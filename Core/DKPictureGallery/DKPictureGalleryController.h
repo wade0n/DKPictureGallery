@@ -59,6 +59,25 @@
 @property(nonatomic, strong) UIActivityViewController    *activity;
 
 
+- (void)setPictureNum:(int)number
+      withImagesCount:(int)imagesCount
+      withMinImageArr:(NSMutableArray *)minImageArr
+        withUrlStrArr:(NSMutableArray *)urlStrArr
+       withUrlShowArr:(NSMutableArray *)urlShowStrArr
+          withDateUrl:(NSMutableArray *)dateArr
+         withTitleArr:(NSMutableArray *)titleArr
+     withTitleShowArr:(NSMutableArray *)titleShowArr
+       withSnippetArr:(NSMutableArray *)snippetArr
+      withFileSizeArr:(NSMutableArray *)fileSizesArr
+        withFormatArr:(NSMutableArray *)formatArr
+         withWidthArr:(NSMutableArray *)widthArr
+        withHeightArr:(NSMutableArray *)heightArr
+            withIdArr:(NSMutableArray *)idArr
+          withNameArr:(NSMutableArray *)nameArr
+     withOriginUrlStr:(NSMutableArray *)originUrlStrArr
+           withSource:(NSMutableArray *)sourceArr;
+
+
 - (void)setCurrentPicture:(DKPictureWrapper *)pic
          AllPictures:(NSMutableArray   *)arr
         SetCurrentPosition:(int)num;

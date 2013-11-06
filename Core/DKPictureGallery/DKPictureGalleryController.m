@@ -22,6 +22,107 @@
 
 @synthesize pics = _pics;
 
+
+
+- (void)setPictureNum:(int)number withImagesCount:(int)imagesCount withMinImageArr:(NSMutableArray *)minImageArr withUrlStrArr:(NSMutableArray *)urlStrArr withUrlShowArr:(NSMutableArray *)urlShowStrArr withDateUrl:(NSMutableArray *)dateArr withTitleArr:(NSMutableArray *)titleArr withTitleShowArr:(NSMutableArray *)titleShowArr withSnippetArr:(NSMutableArray *)snippetArr withFileSizeArr:(NSMutableArray *)fileSizesArr withFormatArr:(NSMutableArray *)formatArr withWidthArr:(NSMutableArray *)widthArr withHeightArr:(NSMutableArray *)heightArr withIdArr:(NSMutableArray *)idArr withNameArr:(NSMutableArray *)nameArr withOriginUrlStr:(NSMutableArray *)originUrlStrArr withSource:(NSMutableArray *)sourceArr{
+    
+    
+    NSMutableArray *picWrapperArr = [NSMutableArray new];
+    DKPictureWrapper *picture;
+    
+    for (int i = 0; i < imagesCount; i++ ) {
+        
+        DKPictureWrapper *curPic = [DKPictureWrapper new];
+        
+        if (i < minImageArr.count) {
+            curPic.minPic = [minImageArr objectAtIndex:i];
+        }
+        if (i < urlStrArr.count) {
+            curPic.urlStr = [urlStrArr objectAtIndex:i];
+        }
+        
+        if (i < urlShowStrArr.count) {
+            
+            curPic.urlShowStr = [urlShowStrArr objectAtIndex:i];
+        }
+        
+        if (i < dateArr.count) {
+            
+            curPic.date = [dateArr objectAtIndex:i];
+        }
+        
+        if (i < titleArr.count) {
+            
+            curPic.title = [titleArr objectAtIndex:i];
+        }
+        
+        if (i < titleShowArr.count) {
+            
+            curPic.titleShow = [titleShowArr objectAtIndex:i];
+        }
+        
+        if (i < snippetArr.count) {
+            curPic.snippet = [snippetArr objectAtIndex:i];
+        }
+        
+        if (i < fileSizesArr.count) {
+            curPic.fileSize =  [(NSString*)[fileSizesArr objectAtIndex:i] intValue];
+        }
+        
+        if (i < formatArr.count) {
+            curPic.format = [formatArr objectAtIndex:i];
+        }
+        
+        if (i < widthArr.count) {
+            
+            curPic.picWidth = [(NSString*)[widthArr objectAtIndex:i] intValue];
+            
+        }
+        
+        if (i < heightArr.count) {
+            
+            curPic.picHeight = [(NSString*)[heightArr objectAtIndex:i] intValue];
+        }
+        
+        if (i < idArr.count) {
+            
+            curPic.picId = [idArr objectAtIndex:i];
+            
+        }
+        
+        if (i < nameArr.count) {
+            
+            curPic.name = [nameArr objectAtIndex:i];
+        }
+        
+        if (i < originUrlStrArr.count) {
+            
+            curPic.originUrl = [originUrlStrArr objectAtIndex:i];
+        }
+        
+        if (i < minImageArr.count) {
+            
+            curPic.minPic = [minImageArr objectAtIndex:i];
+        }
+        
+        if (i < sourceArr.count) {
+            
+        }
+        
+        if (curPic && i == number) {
+            picture = curPic;
+        }
+        
+        [picWrapperArr addObject:curPic];
+        
+        
+    }
+    [self setCurrentPicture:picture AllPictures:picWrapperArr SetCurrentPosition:number];
+    
+}
+
+
+
 - (void)setCurrentPicture:(DKPictureWrapper *)pic
               AllPictures:(NSMutableArray   *)arr
        SetCurrentPosition:(int)num{
@@ -1124,3 +1225,4 @@
 }
 
 @end
+
