@@ -10,6 +10,7 @@
 #import "DKPictureGalleryController.h"
 #import "DKPictureWrapper.h"
 
+
 @interface DKPictureGalleryController : UIViewController <UIScrollViewDelegate,UIActionSheetDelegate>{
     
     UITapGestureRecognizer *singleTap;
@@ -63,11 +64,9 @@
         SetCurrentPosition:(int)num;
 
 
--   (id)  initWithPoster:(DKPictureWrapper *)pic;
--   (void)  setLable:(UILabel*)lable;
+
 -   (void)  setScrollView:(UIScrollView*)tempScrollView;
 -   (void)  screenTapped;
--   (void)  showNextPicture;
 -   (void)  saveToAlbum;
 -   (void)  confirmSave;
 
