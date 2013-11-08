@@ -10,8 +10,12 @@
 #import "UIView+DKExtensions.h"
 #import "NSString+DKStringHTML.h"
 #import "UIImageView+WebCache.h"
-#import "DKConstants.h"
 #import "DKConstants.m"
+
+
+
+
+
 
 @interface DKPictureGalleryController ()
 
@@ -21,7 +25,6 @@
 @implementation DKPictureGalleryController
 
 @synthesize pics = _pics;
-
 
 
 - (void)setPictureNum:(int)number withImagesCount:(int)imagesCount withMinImageArr:(NSMutableArray *)minImageArr withUrlStrArr:(NSMutableArray *)urlStrArr withUrlShowArr:(NSMutableArray *)urlShowStrArr withDateUrl:(NSMutableArray *)dateArr withTitleArr:(NSMutableArray *)titleArr withTitleShowArr:(NSMutableArray *)titleShowArr withSnippetArr:(NSMutableArray *)snippetArr withFileSizeArr:(NSMutableArray *)fileSizesArr withFormatArr:(NSMutableArray *)formatArr withWidthArr:(NSMutableArray *)widthArr withHeightArr:(NSMutableArray *)heightArr withIdArr:(NSMutableArray *)idArr withNameArr:(NSMutableArray *)nameArr withOriginUrlStr:(NSMutableArray *)originUrlStrArr withSource:(NSMutableArray *)sourceArr{
@@ -122,7 +125,6 @@
 }
 
 
-
 - (void)setCurrentPicture:(DKPictureWrapper *)pic
               AllPictures:(NSMutableArray   *)arr
        SetCurrentPosition:(int)num{
@@ -132,11 +134,11 @@
     
     pics = arr;
     picTag = num;
-    picCount = arr.count;
+    picCount = (int)arr.count;
     _picture = pic;
     
     
-    
+    self.view.backgroundColor = [UIColor redColor];
     
     
     
@@ -145,7 +147,7 @@
     scroll.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE);
     
     ///
-    
+    // [self setScrollView:scroll];
     
     
     singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapped)];
@@ -154,13 +156,13 @@
     [self.view addGestureRecognizer:singleTap];
     
     
-//    leftSwipeRecogn = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(screenSwipedLeft)];
-//    [leftSwipeRecogn setDirection:UISwipeGestureRecognizerDirectionRight];
-//    [self.view addGestureRecognizer:leftSwipeRecogn];
-//    
-//    rightSwipeRecogn = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(screenSwipedRight)];
-//    [rightSwipeRecogn setDirection:UISwipeGestureRecognizerDirectionLeft];
-//    [self.view addGestureRecognizer:rightSwipeRecogn];
+    //    leftSwipeRecogn = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(screenSwipedLeft)];
+    //    [leftSwipeRecogn setDirection:UISwipeGestureRecognizerDirectionRight];
+    //    [self.view addGestureRecognizer:leftSwipeRecogn];
+    //
+    //    rightSwipeRecogn = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(screenSwipedRight)];
+    //    [rightSwipeRecogn setDirection:UISwipeGestureRecognizerDirectionLeft];
+    //    [self.view addGestureRecognizer:rightSwipeRecogn];
     
     
     doubleTap = [[UITapGestureRecognizer   alloc]  initWithTarget:self action:@selector(doubleTapped)];
@@ -202,7 +204,7 @@
     [hintView addSubview: nameLabel];
     [self.view addSubview:hintView];
     
-   
+    
     self.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
     
     
@@ -239,13 +241,13 @@
         UIImage *imageToShare = currentImage.image;
         
         
-        NSArray *activityItems = @[textToShare, imageToShare];
+        NSArray *activityItems = @[textToShare];
         
         activ = [[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil];
         
-        #ifdef TESTING
+#ifdef TESTING
         activ.excludedActivityTypes = @[UIActivityTypePostToFacebook, UIActivityTypePostToTwitter, UIActivityTypePostToWeibo]; //or whichever you don't need
-        #endif
+#endif
         
         if (UI_USER_INTERFACE_IDIOM()   ==  UIUserInterfaceIdiomPad) {
             aPopoverController = [[UIPopoverController alloc] initWithContentViewController:[[UIActivityViewController alloc]initWithActivityItems:activityItems applicationActivities:nil]];
@@ -257,15 +259,14 @@
     
     
     
-
+    
 }
 
 
 -   (void) setButton:(UIButton *)button{
     
-    DKPictureWrapper    *picWR =   [[DKPictureWrapper   alloc]  init];
     
-    picWR = [pics   objectAtIndex:picTag];
+    DKPictureWrapper    *picWR = [pics   objectAtIndex:picTag];
     
     NSString    *nameStr = [NSString    new];
     
@@ -318,14 +319,14 @@
         scrollWidth = SCREEN_SIZE_WIDTH ;
         scrollHeight    =    SCREEN_SIZE_HEIGHT;
         
-        [tempScrollView  setFrame:CGRectMake(0, -NAVIGATION_BAR_SIZE - STATUS_BAR_SIZE, SCREEN_SIZE_WIDTH+10, SCREEN_SIZE_HEIGHT + NAVIGATION_BAR_SIZE + STATUS_BAR_SIZE)];
+        [tempScrollView  setFrame:CGRectMake(0,  - STATUS_BAR_SIZE, SCREEN_SIZE_WIDTH+10, SCREEN_SIZE_HEIGHT + NAVIGATION_BAR_SIZE + STATUS_BAR_SIZE)];
         
         picsViews   =   [[NSMutableArray alloc]  init];
         scrollViews =   [[NSMutableArray alloc]  init];
         netActs      =   [[NSMutableArray alloc]  init];
         
         scroll = tempScrollView;
-        scroll.backgroundColor = [UIColor blackColor];
+        scroll.backgroundColor = [UIColor greenColor];
         //
         
         //
@@ -429,8 +430,8 @@
             divider =   PICS_COLLECTION_SCROLL_IMAGE_DIVIDER*i;
             
             
-            [minScroll setFrame:CGRectMake(SCREEN_SIZE_WIDTH*i +divider , 0, SCREEN_SIZE_WIDTH, scrollHeight )];
-            [minScroll setBackgroundColor:[UIColor blackColor]];
+            [minScroll setFrame:CGRectMake(SCREEN_SIZE_WIDTH*i +divider , -NAVIGATION_BAR_SIZE , SCREEN_SIZE_WIDTH, scrollHeight )];
+            [minScroll setBackgroundColor:[UIColor redColor]];
             [tempScrollView addSubview:minScroll];
             
             [picView setFrame:CGRectMake(screenWidth, screenHeight , scaledImageWidth, scaledImageHeight)];
@@ -651,11 +652,36 @@
 }
 
 
+#pragma mark init
+
+- (void)startUp{
+    scroll = [[UIScrollView alloc]   init];
+    scroll.backgroundColor   = [UIColor blueColor];
+    scroll.tag = 13;
+    scroll.delegate = self;
+    scroll.pagingEnabled = YES;
+    scroll.showsHorizontalScrollIndicator = NO;
+    scroll.showsVerticalScrollIndicator = NO;
+    scroll.scrollsToTop = NO;
+    scroll.bounces = NO;
+    
+}
+
+-(id)init{
+    self = [super init];
+    if (self) {
+        [self startUp];
+    }
+    
+    return self;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [self startUp];
     }
     return self;
 }
@@ -664,6 +690,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+    [self.view addSubview:scroll];
 }
 
 - (void)didReceiveMemoryWarning
@@ -720,7 +748,6 @@
     scroll.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH + (picCount-1)*PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE*2);
     scroll.frame = CGRectMake(0, -NAVIGATION_BAR_SIZE - STATUS_BAR_SIZE , SCREEN_SIZE_WIDTH+10, SCREEN_SIZE_HEIGHT +TABBAR_SIZE);
     
-    scroll.backgroundColor  = [UIColor blackColor];
     
     for (int i = 0; i <= picCount-1; i++) {
         UIScrollView    *minScroll = [scrollViews    objectAtIndex:i];
@@ -809,7 +836,7 @@
     
 }
 
-#pragma mark touch events 
+#pragma mark touch events
 - (void)  screenTapped {
     
     UIScrollView    *curScroll = [scrollViews   objectAtIndex:picTag];
@@ -890,7 +917,7 @@
             
             
             
-
+            
             navBarHidden = NO;
             
         }
@@ -924,7 +951,7 @@
             
             
             
-                      
+            
             
             navBarHidden = YES;
             
@@ -1020,6 +1047,49 @@
 
 #pragma mark zooming scrollview
 
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    if ((scrollView.tag ==   13) && !isChangingOrientation) {
+        
+        
+        
+        
+        
+        
+        
+        
+        if ((scrollView.contentOffset.x <= scrollView.frame.size.width * (picTag -1))){
+            if (picTag > 0) {
+                
+                int num;
+                
+                num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
+                picTag = num;
+                [self changePage];
+                [self setButton:nameLabel];
+                self.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+            }
+        }
+        
+        else  if (scrollView.contentOffset.x >= scrollView.frame.size.width * (picTag+1)-10) {
+            if (picTag < (pics.count)) {
+                
+                int num;
+                
+                num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
+                picTag = num;
+                
+                [self changePage];
+                [self setButton:nameLabel];
+                self.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+            }
+        }
+    }
+    
+}
+
+
 - (void)scrollViewWillBeginZooming:(UIScrollView *)_scrollView withView:(UIView *)view {
     //        _scrollView.scrollEnabled = YES;
     if (_scrollView.tag != 13) {
@@ -1043,7 +1113,7 @@
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)_scrollView withView:(UIView *)view atScale:(CGFloat)scale {
-   
+    
     
     if (_scrollView.tag != 13) {
         
@@ -1059,7 +1129,7 @@
                 [netActiv setHidden:NO];
             }
             
-                 }
+        }
         
         
     }
@@ -1087,7 +1157,7 @@
         //        D_Log(@"%f", currentImage.frame.size.height);
         //        D_Log(@"%f", currentImage.frame.size.width);
     }
-        
+    
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)_scrollView {
@@ -1105,7 +1175,7 @@
 }
 
 
-#pragma mark appear and dissapear 
+#pragma mark appear and dissapear
 - (void)viewWillDisappear:(BOOL)animated{
     if (animated && !isInBrowser) {
         
@@ -1124,23 +1194,23 @@
         
         
         UINavigationBar *navBar = [[self navigationController] navigationBar];
-        
+        [navBar setHidden:YES];
         
         
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-//            UIImage *backgroundImage = [[UIImage imageNamed:WIDGETS_NAV_BAR_BACKGROUND_PATTERN] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 1, 1, 1)];
-//            [navBar setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
-//            
-//            
-//            
-//            [navBar setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
-//            [navBar setTintColor:[UIColor colorWithRed:22.0f/255.0f green:152.0f/255.0f blue:248.0f/255.0f alpha:1]];
-//            //[navBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
-//            //[navBar setBackgroundColor:[UIColor   blackColor]];
-//            [navBar setBarStyle:UIBarStyleDefault];
-//            [navBar setTintColor:[UIColor blueColor]];
-//            [navBar setAlpha:1.0f];
-//            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
+            //            UIImage *backgroundImage = [[UIImage imageNamed:WIDGETS_NAV_BAR_BACKGROUND_PATTERN] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 1, 1, 1)];
+            //            [navBar setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
+            //
+            //
+            //
+            //            [navBar setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
+            //            [navBar setTintColor:[UIColor colorWithRed:22.0f/255.0f green:152.0f/255.0f blue:248.0f/255.0f alpha:1]];
+            //            //[navBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+            //            //[navBar setBackgroundColor:[UIColor   blackColor]];
+            //            [navBar setBarStyle:UIBarStyleDefault];
+            //            [navBar setTintColor:[UIColor blueColor]];
+            //            [navBar setAlpha:1.0f];
+            //            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
             
             
         }
@@ -1183,15 +1253,17 @@
         
         
         scrollWidth = scroll.frame.size.width;
-        scrollHeight = SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE;
+        scrollHeight = SCREEN_SIZE_HEIGHT;
         [self.navigationController setNavigationBarHidden:NO];
+        [self.navigationController setNavigationBarHidden:NO animated:YES];
         
         UINavigationBar *navBar = [[self navigationController] navigationBar];
         
+        [navBar setHidden:NO];
         
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-//            UIImage *backgroundImage = [[UIImage imageNamed:WIDGETS_NAV_BAR_BACKGROUND_PATTERN] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 1, 1, 1)];
-//            [navBar setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
+            //            UIImage *backgroundImage = [[UIImage imageNamed:WIDGETS_NAV_BAR_BACKGROUND_PATTERN] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 1, 1, 1)];
+            //            [navBar setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
             
         }
         else{
@@ -1203,17 +1275,22 @@
         [self setScrollView:scroll];
         
         
-        [navBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+        if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+            [navBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+            
+            [navBar setBackgroundColor:[UIColor   blackColor]];
+            self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+            [navBar setTintColor:[UIColor blackColor]];
+            [navBar setAlpha:0.5f];
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+            
+        }
         
-        [navBar setBackgroundColor:[UIColor   blackColor]];
-        self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-        [navBar setTintColor:[UIColor blackColor]];
-        [navBar setAlpha:0.5f];
-        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
         
         
         
-       
+        
+        
         
         isReadyForZoom = YES;
         
@@ -1225,4 +1302,3 @@
 }
 
 @end
-

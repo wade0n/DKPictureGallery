@@ -50,7 +50,7 @@
     
     
     ///// new code ////
-
+    
 }
 
 @property(nonatomic) UIInterfaceOrientation returnOrientaton;
@@ -58,6 +58,10 @@
 @property(nonatomic, strong) NSMutableArray  *pics;
 @property(nonatomic, strong) UIActivityViewController    *activity;
 
+
+- (void)setCurrentPicture:(DKPictureWrapper *)pic
+              AllPictures:(NSMutableArray   *)arr
+       SetCurrentPosition:(int)num;
 
 - (void)setPictureNum:(int)number
       withImagesCount:(int)imagesCount
@@ -76,11 +80,6 @@
           withNameArr:(NSMutableArray *)nameArr
      withOriginUrlStr:(NSMutableArray *)originUrlStrArr
            withSource:(NSMutableArray *)sourceArr;
-
-
-- (void)setCurrentPicture:(DKPictureWrapper *)pic
-         AllPictures:(NSMutableArray   *)arr
-        SetCurrentPosition:(int)num;
 
 
 
