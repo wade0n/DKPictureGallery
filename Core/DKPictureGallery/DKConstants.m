@@ -8,11 +8,3 @@
 
 #import "DKConstants.h"
 
-NSUInteger const kSupportedInterfaceOrientationPortraitBoth = UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
-NSUInteger const kSupportedInterfaceOrientationAllButUsideDown = UIInterfaceOrientationMaskAllButUpsideDown;
-NSUInteger const kSupportedInterfaceOrientationAll = UIInterfaceOrientationMaskAll;
-NSUInteger const kSupportedInterfaceOrientationPortrait = UIInterfaceOrientationMaskPortrait;
-
-
-NSInteger const kTabBarIndexForCurrency = 3;
-NSInteger const kTabBarIndexForWeather = 2;

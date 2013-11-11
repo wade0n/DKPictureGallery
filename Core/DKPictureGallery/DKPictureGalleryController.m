@@ -10,7 +10,7 @@
 #import "UIView+DKExtensions.h"
 #import "NSString+DKStringHTML.h"
 #import "UIImageView+WebCache.h"
-#import "DKConstants.m"
+#import "DKConstants.h"
 
 
 
@@ -20,6 +20,16 @@
 @interface DKPictureGalleryController ()
 
 @end
+
+
+NSUInteger const kSupportedInterfaceOrientationPortraitBoth = UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
+NSUInteger const kSupportedInterfaceOrientationAllButUsideDown = UIInterfaceOrientationMaskAllButUpsideDown;
+NSUInteger const kSupportedInterfaceOrientationAll = UIInterfaceOrientationMaskAll;
+NSUInteger const kSupportedInterfaceOrientationPortrait = UIInterfaceOrientationMaskPortrait;
+
+
+NSInteger const kTabBarIndexForCurrency = 3;
+NSInteger const kTabBarIndexForWeather = 2;
 
 
 @implementation DKPictureGalleryController
@@ -144,7 +154,7 @@
     
     ///adjusting scrollView ot input pictures
     
-    scroll.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE);
+    scroll.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT);
     
     ///
     // [self setScrollView:scroll];
@@ -285,16 +295,20 @@
     
     NSString    *snipStr = [NSString    new];
     
-    if ([picWR.snippet stripHTMLMarkup].length > PICS_COLLECTION_IMAGE_TITLE_LENGTH) {
-        snipStr = [[picWR.snippet stripHTMLMarkup] substringWithRange:NSMakeRange(0, PICS_COLLECTION_IMAGE_TITLE_LENGTH)];
-        snipStr = [NSString stringWithFormat:@"%@...",snipStr];
-        
-    }
-    else{
-        snipStr = [picWR.snippet stripHTMLMarkup];
-    }
+    //    if ([picWR.snippet stripHTMLMarkup].length > PICS_COLLECTION_IMAGE_TITLE_LENGTH) {
+    //        snipStr = [[picWR.snippet stripHTMLMarkup] substringWithRange:NSMakeRange(0, PICS_COLLECTION_IMAGE_TITLE_LENGTH)];
+    //        snipStr = [NSString stringWithFormat:@"%@...\n",snipStr];
+    //
+    //    }
+    //    else{
+    //        snipStr = [picWR.snippet stripHTMLMarkup];
+    //    }
     
-    [info appendFormat:@"%@\n",snipStr];
+    
+    if (picWR.format && picWR.format.length > 0) {
+        snipStr = [snipStr stringByAppendingFormat:@"Формат:%@ \n",picWR.format];
+    }
+    [info appendFormat:@"%@",snipStr];
     
     [info appendFormat:@"%@: %ix%i \n", @"Размер", picWR.picWidth, picWR.picHeight];
     NSString    *sizeStr = [NSString    stringWithFormat:@"%@: %ix%i", @"Размер", picWR.picWidth, picWR.picHeight];
@@ -302,7 +316,7 @@
     
     NSString *str = [range objectAtIndex:2];
     [info   appendFormat:@"%@: %@",@"URL",str];
-    NSString *url = [NSString   stringWithFormat:@"%@: %@",@"URL",str];
+    NSString *url = [NSString   stringWithFormat:@"%@: %@",@"Источник",str];
     [button setTitle:info forState:UIControlStateNormal];
     
     CGSize  expSize = [button.titleLabel.text sizeWithFont:button.titleLabel.font constrainedToSize:CGSizeMake(MAX(MAX([nameStr sizeWithFont:button.titleLabel.font].width, [snipStr sizeWithFont:button.titleLabel.font].width), MAX([sizeStr sizeWithFont:button.titleLabel.font].width, [url sizeWithFont:button.titleLabel.font].width)),9999) lineBreakMode:button.titleLabel.lineBreakMode];
@@ -319,7 +333,7 @@
         scrollWidth = SCREEN_SIZE_WIDTH ;
         scrollHeight    =    SCREEN_SIZE_HEIGHT;
         
-        [tempScrollView  setFrame:CGRectMake(0,  - STATUS_BAR_SIZE, SCREEN_SIZE_WIDTH+10, SCREEN_SIZE_HEIGHT + NAVIGATION_BAR_SIZE + STATUS_BAR_SIZE)];
+        [tempScrollView  setFrame:CGRectMake(0,  0, SCREEN_SIZE_WIDTH+10, SCREEN_SIZE_HEIGHT )];
         
         picsViews   =   [[NSMutableArray alloc]  init];
         scrollViews =   [[NSMutableArray alloc]  init];
@@ -373,9 +387,9 @@
         }
         
         
-        tempScrollView.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH + (picCount-1)*PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE*2);
+        tempScrollView.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH + (picCount-1)*PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, tempScrollView.frame.size.height - STATUS_BAR_SIZE - NAVIGATION_BAR_SIZE);
         
-        CGRect frame = CGRectMake(0, 0 ,tempScrollView.frame.size.width , SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE);
+        CGRect frame = CGRectMake(0, 0 ,tempScrollView.frame.size.width , SCREEN_SIZE_HEIGHT );
         frame.origin.x =tempScrollView.frame.size.width*picTag;
         frame.origin.y = 0;
         
@@ -430,7 +444,8 @@
             divider =   PICS_COLLECTION_SCROLL_IMAGE_DIVIDER*i;
             
             
-            [minScroll setFrame:CGRectMake(SCREEN_SIZE_WIDTH*i +divider , -NAVIGATION_BAR_SIZE , SCREEN_SIZE_WIDTH, scrollHeight )];
+            [minScroll setFrame:CGRectMake(SCREEN_SIZE_WIDTH*i +divider , - NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE, 8), SCREEN_SIZE_WIDTH,tempScrollView.frame.size.height )];
+            
             [minScroll setBackgroundColor:[UIColor redColor]];
             [tempScrollView addSubview:minScroll];
             
@@ -456,7 +471,7 @@
             [minScroll   addSubview:picView];
             [minScroll   addSubview:act];
             
-            [minScroll setContentSize:CGSizeMake(SCREEN_SIZE_WIDTH, scrollHeight )];
+            [minScroll setContentSize:CGSizeMake(SCREEN_SIZE_WIDTH, tempScrollView.frame.size.height )];
             
             //[picView setCenter:CGPointMake(minScroll.center.x, minScroll.center.y)];
             minScroll.maximumZoomScale   = 4.0f;
@@ -656,14 +671,14 @@
 
 - (void)startUp{
     scroll = [[UIScrollView alloc]   init];
-    scroll.backgroundColor   = [UIColor blueColor];
     scroll.tag = 13;
     scroll.delegate = self;
     scroll.pagingEnabled = YES;
     scroll.showsHorizontalScrollIndicator = NO;
-    scroll.showsVerticalScrollIndicator = NO;
+    scroll.showsVerticalScrollIndicator = YES;
     scroll.scrollsToTop = NO;
     scroll.bounces = NO;
+    
     
 }
 
@@ -736,7 +751,7 @@
         [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
         
         
-        self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
+        
         
     }
     
@@ -744,12 +759,12 @@
     scrollHeight    =  SCREEN_SIZE_HEIGHT ;
     
     
-    
-    scroll.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH + (picCount-1)*PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE*2);
-    scroll.frame = CGRectMake(0, -NAVIGATION_BAR_SIZE - STATUS_BAR_SIZE , SCREEN_SIZE_WIDTH+10, SCREEN_SIZE_HEIGHT +TABBAR_SIZE);
+    scroll.frame = CGRectMake(0, 0  , SCREEN_SIZE_WIDTH+PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, SCREEN_SIZE_HEIGHT);
+    scroll.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH + (picCount-1)*PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, scroll.frame.size.height- 400);
     
     
     for (int i = 0; i <= picCount-1; i++) {
+        
         UIScrollView    *minScroll = [scrollViews    objectAtIndex:i];
         UIImageView *picView  =   [picsViews  objectAtIndex:i];
         UIActivityIndicatorView  *act    =   [netActs    objectAtIndex:i];
@@ -791,15 +806,11 @@
         
         
         
-        [minScroll setFrame:CGRectMake(SCREEN_SIZE_WIDTH*i +divider , 0, SCREEN_SIZE_WIDTH, INTERFACE_ORIENTATION_SENSETIVE_VALUE(scrollHeight, scrollHeight + TABBAR_SIZE) )];
+        [minScroll setFrame:CGRectMake(SCREEN_SIZE_WIDTH*i +divider , -NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE, 8), SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT )];
         
-        if (navBarHidden) {
-            [picView setFrame:CGRectMake(screenWidth,INTERFACE_ORIENTATION_SENSETIVE_VALUE(screenHeight, screenHeight+32) , scaledImageWidth, scaledImageHeight)];
-            minScroll.frame = CGRectMake(minScroll.frame.origin.x, 0 + INTERFACE_ORIENTATION_SENSETIVE_VALUE(20, 0), minScroll.frame.size.width, minScroll.frame.size.height);
-        }
-        else{
-            [picView setFrame:CGRectMake(screenWidth,INTERFACE_ORIENTATION_SENSETIVE_VALUE(screenHeight, screenHeight+16) , scaledImageWidth, scaledImageHeight)];
-        }
+        
+        [picView setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
+        
         
         
         
@@ -817,8 +828,8 @@
     
     picTag = localPicTag;
     
-    CGRect frame = CGRectMake(0, 0,scroll.frame.size.width , SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE);
-    frame.origin.x =(SCREEN_SIZE_WIDTH+10)*picTag;
+    CGRect frame = CGRectMake(0, 0,SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT );
+    frame.origin.x =(SCREEN_SIZE_WIDTH+PICS_COLLECTION_SCROLL_IMAGE_DIVIDER)*picTag;
     frame.origin.y = 0;
     
     
@@ -1072,7 +1083,7 @@
             }
         }
         
-        else  if (scrollView.contentOffset.x >= scrollView.frame.size.width * (picTag+1)-10) {
+        else  if (scrollView.contentOffset.x >= scrollView.frame.size.width * (picTag+1)-PICS_COLLECTION_SCROLL_IMAGE_DIVIDER) {
             if (picTag < (pics.count)) {
                 
                 int num;
@@ -1252,7 +1263,7 @@
         //[[NSNotificationCenter   defaultCenter]  postNotificationName:NID_CHANGE_SUPPORTED_INTERFACE_ORIENTATION object:nil userInfo:dict];
         
         
-        scrollWidth = scroll.frame.size.width;
+        
         scrollHeight = SCREEN_SIZE_HEIGHT;
         [self.navigationController setNavigationBarHidden:NO];
         [self.navigationController setNavigationBarHidden:NO animated:YES];
