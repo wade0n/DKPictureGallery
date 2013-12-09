@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "DKPictureGalleryController.h"
 #import "DKPictureWrapper.h"
+#import "AMBLurView.h"
 
 
 @interface DKPictureGalleryController : UIViewController <UIScrollViewDelegate,UIActionSheetDelegate>{
@@ -48,8 +49,12 @@
     
     BOOL navBarHidden;
     
-    
+    UIColor *defautColor;
     ///// new code ////
+    
+    AMBlurView *blurView;
+    
+    
     
 }
 

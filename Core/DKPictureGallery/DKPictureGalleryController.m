@@ -10,7 +10,7 @@
 #import "UIView+DKExtensions.h"
 #import "NSString+DKStringHTML.h"
 #import "UIImageView+WebCache.h"
-#import "DKConstants.h"
+#import "Constants.h"
 
 
 
@@ -22,14 +22,12 @@
 @end
 
 
-NSUInteger const kSupportedInterfaceOrientationPortraitBoth = UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
-NSUInteger const kSupportedInterfaceOrientationAllButUsideDown = UIInterfaceOrientationMaskAllButUpsideDown;
-NSUInteger const kSupportedInterfaceOrientationAll = UIInterfaceOrientationMaskAll;
-NSUInteger const kSupportedInterfaceOrientationPortrait = UIInterfaceOrientationMaskPortrait;
+#define HINT_TRANSFORM_HIDDEN_YES    CGAffineTransformMakeTranslation(0.0, 130.0)
+#define HINT_TRANSFORM_HIDDEN_NO   CGAffineTransformMakeTranslation(0.0, 0.0)
+#define TIMER   0.2
+#define INFO_BAR_TIMER 0.5//UINavigationControllerHideShowBarDuration
 
 
-NSInteger const kTabBarIndexForCurrency = 3;
-NSInteger const kTabBarIndexForWeather = 2;
 
 
 @implementation DKPictureGalleryController
@@ -148,13 +146,13 @@ NSInteger const kTabBarIndexForWeather = 2;
     _picture = pic;
     
     
-    self.view.backgroundColor = [UIColor redColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     
     
     
     ///adjusting scrollView ot input pictures
     
-    scroll.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT);
+   scroll.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT);
     
     ///
     // [self setScrollView:scroll];
@@ -164,15 +162,6 @@ NSInteger const kTabBarIndexForWeather = 2;
     [singleTap setNumberOfTapsRequired:1];
     [singleTap setNumberOfTouchesRequired:1];
     [self.view addGestureRecognizer:singleTap];
-    
-    
-    //    leftSwipeRecogn = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(screenSwipedLeft)];
-    //    [leftSwipeRecogn setDirection:UISwipeGestureRecognizerDirectionRight];
-    //    [self.view addGestureRecognizer:leftSwipeRecogn];
-    //
-    //    rightSwipeRecogn = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(screenSwipedRight)];
-    //    [rightSwipeRecogn setDirection:UISwipeGestureRecognizerDirectionLeft];
-    //    [self.view addGestureRecognizer:rightSwipeRecogn];
     
     
     doubleTap = [[UITapGestureRecognizer   alloc]  initWithTarget:self action:@selector(doubleTapped)];
@@ -196,7 +185,7 @@ NSInteger const kTabBarIndexForWeather = 2;
     [nameLabel.titleLabel setNumberOfLines:6];
     [nameLabel.titleLabel setFont:[UIFont boldSystemFontOfSize:11]];
     [nameLabel setBackgroundColor:[UIColor clearColor]];
-    [nameLabel setTitleColor:[UIColor colorWithWhite:1.0 alpha:0.82] forState:UIControlStateNormal];
+    [nameLabel setTitleColor:[UIColor colorWithWhite:0.0 alpha:0.82] forState:UIControlStateNormal];
     [nameLabel setTitleColor:[UIColor colorWithWhite:1.0 alpha:1] forState:UIControlStateHighlighted];
     
     [nameLabel addTarget:self action:@selector(openPicUrl) forControlEvents:UIControlEventTouchUpInside];
@@ -204,15 +193,20 @@ NSInteger const kTabBarIndexForWeather = 2;
     
     [self setButton:nameLabel];
     
-    
-    
-    
     hintView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 120, self.view.frame.size.width, 120)];
-    hintView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.6];
+    hintView.backgroundColor = [UIColor clearColor];
     [hintView   setTransform:HINT_TRANSFORM_HIDDEN_YES];
     [hintView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
-    [hintView addSubview: nameLabel];
+    
     [self.view addSubview:hintView];
+    
+    
+        //blurView.blurTintColor = self.navigationController.navigationBar.tintColor;
+    //blurView.backgroundColor = [UIColor redColor];
+    blurView = [[AMBlurView alloc] initWithFrame:CGRectMake(0.0, 0.0, MAX(SCREEN_SIZE_HEIGHT, SCREEN_SIZE_WIDTH), hintView.frame.size.height)];
+    [hintView addSubview:blurView];
+    [hintView addSubview: nameLabel];
+    
     
     
     self.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
@@ -295,14 +289,14 @@ NSInteger const kTabBarIndexForWeather = 2;
     
     NSString    *snipStr = [NSString    new];
     
-    //    if ([picWR.snippet stripHTMLMarkup].length > PICS_COLLECTION_IMAGE_TITLE_LENGTH) {
-    //        snipStr = [[picWR.snippet stripHTMLMarkup] substringWithRange:NSMakeRange(0, PICS_COLLECTION_IMAGE_TITLE_LENGTH)];
-    //        snipStr = [NSString stringWithFormat:@"%@...\n",snipStr];
-    //
-    //    }
-    //    else{
-    //        snipStr = [picWR.snippet stripHTMLMarkup];
-    //    }
+//    if ([picWR.snippet stripHTMLMarkup].length > PICS_COLLECTION_IMAGE_TITLE_LENGTH) {
+//        snipStr = [[picWR.snippet stripHTMLMarkup] substringWithRange:NSMakeRange(0, PICS_COLLECTION_IMAGE_TITLE_LENGTH)];
+//        snipStr = [NSString stringWithFormat:@"%@...\n",snipStr];
+//        
+//    }
+//    else{
+//        snipStr = [picWR.snippet stripHTMLMarkup];
+//    }
     
     
     if (picWR.format && picWR.format.length > 0) {
@@ -340,7 +334,7 @@ NSInteger const kTabBarIndexForWeather = 2;
         netActs      =   [[NSMutableArray alloc]  init];
         
         scroll = tempScrollView;
-        scroll.backgroundColor = [UIColor greenColor];
+        scroll.backgroundColor = [UIColor clearColor];
         //
         
         //
@@ -387,7 +381,7 @@ NSInteger const kTabBarIndexForWeather = 2;
         }
         
         
-        tempScrollView.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH + (picCount-1)*PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, tempScrollView.frame.size.height - STATUS_BAR_SIZE - NAVIGATION_BAR_SIZE);
+        tempScrollView.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH + (picCount-1)*PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, 0);
         
         CGRect frame = CGRectMake(0, 0 ,tempScrollView.frame.size.width , SCREEN_SIZE_HEIGHT );
         frame.origin.x =tempScrollView.frame.size.width*picTag;
@@ -446,7 +440,7 @@ NSInteger const kTabBarIndexForWeather = 2;
             
             [minScroll setFrame:CGRectMake(SCREEN_SIZE_WIDTH*i +divider , - NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE, 8), SCREEN_SIZE_WIDTH,tempScrollView.frame.size.height )];
             
-            [minScroll setBackgroundColor:[UIColor redColor]];
+            [minScroll setBackgroundColor:[UIColor clearColor]];
             [tempScrollView addSubview:minScroll];
             
             [picView setFrame:CGRectMake(screenWidth, screenHeight , scaledImageWidth, scaledImageHeight)];
@@ -462,7 +456,7 @@ NSInteger const kTabBarIndexForWeather = 2;
             [act setFrame:CGRectMake(SCREEN_SIZE_WIDTH/2 - act.frame.size.width/2, SCREEN_SIZE_HEIGHT/2- act.frame.size.height/2, act.frame.size.width, act.frame.size.width)];
             
             [act setHidesWhenStopped:YES];
-            //[act setBackgroundColor:[UIColor redColor]];
+           
             [act stopAnimating];
             
             //[picView setCenter:CGPointMake(SCREEN_SIZE_WIDTH*i +divider + SCREEN_SIZE_WIDTH/2, scrollHeight/2)];
@@ -678,7 +672,7 @@ NSInteger const kTabBarIndexForWeather = 2;
     scroll.showsVerticalScrollIndicator = YES;
     scroll.scrollsToTop = NO;
     scroll.bounces = NO;
-    
+   
     
 }
 
@@ -705,6 +699,8 @@ NSInteger const kTabBarIndexForWeather = 2;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+    defautColor =  self.navigationController.navigationBar.tintColor;
     
     [self.view addSubview:scroll];
 }
@@ -748,9 +744,9 @@ NSInteger const kTabBarIndexForWeather = 2;
     
     if (navBarHidden) {
         
-        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+       
         
-        
+        self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
         
         
     }
@@ -760,7 +756,7 @@ NSInteger const kTabBarIndexForWeather = 2;
     
     
     scroll.frame = CGRectMake(0, 0  , SCREEN_SIZE_WIDTH+PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, SCREEN_SIZE_HEIGHT);
-    scroll.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH + (picCount-1)*PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, scroll.frame.size.height- 400);
+    scroll.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH + (picCount-1)*PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, 0);
     
     
     for (int i = 0; i <= picCount-1; i++) {
@@ -780,7 +776,7 @@ NSInteger const kTabBarIndexForWeather = 2;
         
         if(picCur.picWidth > scrollWidth   ||  picCur.picHeight > (scrollHeight)){
             float widthScale =  scrollWidth / picCur.picWidth;
-            float heightScale = (scrollHeight)/ picCur.picHeight;
+            float heightScale = scrollHeight / picCur.picHeight;
             float resultScale = (widthScale < heightScale) ? widthScale : heightScale;
             
             
@@ -804,9 +800,9 @@ NSInteger const kTabBarIndexForWeather = 2;
         
         
         
+        [minScroll setBackgroundColor:[UIColor clearColor]];
         
-        
-        [minScroll setFrame:CGRectMake(SCREEN_SIZE_WIDTH*i +divider , -NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE, 8), SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT )];
+        [minScroll setFrame:CGRectMake(SCREEN_SIZE_WIDTH*i +divider , - NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE, 8), SCREEN_SIZE_WIDTH,scroll.frame.size.height )];
         
         
         [picView setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
@@ -828,25 +824,15 @@ NSInteger const kTabBarIndexForWeather = 2;
     
     picTag = localPicTag;
     
-    CGRect frame = CGRectMake(0, 0,SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT );
-    frame.origin.x =(SCREEN_SIZE_WIDTH+PICS_COLLECTION_SCROLL_IMAGE_DIVIDER)*picTag;
-    frame.origin.y = 0;
     
-    
-    if (navBarHidden) {
-        
-        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-        
-        
-        
-    }
-    
+   
+    [scroll setContentOffset:CGPointMake(scroll.frame.size.width*picTag, - NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE, 8))];
+
     
     isChangingOrientation = NO;
-    [scroll scrollRectToVisible:frame animated:NO];
+    
     
 }
-
 #pragma mark touch events
 - (void)  screenTapped {
     
@@ -922,7 +908,9 @@ NSInteger const kTabBarIndexForWeather = 2;
             
             self.navigationController.navigationBar.frame = CGRectMake(0, STATUS_BAR_SIZE, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
             
+            self.view.backgroundColor = [UIColor whiteColor];
             
+            self.navigationController.navigationBar.tintColor = defautColor;
             
             [UIView commitAnimations];
             
@@ -958,6 +946,8 @@ NSInteger const kTabBarIndexForWeather = 2;
             
             self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
             
+            self.view.backgroundColor = [UIColor whiteColor];
+            self.navigationController.navigationBar.tintColor = [UIColor blackColor] ;
             [UIView commitAnimations];
             
             
@@ -1209,19 +1199,6 @@ NSInteger const kTabBarIndexForWeather = 2;
         
         
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            //            UIImage *backgroundImage = [[UIImage imageNamed:WIDGETS_NAV_BAR_BACKGROUND_PATTERN] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 1, 1, 1)];
-            //            [navBar setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
-            //
-            //
-            //
-            //            [navBar setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
-            //            [navBar setTintColor:[UIColor colorWithRed:22.0f/255.0f green:152.0f/255.0f blue:248.0f/255.0f alpha:1]];
-            //            //[navBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
-            //            //[navBar setBackgroundColor:[UIColor   blackColor]];
-            //            [navBar setBarStyle:UIBarStyleDefault];
-            //            [navBar setTintColor:[UIColor blueColor]];
-            //            [navBar setAlpha:1.0f];
-            //            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
             
             
         }
@@ -1234,9 +1211,9 @@ NSInteger const kTabBarIndexForWeather = 2;
         
         
         //present/dismiss viewcontroller in order to activate rotating.
-        UIViewController *mVC = [[UIViewController alloc] init];
-        [self presentModalViewController:mVC animated:NO];
-        [self dismissModalViewControllerAnimated:NO];
+//        UIViewController *mVC = [[UIViewController alloc] init];
+//        [self presentModalViewController:mVC animated:NO];
+//        [self dismissModalViewControllerAnimated:NO];
     }
     
     if ((_returnOrientaton != [[UIApplication sharedApplication] statusBarOrientation]) && _returnOrientaton) {
@@ -1260,7 +1237,6 @@ NSInteger const kTabBarIndexForWeather = 2;
         
         [dict setObject:num forKey:@"value"];
         
-        //[[NSNotificationCenter   defaultCenter]  postNotificationName:NID_CHANGE_SUPPORTED_INTERFACE_ORIENTATION object:nil userInfo:dict];
         
         
         
@@ -1273,15 +1249,12 @@ NSInteger const kTabBarIndexForWeather = 2;
         [navBar setHidden:NO];
         
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            //            UIImage *backgroundImage = [[UIImage imageNamed:WIDGETS_NAV_BAR_BACKGROUND_PATTERN] resizableImageWithCapInsets:UIEdgeInsetsMake(1, 1, 1, 1)];
-            //            [navBar setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
             
         }
         else{
         }
         
-        //[navBar setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
-        //[navBar setTintColor:[UIColor colorWithRed:22.0f/255.0f green:152.0f/255.0f blue:248.0f/255.0f alpha:1]];
+
         
         [self setScrollView:scroll];
         
@@ -1293,7 +1266,7 @@ NSInteger const kTabBarIndexForWeather = 2;
             self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
             [navBar setTintColor:[UIColor blackColor]];
             [navBar setAlpha:0.5f];
-            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+//            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
             
         }
         
@@ -1308,8 +1281,7 @@ NSInteger const kTabBarIndexForWeather = 2;
     }
     else{
         isInBrowser = NO;
-        //[[self.navigationController navigationBar] setTintColor:[UIColor colorWithRed:22.0f/255.0f green:152.0f/255.0f blue:248.0f/255.0f alpha:1]];
-    }
+        }
 }
 
 @end
