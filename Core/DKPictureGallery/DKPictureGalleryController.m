@@ -724,6 +724,7 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     isChangingOrientation = YES;
+
 }
 
 -   (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
@@ -734,7 +735,11 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-    
+    if (navBarHidden) {
+        
+        self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height , self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
+    }
+
     
 }
 
@@ -742,18 +747,16 @@
     
     int localPicTag = picTag;
     
-    if (navBarHidden) {
-        
-       
-        
-        self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
-        
-        
-    }
     
     scrollWidth = SCREEN_SIZE_WIDTH ;
     scrollHeight    =  SCREEN_SIZE_HEIGHT ;
     
+    
+    if (navBarHidden) {
+        
+        self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height - 600.0f, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
+    }
+
     
     scroll.frame = CGRectMake(0, 0  , SCREEN_SIZE_WIDTH+PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, SCREEN_SIZE_HEIGHT);
     scroll.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH + (picCount-1)*PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, 0);
@@ -826,7 +829,7 @@
     
     
    
-    [scroll setContentOffset:CGPointMake(scroll.frame.size.width*picTag, - NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE, 8))];
+    [scroll setContentOffset:CGPointMake(scroll.frame.size.width*picTag, - NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE+4, 8))];
 
     
     isChangingOrientation = NO;
@@ -946,7 +949,7 @@
             
             self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
             
-            self.view.backgroundColor = [UIColor whiteColor];
+            self.view.backgroundColor = [UIColor blackColor];
             self.navigationController.navigationBar.tintColor = [UIColor blackColor] ;
             [UIView commitAnimations];
             
