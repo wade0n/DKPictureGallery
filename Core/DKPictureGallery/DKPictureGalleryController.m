@@ -262,7 +262,7 @@
     
     
     
-    
+  
     
 }
 
@@ -390,8 +390,8 @@
         tempScrollView.pagingEnabled = YES;
         [tempScrollView setScrollEnabled:YES];
         
-        [tempScrollView scrollRectToVisible:frame animated:NO];
-        
+        //[tempScrollView setContentOffset:CGPointMake(, 0)];
+        [tempScrollView setContentOffset:CGPointMake(scroll.frame.size.width*picTag, 0)];
         
         
         
@@ -614,8 +614,8 @@
             
             [curAct stopAnimating];
             [curImageCaptured setImage:PICS_NO_IMAGE];
-            [curImageCaptured    setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , scrollHeight)];
-            [curImageCaptured    setContentMode:UIViewContentModeCenter];
+            [curImageCaptured setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , scrollHeight)];
+            [curImageCaptured setContentMode:UIViewContentModeCenter];
             
         }
         else{
@@ -1285,6 +1285,8 @@
     else{
         isInBrowser = NO;
         }
+    
+    
 }
 
 @end
