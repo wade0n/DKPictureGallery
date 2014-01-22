@@ -35,6 +35,14 @@
 @synthesize pics = _pics;
 
 
+- (void)setPicNum:(int)position{
+    
+     self.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+    
+     [scroll setContentOffset:CGPointMake(scroll.frame.size.width*picTag, 0)];
+    
+}
+
 - (void)setPictureNum:(int)number withImagesCount:(int)imagesCount withMinImageArr:(NSMutableArray *)minImageArr withUrlStrArr:(NSMutableArray *)urlStrArr withUrlShowArr:(NSMutableArray *)urlShowStrArr withDateUrl:(NSMutableArray *)dateArr withTitleArr:(NSMutableArray *)titleArr withTitleShowArr:(NSMutableArray *)titleShowArr withSnippetArr:(NSMutableArray *)snippetArr withFileSizeArr:(NSMutableArray *)fileSizesArr withFormatArr:(NSMutableArray *)formatArr withWidthArr:(NSMutableArray *)widthArr withHeightArr:(NSMutableArray *)heightArr withIdArr:(NSMutableArray *)idArr withNameArr:(NSMutableArray *)nameArr withOriginUrlStr:(NSMutableArray *)originUrlStrArr withSource:(NSMutableArray *)sourceArr{
     
     

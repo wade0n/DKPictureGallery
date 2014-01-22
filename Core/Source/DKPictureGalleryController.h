@@ -88,9 +88,10 @@
 
 
 
--   (void)  setScrollView:(UIScrollView*)tempScrollView;
--   (void)  screenTapped;
--   (void)  saveToAlbum;
--   (void)  confirmSave;
+-   (void)setScrollView:(UIScrollView*)tempScrollView;
+-   (void)screenTapped;
+-   (void)saveToAlbum;
+-   (void)confirmSave;
+-   (void)setPicNum:(int)position;
 
 @end
