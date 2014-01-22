@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'core' do |c|
     c.requires_arc = true
-    c.source_files = 'core/Source/*'
+    c.source_files = 'core/Source/*','core/Source/Models/*','core/Source/Extensions/*'
     c.resources = 'core/Resources/*'
     c.dependency  'iOS-blur', '0.0.2'
     c.dependency  'SDWebImage'
