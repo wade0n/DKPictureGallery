@@ -1,4 +1,4 @@
-//
+ //
 //  DKPictureGalleryController.m
 //  PictureGallery
 //
@@ -708,7 +708,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    defautColor =  self.navigationController.navigationBar.tintColor;
+    
     
     [self.view addSubview:scroll];
 }
@@ -921,7 +921,7 @@
             
             self.view.backgroundColor = [UIColor whiteColor];
             
-            self.navigationController.navigationBar.tintColor = defautColor;
+            self.navigationController.navigationBar.tintColor = defaultColor;
             
             [UIView commitAnimations];
             
@@ -1206,11 +1206,17 @@
         
         
         UINavigationBar *navBar = [[self navigationController] navigationBar];
-        [navBar setHidden:YES];
+        [navBar setHidden:initialNavBarHidden];
+    
+        if (defaultColor) {
+            
+                self.navigationController.navigationBar.tintColor = defaultColor;
+        }
+        
         
         
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            
+           
             
         }
         
@@ -1256,7 +1262,8 @@
         [self.navigationController setNavigationBarHidden:NO animated:YES];
         
         UINavigationBar *navBar = [[self navigationController] navigationBar];
-        
+        defaultColor =  navBar.tintColor;
+        initialNavBarHidden = navBar.hidden;
         [navBar setHidden:NO];
         
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {

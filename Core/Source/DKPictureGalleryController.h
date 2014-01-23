@@ -27,6 +27,8 @@
     BOOL    isReadyForZoom;
     BOOL isChangingOrientation;
     BOOL isInBrowser;
+    BOOL navBarHidden;
+    BOOL initialNavBarHidden;
     
     
     UIActionSheet *popupQuery;
@@ -47,9 +49,10 @@
     NSMutableArray  *scrollViews;
     NSMutableArray  *netActs;
     
-    BOOL navBarHidden;
     
-    UIColor *defautColor;
+    
+    UIColor *defaultColor;
+   
     ///// new code ////
     
     AMBlurView *blurView;
