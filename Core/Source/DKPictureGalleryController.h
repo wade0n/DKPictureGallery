@@ -65,6 +65,7 @@
 @property(nonatomic,strong) DKPictureWrapper *picture;
 @property(nonatomic, strong) NSMutableArray  *pics;
 @property(nonatomic, strong) UIActivityViewController    *activity;
+@property(nonatomic, copy) void (^selectedPicture)(int selectedNumber);
 
 
 - (void)setCurrentPicture:(DKPictureWrapper *)pic

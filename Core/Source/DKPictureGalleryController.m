@@ -1043,14 +1043,19 @@
     DKPictureWrapper    *picWR =   [[DKPictureWrapper   alloc]  init];
     
     picWR = [pics   objectAtIndex:picTag];
+
     
-    if (picWR.urlStr) {
-        isInBrowser = YES;
-        
-        
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:picWR.urlStr]];
-        //[Utility openUrl:picWR.urlStr withInternalBrowserControllerPresentedModalByController:self];
+    if (self.selectedPicture) {
+        self.selectedPicture(picTag);
     }
+    else
+        if (picWR.urlStr) {
+            isInBrowser = YES;
+        
+        
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:picWR.urlStr]];
+            //[Utility openUrl:picWR.urlStr withInternalBrowserControllerPresentedModalByController:self];
+        }
     
     
     
