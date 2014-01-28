@@ -389,7 +389,7 @@
         }
         
         
-        tempScrollView.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH + (picCount-1)*PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, 0);
+        tempScrollView.contentSize = CGSizeMake(picCount * (SCREEN_SIZE_WIDTH + PICS_COLLECTION_SCROLL_IMAGE_DIVIDER), 0);
         
         CGRect frame = CGRectMake(0, 0 ,tempScrollView.frame.size.width , SCREEN_SIZE_HEIGHT );
         frame.origin.x =tempScrollView.frame.size.width*picTag;
@@ -767,7 +767,7 @@
 
     
     scroll.frame = CGRectMake(0, 0  , SCREEN_SIZE_WIDTH+PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, SCREEN_SIZE_HEIGHT);
-    scroll.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH + (picCount-1)*PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, 0);
+    scroll.contentSize = CGSizeMake(picCount * (SCREEN_SIZE_WIDTH + PICS_COLLECTION_SCROLL_IMAGE_DIVIDER), 0);
     
     
     for (int i = 0; i <= picCount-1; i++) {
