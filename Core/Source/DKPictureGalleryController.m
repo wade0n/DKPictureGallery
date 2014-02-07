@@ -37,6 +37,8 @@
 
 - (void)setPicNum:(int)position{
     
+     picTag = position;
+    
      self.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
     
      [scroll setContentOffset:CGPointMake(scroll.frame.size.width*picTag, 0)];
