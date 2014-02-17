@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = "DKPictureGallery"
-  s.version = "0.0.1"
+  s.version = "0.0.2"
   s.summary = "iOS library, that shows picture's in default iOS picture gallery."
   s.homepage = "https://github.com/wade0n/DKPictureGallery"
   s.license = { :type => 'MIT', :file => 'LICENSE'}
