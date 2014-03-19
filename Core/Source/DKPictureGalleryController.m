@@ -1253,6 +1253,9 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    
+     [hintView   setTransform:HINT_TRANSFORM_HIDDEN_YES];
+    
     if(animated && !isInBrowser){
         
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
