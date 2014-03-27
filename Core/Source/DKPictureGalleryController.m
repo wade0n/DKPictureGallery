@@ -603,6 +603,20 @@
     nextAct = [netActs   objectAtIndex:[pics   indexOfObject:nextPic]];
     preAct  = [netActs   objectAtIndex:[pics   indexOfObject:prePic]];
     
+    
+    if (self.navigationController.navigationBar.frame.origin.y < 0) {
+        [curAct setTintColor:[UIColor whiteColor]];
+        [nextAct setTintColor:[UIColor whiteColor]];
+        [preAct setTintColor:[UIColor whiteColor]];
+    }
+    else{
+        [curAct setTintColor:[UIColor grayColor]];
+        [nextAct setTintColor:[UIColor grayColor]];
+        [preAct setTintColor:[UIColor grayColor]];
+        
+    }
+
+    
     [curAct startAnimating];
     [nextAct startAnimating];
     [preAct startAnimating];
@@ -624,6 +638,14 @@
             
             [curAct stopAnimating];
             [curImageCaptured setImage:PICS_NO_IMAGE];
+            if (self.navigationController.navigationBar.frame.origin.y < 0) {
+                [curImageCaptured setTintColor:[UIColor whiteColor]];
+            }
+            else{
+                [curImageCaptured setTintColor:[UIColor grayColor]];
+            }
+             
+            [curImageCaptured.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             [curImageCaptured setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , scrollHeight)];
             [curImageCaptured setContentMode:UIViewContentModeCenter];
             
@@ -641,6 +663,14 @@
         {
             
             [nextImageCaptured    setImage:PICS_NO_IMAGE];
+            if (self.navigationController.navigationBar.frame.origin.y < 0) {
+                [nextImageCaptured setTintColor:[UIColor whiteColor]];
+            }
+            else{
+                [nextImageCaptured setTintColor:[UIColor grayColor]];
+            }
+            
+            [nextImageCaptured.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             [nextImageCaptured    setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE)];
             [nextImageCaptured    setContentMode:UIViewContentModeCenter];
         }
@@ -654,6 +684,16 @@
         {
             
             [preAct stopAnimating];
+            [preImageCaptured   setImage:PICS_NO_IMAGE];
+            if (self.navigationController.navigationBar.frame.origin.y < 0) {
+                [preImageCaptured setTintColor:[UIColor whiteColor]];
+            }
+            else{
+                [preImageCaptured setTintColor:[UIColor grayColor]];
+            }
+            
+            [preImageCaptured.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+
             [preImageCaptured    setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE)];
             [preImageCaptured    setContentMode:UIViewContentModeCenter];
         }
@@ -896,18 +936,12 @@
     
     
     if (curScroll.zoomScale <= 1.0f) {
-        
-        
-        
-        
-        
-        
+    
         [self screenTapped];
+        UIActivityIndicatorView *curAct  = [netActs   objectAtIndex:picTag];
+        UIImageView *curImageView = [picsViews objectAtIndex:picTag];
         
         if (self.navigationController.navigationBar.frame.origin.y < 0) {
-            
-            
-            
             
             CGFloat animationDuration;
             
@@ -924,7 +958,7 @@
             self.view.backgroundColor = [UIColor whiteColor];
             
             self.navigationController.navigationBar.tintColor = defaultColor;
-            
+            [curAct setTintColor:[UIColor grayColor]];
             [UIView commitAnimations];
             
             
@@ -960,6 +994,8 @@
             self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
             
             self.view.backgroundColor = [UIColor blackColor];
+            [curAct setTintColor:[UIColor whiteColor]];
+            [curImageView setTintColor:[UIColor grayColor]];
             self.navigationController.navigationBar.tintColor = [UIColor blackColor] ;
             [UIView commitAnimations];
             

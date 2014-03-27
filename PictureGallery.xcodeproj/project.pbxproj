@@ -150,6 +150,7 @@
 				77284908188FB038005F91B0 /* DKConstants.m */,
 				77284909188FB038005F91B0 /* DKPictureGalleryController.h */,
 				7728490A188FB038005F91B0 /* DKPictureGalleryController.m */,
+				77DA1FB318E4649D001AC9BD /* Views */,
 				7728490B188FB038005F91B0 /* Extensions */,
 				77284910188FB038005F91B0 /* Models */,
 			);
@@ -226,6 +227,13 @@
 			);
 			name = DKPictureGallery;
 			path = ../../Core/DKPictureGallery;
+			sourceTree = "<group>";
+		};
+		77DA1FB318E4649D001AC9BD /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
