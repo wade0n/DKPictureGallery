@@ -973,8 +973,8 @@
             self.navigationController.navigationBar.tintColor = defaultColor;
             [curAct setColor:[UIColor grayColor]];
             [curImageView setTintColor:[UIColor grayColor]];
-            if (!picWr.originLoaded) {
-                [curImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            if (!picWr.originLoaded  && !curAct.isAnimating) {
+                curImageView.image =  [curImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             }
             [UIView commitAnimations];
             
@@ -1013,7 +1013,7 @@
             self.view.backgroundColor = [UIColor blackColor];
             [curAct setColor:[UIColor whiteColor]];
             [curImageView setTintColor:[UIColor whiteColor]];
-            if (!picWr.originLoaded) {
+            if (!picWr.originLoaded && !curAct.isAnimating) {
                 [curImageView setImage:PICS_NO_IMAGE];
             }
 
