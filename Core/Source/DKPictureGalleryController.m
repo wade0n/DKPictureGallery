@@ -213,7 +213,7 @@
     
         //blurView.blurTintColor = self.navigationController.navigationBar.tintColor;
     //blurView.backgroundColor = [UIColor redColor];
-    blurView = [[AMBlurView alloc] initWithFrame:CGRectMake(0.0, 0.0, MAX(SCREEN_SIZE_HEIGHT, SCREEN_SIZE_WIDTH), hintView.frame.size.height)];
+    blurView = [[AMBlurView alloc] initWithFrame:CGRectMake(0.0, 0.0, MAX(SCREEN_SIZE_HEIGHT, SCREEN_SIZE_WIDTH), hintView.frame.size.height+1)];
     [hintView addSubview:blurView];
     [hintView addSubview: nameLabel];
     
