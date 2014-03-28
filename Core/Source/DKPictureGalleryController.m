@@ -605,14 +605,14 @@
     
     
     if (self.navigationController.navigationBar.frame.origin.y < 0) {
-        [curAct setTintColor:[UIColor whiteColor]];
-        [nextAct setTintColor:[UIColor whiteColor]];
-        [preAct setTintColor:[UIColor whiteColor]];
+        [curAct setColor:[UIColor whiteColor]];
+        [nextAct setColor:[UIColor whiteColor]];
+        [preAct setColor:[UIColor whiteColor]];
     }
     else{
-        [curAct setTintColor:[UIColor grayColor]];
-        [nextAct setTintColor:[UIColor grayColor]];
-        [preAct setTintColor:[UIColor grayColor]];
+        [curAct setColor:[UIColor grayColor]];
+        [nextAct setColor:[UIColor grayColor]];
+        [preAct setColor:[UIColor grayColor]];
         
     }
 
@@ -958,7 +958,9 @@
             self.view.backgroundColor = [UIColor whiteColor];
             
             self.navigationController.navigationBar.tintColor = defaultColor;
-            [curAct setTintColor:[UIColor grayColor]];
+            [curAct setColor:[UIColor grayColor]];
+            [curImageView setTintColor:[UIColor grayColor]];
+            [curImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             [UIView commitAnimations];
             
             
@@ -994,9 +996,10 @@
             self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
             
             self.view.backgroundColor = [UIColor blackColor];
-            [curAct setTintColor:[UIColor whiteColor]];
-            [curImageView setTintColor:[UIColor grayColor]];
-            self.navigationController.navigationBar.tintColor = [UIColor blackColor] ;
+            [curAct setColor:[UIColor whiteColor]];
+            [curImageView setTintColor:[UIColor whiteColor]];
+            [curImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            self.navigationController.navigationBar.tintColor = [UIColor blackColor];
             [UIView commitAnimations];
             
             
