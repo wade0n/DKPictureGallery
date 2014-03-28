@@ -1053,7 +1053,7 @@
         NSString *textToShare = @"I just found this in sputnik.ru";
         UIImage *imageToShare = currentImage.image;
         if (!currentImage.image) {
-            imageToShare =  [UIImage    imageNamed:@"widgets-news_load_image@2x"];
+            imageToShare =  PICS_NO_IMAGE;
         }
         
         NSURL *urlToShare = [NSURL URLWithString:@"http://www.sputnik.ru"];
