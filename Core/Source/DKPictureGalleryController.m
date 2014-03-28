@@ -633,6 +633,8 @@
     
     
     [curImage setImageWithURL:postArr.originUrl placeholderImage:postArr.minPic completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        
+        
         if (error)
         {
             
@@ -643,14 +645,15 @@
             }
             else{
                 [curImageCaptured setTintColor:[UIColor grayColor]];
+                curImageCaptured.image =  [curImageCaptured.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             }
-             
-            [curImageCaptured.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            
             [curImageCaptured setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , scrollHeight)];
             [curImageCaptured setContentMode:UIViewContentModeCenter];
-            
+            postArr.originLoaded = NO;
         }
         else{
+            postArr.originLoaded = YES;
             // [curImageCaptured setFrame:CGRectMake((SCREEN_SIZE_WIDTH/2) - image.size.width/2,( SCREEN_SIZE_HEIGHT- NAVIGATION_BAR_SIZE*2)/2  - image.size.height/2, image.size.width, image.size.height)];
         }
         [curAct stopAnimating];
@@ -659,6 +662,8 @@
     UIImageView *nextImageCaptured = nextImage;
     
     [nextImage setImageWithURL:nextPic.originUrl placeholderImage:nextPic.minPic completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        
+        
         if (error)
         {
             
@@ -668,11 +673,15 @@
             }
             else{
                 [nextImageCaptured setTintColor:[UIColor grayColor]];
+                nextImageCaptured.image =  [nextImageCaptured.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             }
             
-            [nextImageCaptured.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             [nextImageCaptured    setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE)];
             [nextImageCaptured    setContentMode:UIViewContentModeCenter];
+            nextPic.originLoaded = NO;
+        }
+        else{
+            nextPic.originLoaded = YES;
         }
         [nextAct stopAnimating];
     }];
@@ -690,12 +699,15 @@
             }
             else{
                 [preImageCaptured setTintColor:[UIColor grayColor]];
+                preImageCaptured.image =  [preImageCaptured.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             }
-            
-            [preImageCaptured.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-
+           
             [preImageCaptured    setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE)];
             [preImageCaptured    setContentMode:UIViewContentModeCenter];
+            prePic.originLoaded = NO;
+        }
+        else{
+            prePic.originLoaded = YES;
         }
         [preAct stopAnimating];
     }];
@@ -940,6 +952,7 @@
         [self screenTapped];
         UIActivityIndicatorView *curAct  = [netActs   objectAtIndex:picTag];
         UIImageView *curImageView = [picsViews objectAtIndex:picTag];
+        DKPictureWrapper *picWr = [pics objectAtIndex:picTag];
         
         if (self.navigationController.navigationBar.frame.origin.y < 0) {
             
@@ -960,7 +973,9 @@
             self.navigationController.navigationBar.tintColor = defaultColor;
             [curAct setColor:[UIColor grayColor]];
             [curImageView setTintColor:[UIColor grayColor]];
-            [curImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            if (!picWr.originLoaded) {
+                [curImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            }
             [UIView commitAnimations];
             
             
@@ -998,7 +1013,10 @@
             self.view.backgroundColor = [UIColor blackColor];
             [curAct setColor:[UIColor whiteColor]];
             [curImageView setTintColor:[UIColor whiteColor]];
-            [curImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            if (!picWr.originLoaded) {
+                [curImageView setImage:PICS_NO_IMAGE];
+            }
+
             self.navigationController.navigationBar.tintColor = [UIColor blackColor];
             [UIView commitAnimations];
             

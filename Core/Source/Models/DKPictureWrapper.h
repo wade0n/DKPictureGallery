@@ -27,7 +27,9 @@
 @property(nonatomic, retain) NSString   *minPicKey;
 @property(nonatomic, retain) NSURL      *minPicUrl;
 @property(nonatomic, retain) UIImage    *minPic;
+@property(nonatomic, retain) UIImage    *fullPic;
 @property(nonatomic, retain) UIImage    *rectImage;
+@property(nonatomic)         BOOL       originLoaded;
 @property(nonatomic)         int        time;
 @property(nonatomic)         int        picWidth;
 @property(nonatomic)         int        picHeight;
