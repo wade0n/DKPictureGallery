@@ -648,7 +648,7 @@
                 curImageCaptured.image =  [curImageCaptured.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             }
             
-            [curImageCaptured setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , scrollHeight)];
+            [curImageCaptured setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT)];
             [curImageCaptured setContentMode:UIViewContentModeCenter];
             postArr.originLoaded = NO;
         }
@@ -676,7 +676,7 @@
                 nextImageCaptured.image =  [nextImageCaptured.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             }
             
-            [nextImageCaptured    setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE)];
+            [nextImageCaptured    setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT)];
             [nextImageCaptured    setContentMode:UIViewContentModeCenter];
             nextPic.originLoaded = NO;
         }
@@ -702,7 +702,7 @@
                 preImageCaptured.image =  [preImageCaptured.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             }
            
-            [preImageCaptured    setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT - NAVIGATION_BAR_SIZE)];
+            [preImageCaptured    setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT)];
             [preImageCaptured    setContentMode:UIViewContentModeCenter];
             prePic.originLoaded = NO;
         }
