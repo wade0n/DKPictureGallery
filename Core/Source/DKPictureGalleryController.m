@@ -318,7 +318,10 @@
     NSString    *sizeStr = [NSString    stringWithFormat:@"%@: %ix%i", @"Размер", picWR.picWidth, picWR.picHeight];
     NSArray *range = [picWR.urlShowStr componentsSeparatedByString:@"/"];
     
-    NSString *str = [range objectAtIndex:2];
+    NSString *str = nil;
+    if (str.length > 2)
+        str = [range objectAtIndex:2];
+    
     [info   appendFormat:@"%@: %@",@"URL",str];
     NSString *url = [NSString   stringWithFormat:@"%@: %@",@"Источник",str];
     [button setTitle:info forState:UIControlStateNormal];
