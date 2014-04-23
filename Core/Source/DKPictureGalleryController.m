@@ -319,7 +319,7 @@
     NSArray *range = [picWR.urlShowStr componentsSeparatedByString:@"/"];
     
     NSString *str = nil;
-    if (str.length > 2)
+    if ([range count] > 2)
         str = [range objectAtIndex:2];
     
     [info   appendFormat:@"%@: %@",@"URL",str];
@@ -725,7 +725,6 @@
     
 }
 
-
 #pragma mark init
 
 - (void)startUp{
@@ -738,7 +737,7 @@
     scroll.scrollsToTop = NO;
     scroll.bounces = NO;
    
-    
+    [self observeApplicationNotifications];
 }
 
 -(id)init{
@@ -777,6 +776,9 @@
 }
 
 
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 #pragma mark - orientation
 
 
@@ -966,26 +968,31 @@
             [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
             
             // hide nav bar
-            [UIView beginAnimations:nil context:nil];
-            [UIView setAnimationDuration:animationDuration];
-            
-            self.navigationController.navigationBar.frame = CGRectMake(0, STATUS_BAR_SIZE, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
-            
-            self.view.backgroundColor = [UIColor whiteColor];
-            
-            self.navigationController.navigationBar.tintColor = defaultColor;
-            [curAct setColor:[UIColor grayColor]];
-            [curImageView setTintColor:[UIColor grayColor]];
-            if (!picWr.originLoaded  && !curAct.isAnimating) {
-                curImageView.image =  [curImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-            }
-            [UIView commitAnimations];
-            
-            [[UIApplication sharedApplication] setStatusBarHidden:YES];
-            
             
             navBarHidden = NO;
             
+
+            [UIView animateWithDuration:animationDuration animations:^{
+                self.navigationController.navigationBar.frame = CGRectMake(0, STATUS_BAR_SIZE, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
+                
+                self.view.backgroundColor = [UIColor whiteColor];
+                [self setNeedsStatusBarAppearanceUpdate];
+                self.navigationController.navigationBar.tintColor = defaultColor;
+                [curAct setColor:[UIColor grayColor]];
+                [curImageView setTintColor:[UIColor grayColor]];
+                if (!picWr.originLoaded  && !curAct.isAnimating) {
+                    curImageView.image =  [curImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                }
+
+            } completion:^(BOOL finished) {
+                
+            }];
+            
+            
+        
+            
+            
+            //[self setNeedsStatusBarAppearanceUpdate];
         }
         else{
             
@@ -1008,26 +1015,27 @@
             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
             
             // hide nav bar
-            [UIView beginAnimations:nil context:nil];
-            [UIView setAnimationDuration:animationDuration];
-            
-            self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
-            
-            self.view.backgroundColor = [UIColor blackColor];
-            [curAct setColor:[UIColor whiteColor]];
-            [curImageView setTintColor:[UIColor whiteColor]];
-            if (!picWr.originLoaded && !curAct.isAnimating) {
-                [curImageView setImage:PICS_NO_IMAGE];
-            }
-
-            self.navigationController.navigationBar.tintColor = [UIColor blackColor];
-            [UIView commitAnimations];
-            
-            [[UIApplication sharedApplication] setStatusBarHidden:NO];
-            
-            
+            ;
             
             navBarHidden = YES;
+            [UIView animateWithDuration:animationDuration animations:^{
+                self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
+                
+                self.view.backgroundColor = [UIColor blackColor];
+                [curAct setColor:[UIColor whiteColor]];
+                [curImageView setTintColor:[UIColor whiteColor]];
+                if (!picWr.originLoaded && !curAct.isAnimating) {
+                    [curImageView setImage:PICS_NO_IMAGE];
+                }
+                [self setNeedsStatusBarAppearanceUpdate];
+                self.navigationController.navigationBar.tintColor = [UIColor blackColor];
+            } completion:^(BOOL finished) {
+            }];
+            
+            
+            
+            
+
             
         }
         
@@ -1371,6 +1379,49 @@
         isInBrowser = NO;
         }
     
+    
+}
+
+#pragma mark status bar customization
+- (UIStatusBarStyle)preferredStatusBarStyle{
+    if (navBarHidden) {
+        return UIStatusBarStyleLightContent;
+    }else
+        return UIStatusBarStyleDefault;
+}
+#pragma mark observing notifications
+
+- (void)observeApplicationNotifications
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    // restart scrolling when the app has been activated
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(enterForeground)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(becomeActive)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+    
+}
+
+- (void)enterForeground{
+    NSLog(@"enter for");
+    
+}
+
+- (void)becomeActive{
+    NSLog(@"become active");
+    if (navBarHidden) {
+        self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
+        
+        self.view.backgroundColor = [UIColor redColor];
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
+ 
     
 }
 
