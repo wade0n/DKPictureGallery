@@ -981,7 +981,7 @@
             }
             [UIView commitAnimations];
             
-            
+            [[UIApplication sharedApplication] setStatusBarHidden:YES];
             
             
             navBarHidden = NO;
@@ -1023,7 +1023,7 @@
             self.navigationController.navigationBar.tintColor = [UIColor blackColor];
             [UIView commitAnimations];
             
-            
+            [[UIApplication sharedApplication] setStatusBarHidden:NO];
             
             
             
