@@ -31,6 +31,8 @@
 		774F96681828EB710086A013 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774F96671828EB710086A013 /* XCTest.framework */; };
 		774F96691828EB710086A013 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774F96451828EB710086A013 /* Foundation.framework */; };
 		774F966A1828EB710086A013 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774F96491828EB710086A013 /* UIKit.framework */; };
+		77D5EF4E195DB43E0063656D /* DKTransitionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D5EF4D195DB43E0063656D /* DKTransitionDelegate.m */; };
+		77D5EF51195DB44F0063656D /* DKAnimationTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D5EF50195DB44F0063656D /* DKAnimationTransition.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +78,10 @@
 		774F96491828EB710086A013 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		774F96661828EB710086A013 /* PictureGalleryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PictureGalleryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		774F96671828EB710086A013 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		77D5EF4C195DB43E0063656D /* DKTransitionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKTransitionDelegate.h; path = Transition/DKTransitionDelegate.h; sourceTree = "<group>"; };
+		77D5EF4D195DB43E0063656D /* DKTransitionDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DKTransitionDelegate.m; path = Transition/DKTransitionDelegate.m; sourceTree = "<group>"; };
+		77D5EF4F195DB44F0063656D /* DKAnimationTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKAnimationTransition.h; path = Transition/DKAnimationTransition.h; sourceTree = "<group>"; };
+		77D5EF50195DB44F0063656D /* DKAnimationTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DKAnimationTransition.m; path = Transition/DKAnimationTransition.m; sourceTree = "<group>"; };
 		90A7A93982BE4C84AF641724 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -150,6 +156,10 @@
 				77284908188FB038005F91B0 /* DKConstants.m */,
 				77284909188FB038005F91B0 /* DKPictureGalleryController.h */,
 				7728490A188FB038005F91B0 /* DKPictureGalleryController.m */,
+				77D5EF4C195DB43E0063656D /* DKTransitionDelegate.h */,
+				77D5EF4D195DB43E0063656D /* DKTransitionDelegate.m */,
+				77D5EF4F195DB44F0063656D /* DKAnimationTransition.h */,
+				77D5EF50195DB44F0063656D /* DKAnimationTransition.m */,
 				77DA1FB318E4649D001AC9BD /* Views */,
 				7728490B188FB038005F91B0 /* Extensions */,
 				77284910188FB038005F91B0 /* Models */,
@@ -376,10 +386,12 @@
 				77284919188FB038005F91B0 /* NSString+DKStringHTML.m in Sources */,
 				7728491B188FB038005F91B0 /* DKPictureWrapper.m in Sources */,
 				77284917188FB038005F91B0 /* DKConstants.m in Sources */,
+				77D5EF4E195DB43E0063656D /* DKTransitionDelegate.m in Sources */,
 				7728491A188FB038005F91B0 /* UIView+DKExtensions.m in Sources */,
 				77284900188FAF4B005F91B0 /* ViewController.m in Sources */,
 				77284918188FB038005F91B0 /* DKPictureGalleryController.m in Sources */,
 				772848FD188FAF4B005F91B0 /* AppDelegate.m in Sources */,
+				77D5EF51195DB44F0063656D /* DKAnimationTransition.m in Sources */,
 				772848FE188FAF4B005F91B0 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
