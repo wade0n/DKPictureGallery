@@ -7,6 +7,7 @@
 //
 
 #import "DKAnimationTransition.h"
+#import "DKPictureGalleryController.h"
 
 
 static NSTimeInterval const DKAnimatedTransitionDuration = 0.5f;
@@ -17,15 +18,24 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
 {
     UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    DKPictureGalleryController *toViewController = (DKPictureGalleryController *)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIView *container = [transitionContext containerView];
-    
+    UIImageView *imgView;
     if (self.reverse) {
         [container insertSubview:toViewController.view belowSubview:fromViewController.view];
     }
     else {
-        toViewController.view.transform = CGAffineTransformMakeScale(0, 0);
-        [container addSubview:toViewController.view];
+        if (toViewController.transitionSet) {
+            imgView = [[UIImageView alloc] initWithFrame:toViewController.startFrame];
+            [imgView setImage:toViewController.transitionImage];
+            [container addSubview:imgView];
+        }else{
+            toViewController.view.transform = CGAffineTransformMakeScale(0, 0);
+            [container addSubview:toViewController.view];
+
+        }
+
+        
     }
     
     [UIView animateKeyframesWithDuration:DKAnimatedTransitionDuration delay:0 options:0 animations:^{
@@ -33,9 +43,17 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
             fromViewController.view.transform = CGAffineTransformMakeScale(0, 0);
         }
         else {
-            toViewController.view.transform = CGAffineTransformIdentity;
+            if (toViewController.transitionSet) {
+                [imgView setFrame:toViewController.endFrame];
+                
+            }else{
+                toViewController.view.transform = CGAffineTransformIdentity;
+            }
+            
+            
         }
     } completion:^(BOOL finished) {
+        [imgView removeFromSuperview];
         [transitionContext completeTransition:finished];
     }];
 }

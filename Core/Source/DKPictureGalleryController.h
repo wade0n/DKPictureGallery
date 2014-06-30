@@ -66,6 +66,10 @@
 @property(nonatomic, strong) NSMutableArray  *pics;
 @property(nonatomic, strong) UIActivityViewController    *activity;
 @property(nonatomic, copy) void (^selectedPicture)(int selectedNumber);
+@property(nonatomic) BOOL transitionSet;
+@property(nonatomic) CGRect startFrame;
+@property(nonatomic) CGRect endFrame;
+@property(nonatomic, strong) UIImage *transitionImage;
 
 
 - (void)setCurrentPicture:(DKPictureWrapper *)pic
@@ -98,4 +102,5 @@
 -   (void)confirmSave;
 -   (void)setPicNum:(int)position;
 
+- (void)setTransitionRect:(CGRect)startFrame andImage:(UIImage *)startImage finishFrame:(CGRect)endFrame;
 @end

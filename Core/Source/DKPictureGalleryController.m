@@ -35,6 +35,48 @@
 @synthesize pics = _pics;
 
 
+- (void)setTransitionRect:(CGRect)startFrame andImage:(UIImage *)startImage finishFrame:(CGRect)endFrame{
+    if (startImage) {
+        _startFrame = startFrame;
+        
+        _transitionImage = startImage;
+        
+        
+        float screenWidth;
+        float screenHeight;
+        float scaledImageWidth ;
+        float scaledImageHeight;
+        
+        if(endFrame.size.width > SCREEN_SIZE_WIDTH   ||  endFrame.size.height > (SCREEN_SIZE_HEIGHT)){
+            float widthScale =  SCREEN_SIZE_WIDTH / endFrame.size.width;
+            float heightScale = (SCREEN_SIZE_HEIGHT)/ endFrame.size.height;
+            float resultScale = (widthScale < heightScale) ? widthScale : heightScale;
+            
+            
+            scaledImageWidth = endFrame.size.width * resultScale;
+            scaledImageHeight = endFrame.size.height * resultScale;
+            screenWidth = ( SCREEN_SIZE_WIDTH - scaledImageWidth ) / 2;
+            screenHeight = ( SCREEN_SIZE_HEIGHT - scaledImageHeight ) / 2 ;
+            
+            
+        }
+        else{
+            screenWidth = (SCREEN_SIZE_WIDTH - endFrame.size.width)/2;
+            screenHeight = (SCREEN_SIZE_HEIGHT   - endFrame.size.height)/2 ;
+            scaledImageWidth = endFrame.size.width ;
+            scaledImageHeight = endFrame.size.width;
+        }
+        
+        _endFrame = CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageWidth);
+
+        
+        _transitionSet = YES;
+    }else{
+       _transitionSet = NO;
+    }
+
+}
+
 - (void)setPicNum:(int)position{
     
      picTag = position;
