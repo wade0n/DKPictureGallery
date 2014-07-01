@@ -31,6 +31,7 @@
 		774F96681828EB710086A013 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774F96671828EB710086A013 /* XCTest.framework */; };
 		774F96691828EB710086A013 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774F96451828EB710086A013 /* Foundation.framework */; };
 		774F966A1828EB710086A013 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 774F96491828EB710086A013 /* UIKit.framework */; };
+		778EBB671962D59D000CF712 /* PictureGalleryBoard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 778EBB661962D59D000CF712 /* PictureGalleryBoard.storyboard */; };
 		77D5EF4E195DB43E0063656D /* DKTransitionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D5EF4D195DB43E0063656D /* DKTransitionDelegate.m */; };
 		77D5EF51195DB44F0063656D /* DKAnimationTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D5EF50195DB44F0063656D /* DKAnimationTransition.m */; };
 /* End PBXBuildFile section */
@@ -78,6 +79,7 @@
 		774F96491828EB710086A013 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		774F96661828EB710086A013 /* PictureGalleryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PictureGalleryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		774F96671828EB710086A013 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		778EBB661962D59D000CF712 /* PictureGalleryBoard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PictureGalleryBoard.storyboard; sourceTree = "<group>"; };
 		77D5EF4C195DB43E0063656D /* DKTransitionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKTransitionDelegate.h; path = Transition/DKTransitionDelegate.h; sourceTree = "<group>"; };
 		77D5EF4D195DB43E0063656D /* DKTransitionDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DKTransitionDelegate.m; path = Transition/DKTransitionDelegate.m; sourceTree = "<group>"; };
 		77D5EF4F195DB44F0063656D /* DKAnimationTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKAnimationTransition.h; path = Transition/DKAnimationTransition.h; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				77284903188FB038005F91B0 /* no_photo@2x.png */,
 				77284904188FB038005F91B0 /* no_photo@2x~ipad.png */,
 				77284905188FB038005F91B0 /* no_photo~ipad.png */,
+				778EBB661962D59D000CF712 /* PictureGalleryBoard.storyboard */,
 			);
 			name = Resources;
 			path = Core/Resources;
@@ -333,6 +336,7 @@
 				772848FF188FAF4B005F91B0 /* PictureGallery-Info.plist in Resources */,
 				77284916188FB038005F91B0 /* no_photo~ipad.png in Resources */,
 				77284914188FB038005F91B0 /* no_photo@2x.png in Resources */,
+				778EBB671962D59D000CF712 /* PictureGalleryBoard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

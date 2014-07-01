@@ -12,7 +12,7 @@
 #import "AMBLurView.h"
 
 
-@interface DKPictureGalleryController : UIViewController <UIScrollViewDelegate,UIActionSheetDelegate>{
+@interface DKPictureGalleryController : UIViewController <UIScrollViewDelegate,UIActionSheetDelegate, UICollectionViewDataSource>{
     
     UITapGestureRecognizer *singleTap;
     UITapGestureRecognizer *doubleTap;
@@ -57,6 +57,10 @@
     
     AMBlurView *blurView;
     
+    
+    ///// new storyboard View
+    
+    IBOutlet UICollectionView *_collectionView;
     
     
 }

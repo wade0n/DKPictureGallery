@@ -784,6 +784,9 @@
 
 -(id)init{
     self = [super init];
+    
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"PictureGalleryBoard" bundle:nil];
+     self = (DKPictureGalleryController *)[sb instantiateViewControllerWithIdentifier:@"pictureGallery"];
     if (self) {
         [self startUp];
     }
@@ -1451,7 +1454,6 @@
 }
 
 - (void)enterForeground{
-    NSLog(@"enter for");
     
 }
 
@@ -1467,4 +1469,54 @@
     
 }
 
+#pragma mark collectionView dataSource
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return pics.count;
+}
+
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    UICollectionViewCell *picCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"picCell" forIndexPath:indexPath];\
+    
+    UIScrollView *minScroll = (UIScrollView *)[picCell viewWithTag:11];
+    UIImageView *picView = (UIImageView *)[picCell viewWithTag:12];
+    UIActivityIndicatorView *act = (UIActivityIndicatorView *)[picCell viewWithTag:13];
+    DKPictureWrapper  *picCur = [pics    objectAtIndex:indexPath.row];
+    
+    
+    float screenWidth;
+    float screenHeight;
+    float scaledImageWidth ;
+    float scaledImageHeight;
+    
+    if(picCur.picWidth > scrollWidth   ||  picCur.picHeight > (SCREEN_SIZE_HEIGHT)){
+        float widthScale =  scrollWidth / picCur.picWidth;
+        float heightScale = (scrollHeight)/ picCur.picHeight;
+        float resultScale = (widthScale < heightScale) ? widthScale : heightScale;
+        
+        
+        scaledImageWidth = picCur.picWidth * resultScale;
+        scaledImageHeight = picCur.picHeight * resultScale;
+        screenWidth = ( scrollWidth - scaledImageWidth ) / 2;
+        screenHeight = ( scrollHeight - scaledImageHeight ) / 2 ;
+        
+        
+    }
+    else{
+        screenWidth = (scrollWidth - picCur.picWidth)/2;
+        screenHeight = (scrollHeight   - picCur.picHeight)/2 ;
+        scaledImageWidth = picCur.picWidth ;
+        scaledImageHeight = picCur.picHeight;
+    }
+    
+    
+    [picView setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
+    
+    return picCell;
+}
 @end
