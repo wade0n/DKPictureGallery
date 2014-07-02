@@ -87,6 +87,103 @@
     
 }
 
+
+- (void)setCollectionPictureNum:(int)number withImagesCount:(int)imagesCount withMinImageArr:(NSMutableArray *)minImageArr withUrlStrArr:(NSMutableArray *)urlStrArr withUrlShowArr:(NSMutableArray *)urlShowStrArr withDateUrl:(NSMutableArray *)dateArr withTitleArr:(NSMutableArray *)titleArr withTitleShowArr:(NSMutableArray *)titleShowArr withSnippetArr:(NSMutableArray *)snippetArr withFileSizeArr:(NSMutableArray *)fileSizesArr withFormatArr:(NSMutableArray *)formatArr withWidthArr:(NSMutableArray *)widthArr withHeightArr:(NSMutableArray *)heightArr withIdArr:(NSMutableArray *)idArr withNameArr:(NSMutableArray *)nameArr withOriginUrlStr:(NSMutableArray *)originUrlStrArr withSource:(NSMutableArray *)sourceArr{
+    NSMutableArray *picWrapperArr = [NSMutableArray new];
+    DKPictureWrapper *picture;
+    
+    for (int i = 0; i < imagesCount; i++ ) {
+        
+        DKPictureWrapper *curPic = [DKPictureWrapper new];
+        
+        if (i < minImageArr.count) {
+            curPic.minPic = [minImageArr objectAtIndex:i];
+        }
+        if (i < urlStrArr.count) {
+            curPic.urlStr = [urlStrArr objectAtIndex:i];
+        }
+        
+        if (i < urlShowStrArr.count) {
+            
+            curPic.urlShowStr = [urlShowStrArr objectAtIndex:i];
+        }
+        
+        if (i < dateArr.count) {
+            
+            curPic.date = [dateArr objectAtIndex:i];
+        }
+        
+        if (i < titleArr.count) {
+            
+            curPic.title = [titleArr objectAtIndex:i];
+        }
+        
+        if (i < titleShowArr.count) {
+            
+            curPic.titleShow = [titleShowArr objectAtIndex:i];
+        }
+        
+        if (i < snippetArr.count) {
+            curPic.snippet = [snippetArr objectAtIndex:i];
+        }
+        
+        if (i < fileSizesArr.count) {
+            curPic.fileSize =  [(NSString*)[fileSizesArr objectAtIndex:i] intValue];
+        }
+        
+        if (i < formatArr.count) {
+            curPic.format = [formatArr objectAtIndex:i];
+        }
+        
+        if (i < widthArr.count) {
+            
+            curPic.picWidth = [(NSString*)[widthArr objectAtIndex:i] intValue];
+            
+        }
+        
+        if (i < heightArr.count) {
+            
+            curPic.picHeight = [(NSString*)[heightArr objectAtIndex:i] intValue];
+        }
+        
+        if (i < idArr.count) {
+            
+            curPic.picId = [idArr objectAtIndex:i];
+            
+        }
+        
+        if (i < nameArr.count) {
+            
+            curPic.name = [nameArr objectAtIndex:i];
+        }
+        
+        if (i < originUrlStrArr.count) {
+            
+            curPic.originUrl = [originUrlStrArr objectAtIndex:i];
+        }
+        
+        if (i < minImageArr.count) {
+            
+            curPic.minPic = [minImageArr objectAtIndex:i];
+        }
+        
+        if (i < sourceArr.count) {
+            
+        }
+        
+        if (curPic && i == number) {
+            picture = curPic;
+        }
+        
+        [picWrapperArr addObject:curPic];
+        
+        
+    }
+     [self setCurrentPicture:picture AllPictures:picWrapperArr SetCurrentPosition:number];
+}
+
+
+
 - (void)setPictureNum:(int)number withImagesCount:(int)imagesCount withMinImageArr:(NSMutableArray *)minImageArr withUrlStrArr:(NSMutableArray *)urlStrArr withUrlShowArr:(NSMutableArray *)urlShowStrArr withDateUrl:(NSMutableArray *)dateArr withTitleArr:(NSMutableArray *)titleArr withTitleShowArr:(NSMutableArray *)titleShowArr withSnippetArr:(NSMutableArray *)snippetArr withFileSizeArr:(NSMutableArray *)fileSizesArr withFormatArr:(NSMutableArray *)formatArr withWidthArr:(NSMutableArray *)widthArr withHeightArr:(NSMutableArray *)heightArr withIdArr:(NSMutableArray *)idArr withNameArr:(NSMutableArray *)nameArr withOriginUrlStr:(NSMutableArray *)originUrlStrArr withSource:(NSMutableArray *)sourceArr{
     
     
@@ -180,8 +277,10 @@
         
         
     }
-    [self setCurrentPicture:picture AllPictures:picWrapperArr SetCurrentPosition:number];
+    //[self setCurrentPicture:picture AllPictures:picWrapperArr SetCurrentPosition:number];
+    pics = picWrapperArr;
     
+    [_collectionView reloadData];
 }
 
 
@@ -1484,10 +1583,11 @@
     UICollectionViewCell *picCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"picCell" forIndexPath:indexPath];\
     
     UIScrollView *minScroll = (UIScrollView *)[picCell viewWithTag:11];
-    UIImageView *picView = (UIImageView *)[picCell viewWithTag:12];
+    UIImageView *picView = (UIImageView *)[minScroll viewWithTag:12];
     UIActivityIndicatorView *act = (UIActivityIndicatorView *)[picCell viewWithTag:13];
     DKPictureWrapper  *picCur = [pics    objectAtIndex:indexPath.row];
     
+    UIImageView *curImageCaptured = picView;
     
     float screenWidth;
     float screenHeight;
@@ -1517,6 +1617,54 @@
     
     [picView setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
     
+    
+    
+    if (picCur.originUrl) {
+        [picView setImageWithURL:picCur.originUrl placeholderImage:picCur.minPic completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            
+            
+            if (error)
+            {
+                
+                [act stopAnimating];
+                [curImageCaptured setImage:PICS_NO_IMAGE];
+                if (self.navigationController.navigationBar.frame.origin.y < 0) {
+                    [curImageCaptured setTintColor:[UIColor whiteColor]];
+                }
+                else{
+                    [curImageCaptured setTintColor:[UIColor grayColor]];
+                    curImageCaptured.image =  [curImageCaptured.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                }
+                
+                [curImageCaptured setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT)];
+                [curImageCaptured setContentMode:UIViewContentModeCenter];
+                picCur.originLoaded = NO;
+            }
+            else{
+                picCur.originLoaded = YES;
+                // [curImageCaptured setFrame:CGRectMake((SCREEN_SIZE_WIDTH/2) - image.size.width/2,( SCREEN_SIZE_HEIGHT- NAVIGATION_BAR_SIZE*2)/2  - image.size.height/2, image.size.width, image.size.height)];
+            }
+            [act stopAnimating];
+        }];
+
+    }else {
+        [act stopAnimating];
+        [curImageCaptured setImage:PICS_NO_IMAGE];
+    }
+   
+    
+    
+    
     return picCell;
+}
+
+#pragma mark collectionView delegate
+
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout*)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+  
+    return CGSizeMake(SCREEN_SIZE_WIDTH, SCREEN_SIZE_WIDTH);
 }
 @end

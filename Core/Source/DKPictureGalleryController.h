@@ -12,7 +12,7 @@
 #import "AMBLurView.h"
 
 
-@interface DKPictureGalleryController : UIViewController <UIScrollViewDelegate,UIActionSheetDelegate, UICollectionViewDataSource>{
+@interface DKPictureGalleryController : UIViewController <UIScrollViewDelegate,UIActionSheetDelegate, UICollectionViewDataSource, UICollectionViewDelegate>{
     
     UITapGestureRecognizer *singleTap;
     UITapGestureRecognizer *doubleTap;
@@ -98,7 +98,23 @@
      withOriginUrlStr:(NSMutableArray *)originUrlStrArr
            withSource:(NSMutableArray *)sourceArr;
 
-
+- (void)setCollectionPictureNum:(int)number
+                withImagesCount:(int)imagesCount
+                withMinImageArr:(NSMutableArray *)minImageArr
+                  withUrlStrArr:(NSMutableArray *)urlStrArr
+                 withUrlShowArr:(NSMutableArray *)urlShowStrArr
+                    withDateUrl:(NSMutableArray *)dateArr
+                   withTitleArr:(NSMutableArray *)titleArr
+               withTitleShowArr:(NSMutableArray *)titleShowArr
+                 withSnippetArr:(NSMutableArray *)snippetArr
+                withFileSizeArr:(NSMutableArray *)fileSizesArr
+                  withFormatArr:(NSMutableArray *)formatArr
+                   withWidthArr:(NSMutableArray *)widthArr
+                  withHeightArr:(NSMutableArray *)heightArr
+                      withIdArr:(NSMutableArray *)idArr
+                    withNameArr:(NSMutableArray *)nameArr
+               withOriginUrlStr:(NSMutableArray *)originUrlStrArr
+                     withSource:(NSMutableArray *)sourceArr;
 
 -   (void)setScrollView:(UIScrollView*)tempScrollView;
 -   (void)screenTapped;

@@ -23,10 +23,14 @@
                                     <barButtonItem systemItem="done" id="m0d-Lt-DPb"/>
                                 </items>
                             </toolbar>
-                            <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" pagingEnabled="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="blP-Vk-rNM">
+                            <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="blP-Vk-rNM">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="568" id="Mcf-LC-LsO"/>
+                                    <constraint firstAttribute="width" constant="320" id="sYz-wZ-lKg"/>
+                                </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="u6g-gq-nUr">
                                     <size key="itemSize" width="266" height="569"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -41,27 +45,35 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g0K-uS-JhZ">
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g0K-uS-JhZ">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" tag="12" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eBH-rG-dva">
+                                                            <rect key="frame" x="20" y="150" width="280" height="269"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="269" id="9XT-Iu-ifb"/>
+                                                                <constraint firstAttribute="width" constant="280" id="NVI-GT-WCS"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="qXg-za-rgo">
+                                                            <rect key="frame" x="141" y="266" width="37" height="37"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <color key="color" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </activityIndicatorView>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="eBH-rG-dva" firstAttribute="leading" secondItem="g0K-uS-JhZ" secondAttribute="leading" constant="20" id="LMO-kb-tsK"/>
+                                                        <constraint firstItem="eBH-rG-dva" firstAttribute="top" secondItem="g0K-uS-JhZ" secondAttribute="top" constant="150" id="VXk-wG-JnI"/>
+                                                    </constraints>
                                                 </scrollView>
-                                                <imageView userInteractionEnabled="NO" tag="12" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eBH-rG-dva">
-                                                    <rect key="frame" x="20" y="170" width="280" height="269"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="qXg-za-rgo">
-                                                    <rect key="frame" x="141" y="266" width="37" height="37"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="color" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </activityIndicatorView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="g0K-uS-JhZ" secondAttribute="bottom" id="6KY-XG-FHO"/>
-                                            <constraint firstAttribute="centerY" secondItem="qXg-za-rgo" secondAttribute="centerY" id="8ns-h4-KNq"/>
                                             <constraint firstItem="g0K-uS-JhZ" firstAttribute="top" secondItem="71s-qo-w3J" secondAttribute="top" id="DpC-jP-V9W"/>
-                                            <constraint firstAttribute="centerX" secondItem="qXg-za-rgo" secondAttribute="centerX" id="P57-II-X0g"/>
                                             <constraint firstItem="g0K-uS-JhZ" firstAttribute="leading" secondItem="71s-qo-w3J" secondAttribute="leading" id="tZl-Rh-Sve"/>
                                             <constraint firstAttribute="trailing" secondItem="g0K-uS-JhZ" secondAttribute="trailing" id="wx6-fV-QGZ"/>
                                         </constraints>
@@ -71,6 +83,10 @@
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="blP-Vk-rNM" firstAttribute="leading" secondItem="2qZ-ja-2jw" secondAttribute="leading" id="Tta-TD-BSq"/>
+                            <constraint firstItem="blP-Vk-rNM" firstAttribute="top" secondItem="2qZ-ja-2jw" secondAttribute="top" id="gTb-bU-7qj"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TmS-fc-V2G" userLabel="First Responder" sceneMemberID="firstResponder"/>
