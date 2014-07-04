@@ -121,6 +121,7 @@
 -   (void)saveToAlbum;
 -   (void)confirmSave;
 -   (void)setPicNum:(int)position;
+-   (IBAction)dismiss:(id)sender;
 
 - (void)setTransitionRect:(CGRect)startFrame andImage:(UIImage *)startImage finishFrame:(CGRect)endFrame;
 @end

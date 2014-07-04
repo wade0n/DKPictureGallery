@@ -179,7 +179,9 @@
         
         
     }
-     [self setCurrentPicture:picture AllPictures:picWrapperArr SetCurrentPosition:number];
+     //[self setCurrentPicture:picture AllPictures:picWrapperArr SetCurrentPosition:number];
+    pics = picWrapperArr;
+    [_collectionView reloadData];
 }
 
 
@@ -475,186 +477,186 @@
 }
 
 -   (void) setScrollView:(UIScrollView*)tempScrollView{
-    if (tempScrollView.tag == 13) {
-        
-        
-        scrollWidth = SCREEN_SIZE_WIDTH ;
-        scrollHeight    =    SCREEN_SIZE_HEIGHT;
-        
-        [tempScrollView  setFrame:CGRectMake(0,  0, SCREEN_SIZE_WIDTH+10, SCREEN_SIZE_HEIGHT )];
-        
-        picsViews   =   [[NSMutableArray alloc]  init];
-        scrollViews =   [[NSMutableArray alloc]  init];
-        netActs      =   [[NSMutableArray alloc]  init];
-        
-        scroll = tempScrollView;
-        scroll.backgroundColor = [UIColor clearColor];
-        //
-        
-        //
-        //    D_Log(@"width %f height %f",scrollWidth,scrollHeight);
-        //    int localTag = picTag;
-        //
-        DKPictureWrapper *postArr       = [[DKPictureWrapper    alloc]  init];
-        DKPictureWrapper *prePic        = [[DKPictureWrapper alloc]  init];
-        DKPictureWrapper *prePrePic     = [[DKPictureWrapper  alloc]  init];
-        DKPictureWrapper *nextPic       = [[DKPictureWrapper alloc]  init];
-        DKPictureWrapper *nextNextPic   = [[DKPictureWrapper    alloc]  init];
-        
-        postArr    =   [pics    objectAtIndex:picTag];
-        
-        
-        if (picTag == pics.count-1) {
-            nextPic =   [pics objectAtIndex:0];
-            
-        }
-        else{
-            nextPic = [pics  objectAtIndex:picTag+1];
-        }
-        
-        if (picTag  ==  pics.count-2) {
-            nextNextPic = [pics objectAtIndex:0];
-        }
-        
-        else{
-            nextNextPic = [pics objectAtIndex:picTag];
-        }
-        
-        if (picTag  ==  0) {
-            prePic  =   [pics   objectAtIndex:pics.count-1];
-        }
-        else{
-            prePic  =   [pics objectAtIndex:picTag-1];
-        }
-        
-        if (picTag == 1) {
-            prePrePic = [pics objectAtIndex:pics.count-1];
-        }
-        else{
-            prePrePic   =   [pics objectAtIndex:picTag];
-        }
-        
-        
-        tempScrollView.contentSize = CGSizeMake(picCount * (SCREEN_SIZE_WIDTH + PICS_COLLECTION_SCROLL_IMAGE_DIVIDER), 0);
-        
-        CGRect frame = CGRectMake(0, 0 ,tempScrollView.frame.size.width , SCREEN_SIZE_HEIGHT );
-        frame.origin.x =tempScrollView.frame.size.width*picTag;
-        frame.origin.y = 0;
-        
-        tempScrollView.pagingEnabled = YES;
-        [tempScrollView setScrollEnabled:YES];
-        
-        //[tempScrollView setContentOffset:CGPointMake(, 0)];
-        [tempScrollView setContentOffset:CGPointMake(scroll.frame.size.width*picTag, 0)];
-        
-        
-        
-        for (int i = 0; i < pics.count; i++) {
-            
-            DKPictureWrapper  *picCur = [pics    objectAtIndex:i];
-            UIImageView *picView = [[UIImageView alloc]  initWithImage:picCur.minPic];
-            
-            
-            UIScrollView * minScroll = [[UIScrollView    alloc]  init];
-            [minScroll setDelegate:self];
-            
-            UIActivityIndicatorView *act = [[UIActivityIndicatorView alloc]  initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-            
-            
-            
-            float screenWidth;
-            float screenHeight;
-            float scaledImageWidth ;
-            float scaledImageHeight;
-            
-            if(picCur.picWidth > scrollWidth   ||  picCur.picHeight > (SCREEN_SIZE_HEIGHT)){
-                float widthScale =  scrollWidth / picCur.picWidth;
-                float heightScale = (scrollHeight)/ picCur.picHeight;
-                float resultScale = (widthScale < heightScale) ? widthScale : heightScale;
-                
-                
-                scaledImageWidth = picCur.picWidth * resultScale;
-                scaledImageHeight = picCur.picHeight * resultScale;
-                screenWidth = ( scrollWidth - scaledImageWidth ) / 2;
-                screenHeight = ( scrollHeight - scaledImageHeight ) / 2 ;
-                
-                
-            }
-            else{
-                screenWidth = (scrollWidth - picCur.picWidth)/2;
-                screenHeight = (scrollHeight   - picCur.picHeight)/2 ;
-                scaledImageWidth = picCur.picWidth ;
-                scaledImageHeight = picCur.picHeight;
-            }
-            
-            float   divider =   0.0f;
-            
-            divider =   PICS_COLLECTION_SCROLL_IMAGE_DIVIDER*i;
-            
-            
-            [minScroll setFrame:CGRectMake(SCREEN_SIZE_WIDTH*i +divider , - NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE, 8), SCREEN_SIZE_WIDTH,tempScrollView.frame.size.height )];
-            
-            [minScroll setBackgroundColor:[UIColor clearColor]];
-            [tempScrollView addSubview:minScroll];
-            
-            [picView setFrame:CGRectMake(screenWidth, screenHeight , scaledImageWidth, scaledImageHeight)];
-            
-            
-            
-            
-            
-            //[minScroll setCenter:CGPointMake(minScroll.center.x, tempScrollView.center.y)];
-            [picsViews addObject:picView];
-            //[picView setCenter:CGPointMake(320/2, 436/2)];
-            
-            [act setFrame:CGRectMake(SCREEN_SIZE_WIDTH/2 - act.frame.size.width/2, SCREEN_SIZE_HEIGHT/2- act.frame.size.height/2, act.frame.size.width, act.frame.size.width)];
-            
-            [act setHidesWhenStopped:YES];
-           
-            [act stopAnimating];
-            
-            //[picView setCenter:CGPointMake(SCREEN_SIZE_WIDTH*i +divider + SCREEN_SIZE_WIDTH/2, scrollHeight/2)];
-            //[tempScrollView addSubview:picView]
-            // [minScroll   addSubview:act];
-            [minScroll   addSubview:picView];
-            [minScroll   addSubview:act];
-            
-            [minScroll setContentSize:CGSizeMake(SCREEN_SIZE_WIDTH, tempScrollView.frame.size.height )];
-            
-            //[picView setCenter:CGPointMake(minScroll.center.x, minScroll.center.y)];
-            minScroll.maximumZoomScale   = 4.0f;
-            minScroll.minimumZoomScale  =   1.0f;
-            minScroll.scrollEnabled =   YES;
-            minScroll.showsHorizontalScrollIndicator = YES;
-            minScroll.showsVerticalScrollIndicator = YES;
-            minScroll.scrollsToTop = NO;
-            minScroll.bounces = NO;
-            
-            
-            
-            [scrollViews    addObject:minScroll];
-            [netActs    addObject:act];
-            
-            
-        }
-        
-        currentImage = [picsViews   objectAtIndex:picTag];
-        
-        [self changePage];
-        [self screenTapped];
-        
-        tempScrollView.scrollEnabled = YES;
-        tempScrollView.maximumZoomScale = 2.0;
-        tempScrollView.minimumZoomScale = 1.0;
-        tempScrollView.zoomScale = 1.0;
-        
-        
-        tempScrollView.pagingEnabled = YES;
-        
-        
-        
-    }
-    
+//    if (tempScrollView.tag == 13) {
+//        
+//        
+//        scrollWidth = SCREEN_SIZE_WIDTH ;
+//        scrollHeight    =    SCREEN_SIZE_HEIGHT;
+//        
+//        [tempScrollView  setFrame:CGRectMake(0,  0, SCREEN_SIZE_WIDTH+10, SCREEN_SIZE_HEIGHT )];
+//        
+//        picsViews   =   [[NSMutableArray alloc]  init];
+//        scrollViews =   [[NSMutableArray alloc]  init];
+//        netActs      =   [[NSMutableArray alloc]  init];
+//        
+//        scroll = tempScrollView;
+//        scroll.backgroundColor = [UIColor clearColor];
+//        //
+//        
+//        //
+//        //    D_Log(@"width %f height %f",scrollWidth,scrollHeight);
+//        //    int localTag = picTag;
+//        //
+//        DKPictureWrapper *postArr       = [[DKPictureWrapper    alloc]  init];
+//        DKPictureWrapper *prePic        = [[DKPictureWrapper alloc]  init];
+//        DKPictureWrapper *prePrePic     = [[DKPictureWrapper  alloc]  init];
+//        DKPictureWrapper *nextPic       = [[DKPictureWrapper alloc]  init];
+//        DKPictureWrapper *nextNextPic   = [[DKPictureWrapper    alloc]  init];
+//        
+//        postArr    =   [pics    objectAtIndex:picTag];
+//        
+//        
+//        if (picTag == pics.count-1) {
+//            nextPic =   [pics objectAtIndex:0];
+//            
+//        }
+//        else{
+//            nextPic = [pics  objectAtIndex:picTag+1];
+//        }
+//        
+//        if (picTag  ==  pics.count-2) {
+//            nextNextPic = [pics objectAtIndex:0];
+//        }
+//        
+//        else{
+//            nextNextPic = [pics objectAtIndex:picTag];
+//        }
+//        
+//        if (picTag  ==  0) {
+//            prePic  =   [pics   objectAtIndex:pics.count-1];
+//        }
+//        else{
+//            prePic  =   [pics objectAtIndex:picTag-1];
+//        }
+//        
+//        if (picTag == 1) {
+//            prePrePic = [pics objectAtIndex:pics.count-1];
+//        }
+//        else{
+//            prePrePic   =   [pics objectAtIndex:picTag];
+//        }
+//        
+//        
+//        tempScrollView.contentSize = CGSizeMake(picCount * (SCREEN_SIZE_WIDTH + PICS_COLLECTION_SCROLL_IMAGE_DIVIDER), 0);
+//        
+//        CGRect frame = CGRectMake(0, 0 ,tempScrollView.frame.size.width , SCREEN_SIZE_HEIGHT );
+//        frame.origin.x =tempScrollView.frame.size.width*picTag;
+//        frame.origin.y = 0;
+//        
+//        tempScrollView.pagingEnabled = YES;
+//        [tempScrollView setScrollEnabled:YES];
+//        
+//        //[tempScrollView setContentOffset:CGPointMake(, 0)];
+//        [tempScrollView setContentOffset:CGPointMake(scroll.frame.size.width*picTag, 0)];
+//        
+//        
+//        
+//        for (int i = 0; i < pics.count; i++) {
+//            
+//            DKPictureWrapper  *picCur = [pics    objectAtIndex:i];
+//            UIImageView *picView = [[UIImageView alloc]  initWithImage:picCur.minPic];
+//            
+//            
+//            UIScrollView * minScroll = [[UIScrollView    alloc]  init];
+//            [minScroll setDelegate:self];
+//            
+//            UIActivityIndicatorView *act = [[UIActivityIndicatorView alloc]  initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//            
+//            
+//            
+//            float screenWidth;
+//            float screenHeight;
+//            float scaledImageWidth ;
+//            float scaledImageHeight;
+//            
+//            if(picCur.picWidth > scrollWidth   ||  picCur.picHeight > (SCREEN_SIZE_HEIGHT)){
+//                float widthScale =  scrollWidth / picCur.picWidth;
+//                float heightScale = (scrollHeight)/ picCur.picHeight;
+//                float resultScale = (widthScale < heightScale) ? widthScale : heightScale;
+//                
+//                
+//                scaledImageWidth = picCur.picWidth * resultScale;
+//                scaledImageHeight = picCur.picHeight * resultScale;
+//                screenWidth = ( scrollWidth - scaledImageWidth ) / 2;
+//                screenHeight = ( scrollHeight - scaledImageHeight ) / 2 ;
+//                
+//                
+//            }
+//            else{
+//                screenWidth = (scrollWidth - picCur.picWidth)/2;
+//                screenHeight = (scrollHeight   - picCur.picHeight)/2 ;
+//                scaledImageWidth = picCur.picWidth ;
+//                scaledImageHeight = picCur.picHeight;
+//            }
+//            
+//            float   divider =   0.0f;
+//            
+//            divider =   PICS_COLLECTION_SCROLL_IMAGE_DIVIDER*i;
+//            
+//            
+//            [minScroll setFrame:CGRectMake(SCREEN_SIZE_WIDTH*i +divider , - NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE, 8), SCREEN_SIZE_WIDTH,tempScrollView.frame.size.height )];
+//            
+//            [minScroll setBackgroundColor:[UIColor clearColor]];
+//            [tempScrollView addSubview:minScroll];
+//            
+//            [picView setFrame:CGRectMake(screenWidth, screenHeight , scaledImageWidth, scaledImageHeight)];
+//            
+//            
+//            
+//            
+//            
+//            //[minScroll setCenter:CGPointMake(minScroll.center.x, tempScrollView.center.y)];
+//            [picsViews addObject:picView];
+//            //[picView setCenter:CGPointMake(320/2, 436/2)];
+//            
+//            [act setFrame:CGRectMake(SCREEN_SIZE_WIDTH/2 - act.frame.size.width/2, SCREEN_SIZE_HEIGHT/2- act.frame.size.height/2, act.frame.size.width, act.frame.size.width)];
+//            
+//            [act setHidesWhenStopped:YES];
+//           
+//            [act stopAnimating];
+//            
+//            //[picView setCenter:CGPointMake(SCREEN_SIZE_WIDTH*i +divider + SCREEN_SIZE_WIDTH/2, scrollHeight/2)];
+//            //[tempScrollView addSubview:picView]
+//            // [minScroll   addSubview:act];
+//            [minScroll   addSubview:picView];
+//            [minScroll   addSubview:act];
+//            
+//            [minScroll setContentSize:CGSizeMake(SCREEN_SIZE_WIDTH, tempScrollView.frame.size.height )];
+//            
+//            //[picView setCenter:CGPointMake(minScroll.center.x, minScroll.center.y)];
+//            minScroll.maximumZoomScale   = 4.0f;
+//            minScroll.minimumZoomScale  =   1.0f;
+//            minScroll.scrollEnabled =   YES;
+//            minScroll.showsHorizontalScrollIndicator = YES;
+//            minScroll.showsVerticalScrollIndicator = YES;
+//            minScroll.scrollsToTop = NO;
+//            minScroll.bounces = NO;
+//            
+//            
+//            
+//            [scrollViews    addObject:minScroll];
+//            [netActs    addObject:act];
+//            
+//            
+//        }
+//        
+//        currentImage = [picsViews   objectAtIndex:picTag];
+//        
+//        [self changePage];
+//        [self screenTapped];
+//        
+//        tempScrollView.scrollEnabled = YES;
+//        tempScrollView.maximumZoomScale = 2.0;
+//        tempScrollView.minimumZoomScale = 1.0;
+//        tempScrollView.zoomScale = 1.0;
+//        
+//        
+//        tempScrollView.pagingEnabled = YES;
+//        
+//        
+//        
+//    }
+//    
 }
 
 - (void)changePage{
@@ -1191,6 +1193,10 @@
 
 #pragma mark pics actions
 
+- (IBAction)dismiss:(id)sender{
+     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
 -   (void)  saveToAlbum{
     
     
@@ -1580,7 +1586,7 @@
 
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    UICollectionViewCell *picCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"picCell" forIndexPath:indexPath];\
+    UICollectionViewCell *picCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"picCell" forIndexPath:indexPath];
     
     UIScrollView *minScroll = (UIScrollView *)[picCell viewWithTag:11];
     UIImageView *picView = (UIImageView *)[minScroll viewWithTag:12];
@@ -1615,9 +1621,9 @@
     }
     
     
-    [picView setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
+    //[picView setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
     
-    
+    UIImageView *picViewCapt = picView;
     
     if (picCur.originUrl) {
         [picView setImageWithURL:picCur.originUrl placeholderImage:picCur.minPic completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
@@ -1642,6 +1648,7 @@
             }
             else{
                 picCur.originLoaded = YES;
+                [picViewCapt setImage:image];
                 // [curImageCaptured setFrame:CGRectMake((SCREEN_SIZE_WIDTH/2) - image.size.width/2,( SCREEN_SIZE_HEIGHT- NAVIGATION_BAR_SIZE*2)/2  - image.size.height/2, image.size.width, image.size.height)];
             }
             [act stopAnimating];
@@ -1665,6 +1672,6 @@
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     
   
-    return CGSizeMake(SCREEN_SIZE_WIDTH, SCREEN_SIZE_WIDTH);
+    return CGSizeMake(SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT);
 }
 @end
