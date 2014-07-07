@@ -17,13 +17,9 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="blP-Vk-rNM">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="0.0" width="330" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.98823529409999999" green="0.23921568630000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="568" id="Mcf-LC-LsO"/>
-                                    <constraint firstAttribute="width" constant="320" id="sYz-wZ-lKg"/>
-                                </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="u6g-gq-nUr">
                                     <size key="itemSize" width="266" height="569"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -38,7 +34,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" tag="11" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g0K-uS-JhZ">
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" tag="11" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g0K-uS-JhZ" customClass="DKPictureScroll">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <subviews>
@@ -51,7 +47,7 @@
                                                                 <constraint firstAttribute="width" constant="280" id="NVI-GT-WCS"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="qXg-za-rgo">
+                                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="qXg-za-rgo">
                                                             <rect key="frame" x="141" y="266" width="37" height="37"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <color key="color" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -61,7 +57,21 @@
                                                     <constraints>
                                                         <constraint firstItem="eBH-rG-dva" firstAttribute="leading" secondItem="g0K-uS-JhZ" secondAttribute="leading" constant="20" id="LMO-kb-tsK"/>
                                                         <constraint firstItem="eBH-rG-dva" firstAttribute="top" secondItem="g0K-uS-JhZ" secondAttribute="top" constant="150" id="VXk-wG-JnI"/>
+                                                        <constraint firstItem="qXg-za-rgo" firstAttribute="leading" secondItem="g0K-uS-JhZ" secondAttribute="leading" constant="141" id="muh-Nd-oqY"/>
+                                                        <constraint firstAttribute="bottom" secondItem="qXg-za-rgo" secondAttribute="bottom" constant="265" id="tke-Sd-vlq"/>
+                                                        <constraint firstAttribute="trailing" secondItem="qXg-za-rgo" secondAttribute="trailing" constant="142" id="udZ-vN-Z6i"/>
+                                                        <constraint firstItem="qXg-za-rgo" firstAttribute="top" secondItem="g0K-uS-JhZ" secondAttribute="top" constant="266" id="xQ7-mY-uSC"/>
                                                     </constraints>
+                                                    <connections>
+                                                        <outlet property="actBottomtOffsetConstr" destination="tke-Sd-vlq" id="e7y-h6-96N"/>
+                                                        <outlet property="actLeftOffsetConstr" destination="muh-Nd-oqY" id="c0G-Uu-lMd"/>
+                                                        <outlet property="actRightOffsetConstr" destination="udZ-vN-Z6i" id="CgK-Kz-jzd"/>
+                                                        <outlet property="actTopOffsetConstr" destination="xQ7-mY-uSC" id="Sf6-UE-9Z2"/>
+                                                        <outlet property="heightConstr" destination="9XT-Iu-ifb" id="g0R-ke-90F"/>
+                                                        <outlet property="leftOffsetConstr" destination="LMO-kb-tsK" id="15L-ad-jMA"/>
+                                                        <outlet property="topOffsestConstr" destination="VXk-wG-JnI" id="4Is-vu-abE"/>
+                                                        <outlet property="widthConstr" destination="NVI-GT-WCS" id="o7z-oJ-wV7"/>
+                                                    </connections>
                                                 </scrollView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -84,24 +94,55 @@
                                     <outlet property="delegate" destination="ntz-Bi-ZAD" id="jCt-Wk-bcI"/>
                                 </connections>
                             </collectionView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dKl-PO-RkA">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dKl-PO-RkA">
+                                <rect key="frame" x="0.0" y="15" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
-                                    <barButtonItem systemItem="done" id="m0d-Lt-DPb">
+                                    <barButtonItem systemItem="stop" id="m0d-Lt-DPb">
                                         <connections>
                                             <action selector="dismiss:" destination="ntz-Bi-ZAD" id="bvn-aQ-35k"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="MHe-Xp-kIQ"/>
+                                    <barButtonItem title="1 из 20" style="plain" id="xLc-Ku-xiQ">
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="XVZ-HA-deC"/>
+                                    <barButtonItem systemItem="compose" id="Aer-iS-2Zy">
+                                        <connections>
+                                            <action selector="saveToAlbum:" destination="ntz-Bi-ZAD" id="QTp-bH-DOd"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AFd-Fa-v26" customClass="AMBlurView">
+                                <rect key="frame" x="0.0" y="0.0" width="568" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="16" id="IPZ-ej-G9W"/>
+                                    <constraint firstAttribute="width" constant="568" id="kJe-Tl-xJl"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="dKl-PO-RkA" firstAttribute="leading" secondItem="2qZ-ja-2jw" secondAttribute="leading" id="0LG-E2-rWa"/>
+                            <constraint firstItem="AFd-Fa-v26" firstAttribute="top" secondItem="2qZ-ja-2jw" secondAttribute="top" id="2iI-jS-eOC"/>
+                            <constraint firstItem="hox-PT-SoY" firstAttribute="top" secondItem="blP-Vk-rNM" secondAttribute="bottom" id="K5n-eG-iIc"/>
+                            <constraint firstAttribute="trailing" secondItem="dKl-PO-RkA" secondAttribute="trailing" id="RJQ-mQ-aq9"/>
+                            <constraint firstAttribute="trailing" secondItem="blP-Vk-rNM" secondAttribute="trailing" constant="-10" id="Rum-HR-EVU"/>
                             <constraint firstItem="blP-Vk-rNM" firstAttribute="leading" secondItem="2qZ-ja-2jw" secondAttribute="leading" id="Tta-TD-BSq"/>
                             <constraint firstItem="blP-Vk-rNM" firstAttribute="top" secondItem="2qZ-ja-2jw" secondAttribute="top" id="gTb-bU-7qj"/>
+                            <constraint firstItem="dKl-PO-RkA" firstAttribute="top" secondItem="AFd-Fa-v26" secondAttribute="bottom" constant="-1" id="hW4-ZZ-J5n"/>
+                            <constraint firstItem="AFd-Fa-v26" firstAttribute="leading" secondItem="2qZ-ja-2jw" secondAttribute="leading" id="pBB-ge-W37"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="_collectionView" destination="blP-Vk-rNM" id="3c9-Vb-UMp"/>
+                        <outlet property="_navTitle" destination="xLc-Ku-xiQ" id="MU7-3q-zDy"/>
+                        <outlet property="_statusBlurView" destination="AFd-Fa-v26" id="JRo-ug-Q4y"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TmS-fc-V2G" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

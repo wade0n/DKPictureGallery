@@ -11,6 +11,7 @@
 #import "NSString+DKStringHTML.h"
 #import "UIImageView+WebCache.h"
 #import "DKConstants.h"
+#import "DKPictureScroll.h"
 
 
 
@@ -67,9 +68,12 @@
             scaledImageHeight = endFrame.size.width;
         }
         
-        _endFrame = CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageWidth);
+        _endFrame = CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight);
 
-        
+        DKPictureWrapper *curPic = [pics objectAtIndex:picTag];
+        if (curPic && !curPic.minPic) {
+            curPic.minPic = startImage;
+        }
         _transitionSet = YES;
     }else{
        _transitionSet = NO;
@@ -97,6 +101,7 @@
         DKPictureWrapper *curPic = [DKPictureWrapper new];
         
         if (i < minImageArr.count) {
+            
             curPic.minPic = [minImageArr objectAtIndex:i];
         }
         if (i < urlStrArr.count) {
@@ -171,8 +176,8 @@
             
         }
         
-        if (curPic && i == number) {
-            picture = curPic;
+        if (curPic && i == number && self.transitionSet) {
+            curPic.minPic = self.transitionImage;
         }
         
         [picWrapperArr addObject:curPic];
@@ -180,8 +185,14 @@
         
     }
      //[self setCurrentPicture:picture AllPictures:picWrapperArr SetCurrentPosition:number];
+    
+    picTag = 0;
+    if (number) {
+        picTag = number;
+    }
     pics = picWrapperArr;
     [_collectionView reloadData];
+    [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:number inSection:0]  atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
 }
 
 
@@ -291,7 +302,7 @@
        SetCurrentPosition:(int)num{
     
     
-    currentImage = [[UIImageView alloc]  init];
+    _currentImage = [[UIImageView alloc]  init];
     
     pics = arr;
     picTag = num;
@@ -386,16 +397,16 @@
         
         
         if(_picture.minPic) {
-            [currentImage setImage:_picture.minPic];
+            [_currentImage setImage:_picture.minPic];
         }
         else{
-            [currentImage setImage:[UIImage  imageNamed:@"widgets-news_load_image@2x"]];
+            [_currentImage setImage:[UIImage  imageNamed:@"widgets-news_load_image@2x"]];
         }
         
         
         
         NSString *textToShare = @"I just found this in sputnik.ru";
-        UIImage *imageToShare = currentImage.image;
+        UIImage *imageToShare = _currentImage.image;
         
         
         NSArray *activityItems = @[textToShare];
@@ -743,7 +754,7 @@
     }
     
     
-    currentImage = curImage;
+    _currentImage = curImage;
     
     curAct  = [netActs   objectAtIndex:picTag];
     nextAct = [netActs   objectAtIndex:[pics   indexOfObject:nextPic]];
@@ -910,9 +921,17 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    _toolBar.layer.cornerRadius = 0.0f;
+    
+    _toolBar.clipsToBounds = YES;
+    _statusBlurView.blurTintColor = _toolBar.tintColor;
     
     
-    [self.view addSubview:scroll];
+    
+    
+    [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -942,12 +961,15 @@
 
 -   (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
-    [self changeTheScrollViewOrientation];
+    //[self changeTheScrollViewOrientation];
+    [_collectionView reloadData];
     
-    
+    [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    isChangingOrientation = NO;
+    
     if (navBarHidden) {
         
         self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height , self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
@@ -1177,27 +1199,18 @@
                 self.navigationController.navigationBar.tintColor = [UIColor blackColor];
             } completion:^(BOOL finished) {
             }];
-            
-            
-            
-            
-
-            
+     
         }
-        
-        
     }
-    
-    
 }
 
 #pragma mark pics actions
 
 - (IBAction)dismiss:(id)sender{
-     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    [[self presentingViewController] dismissViewControllerAnimated:NO completion:nil];
 }
 
--   (void)  saveToAlbum{
+- (IBAction)saveToAlbum:(id)sender{
     
     
     if (SYSTEM_VERSION_LESS_THAN(@"6.0")){
@@ -1212,8 +1225,8 @@
         
         
         NSString *textToShare = @"I just found this in sputnik.ru";
-        UIImage *imageToShare = currentImage.image;
-        if (!currentImage.image) {
+        UIImage *imageToShare = _currentImage.image;
+        if (!_currentImage.image) {
             imageToShare =  PICS_NO_IMAGE;
         }
         
@@ -1252,7 +1265,7 @@
 
 
 -   (void)  confirmSave{
-    UIImageWriteToSavedPhotosAlbum(currentImage.image, nil,
+    UIImageWriteToSavedPhotosAlbum(_currentImage.image, nil,
                                    nil, nil);
     
 }
@@ -1288,14 +1301,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     if ((scrollView.tag ==   13) && !isChangingOrientation) {
-        
-        
-        
-        
-        
-        
-        
-        
+
         if ((scrollView.contentOffset.x <= scrollView.frame.size.width * (picTag -1))){
             if (picTag > 0) {
                 
@@ -1381,14 +1387,14 @@
     CGFloat offSetY = (_scrollView.contentSize.height > _scrollView.frame.size.height) ? (_scrollView.contentSize.height - _scrollView.frame.size.height) * 0.45 : 0.0;
     
     if (imageOrientation == YES){
-        currentImage.center = CGPointMake( offSetX + _scrollView.frame.size.width * 0.5 ,
+        _currentImage.center = CGPointMake( offSetX + _scrollView.frame.size.width * 0.5 ,
                                           offSetY + _scrollView.frame.size.height * 0.5 + _scrollView.zoomScale * 4.25 * _scrollView.zoomScale);
         //      //  D_Log(@"H");
         //        D_Log(@"%f", currentImage.frame.size.height);
         //        D_Log(@"%f", currentImage.frame.size.width);
     }
     else{
-        currentImage.center = CGPointMake( offSetX + _scrollView.frame.size.width * 0.5 ,
+        _currentImage.center = CGPointMake( offSetX + _scrollView.frame.size.width * 0.5 ,
                                           offSetY + _scrollView.frame.size.height * 0.5 + 3);
         //        D_Log(@"W");
         //        D_Log(@"%f", currentImage.frame.size.height);
@@ -1588,7 +1594,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *picCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"picCell" forIndexPath:indexPath];
     
-    UIScrollView *minScroll = (UIScrollView *)[picCell viewWithTag:11];
+    DKPictureScroll *minScroll = (DKPictureScroll *)[picCell viewWithTag:11];
     UIImageView *picView = (UIImageView *)[minScroll viewWithTag:12];
     UIActivityIndicatorView *act = (UIActivityIndicatorView *)[picCell viewWithTag:13];
     DKPictureWrapper  *picCur = [pics    objectAtIndex:indexPath.row];
@@ -1600,38 +1606,48 @@
     float scaledImageWidth ;
     float scaledImageHeight;
     
-    if(picCur.picWidth > scrollWidth   ||  picCur.picHeight > (SCREEN_SIZE_HEIGHT)){
-        float widthScale =  scrollWidth / picCur.picWidth;
-        float heightScale = (scrollHeight)/ picCur.picHeight;
+    if(picCur.picWidth > SCREEN_SIZE_WIDTH   ||  picCur.picHeight > (SCREEN_SIZE_HEIGHT)){
+        float widthScale =  SCREEN_SIZE_WIDTH / picCur.picWidth;
+        float heightScale = (SCREEN_SIZE_HEIGHT)/ picCur.picHeight;
         float resultScale = (widthScale < heightScale) ? widthScale : heightScale;
         
         
         scaledImageWidth = picCur.picWidth * resultScale;
         scaledImageHeight = picCur.picHeight * resultScale;
-        screenWidth = ( scrollWidth - scaledImageWidth ) / 2;
-        screenHeight = ( scrollHeight - scaledImageHeight ) / 2 ;
+        screenWidth = ( SCREEN_SIZE_WIDTH - scaledImageWidth ) / 2;
+        screenHeight = ( SCREEN_SIZE_HEIGHT - scaledImageHeight ) / 2 ;
         
         
     }
     else{
-        screenWidth = (scrollWidth - picCur.picWidth)/2;
-        screenHeight = (scrollHeight   - picCur.picHeight)/2 ;
+        screenWidth = (SCREEN_SIZE_WIDTH - picCur.picWidth)/2;
+        screenHeight = (SCREEN_SIZE_HEIGHT   - picCur.picHeight)/2 ;
         scaledImageWidth = picCur.picWidth ;
         scaledImageHeight = picCur.picHeight;
     }
     
+    if (!isChangingOrientation) {
+        picTag = indexPath.row;
+        _currentImage = picView;
+        
+        _navTitle.title= [NSString stringWithFormat:@"%i из %i",picTag+1,pics.count];
+    }
     
-    //[picView setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
+    [minScroll setContentSize:CGSizeMake(SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT)];
+    minScroll.widthConstr.constant = scaledImageWidth;
+    minScroll.heightConstr.constant = scaledImageHeight;
+    minScroll.topOffsestConstr.constant = screenHeight;
+    minScroll.leftOffsetConstr.constant = screenWidth;
+    
+    [minScroll setNeedsLayout];
+    [minScroll layoutIfNeeded];
     
     UIImageView *picViewCapt = picView;
     
     if (picCur.originUrl) {
         [picView setImageWithURL:picCur.originUrl placeholderImage:picCur.minPic completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-            
-            
             if (error)
             {
-                
                 [act stopAnimating];
                 [curImageCaptured setImage:PICS_NO_IMAGE];
                 if (self.navigationController.navigationBar.frame.origin.y < 0) {

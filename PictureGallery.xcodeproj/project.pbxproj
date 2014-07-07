@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		299C862A8307436498E4B783 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 90A7A93982BE4C84AF641724 /* libPods.a */; };
+		771F2E2F196B07EA007C3E80 /* DKPictureScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 771F2E2E196B07EA007C3E80 /* DKPictureScroll.m */; };
 		772848F9188FAF4B005F91B0 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 772848EA188FAF4B005F91B0 /* Main_iPad.storyboard */; };
 		772848FA188FAF4B005F91B0 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 772848EC188FAF4B005F91B0 /* Main_iPhone.storyboard */; };
 		772848FB188FAF4B005F91B0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 772848EE188FAF4B005F91B0 /* InfoPlist.strings */; };
@@ -48,6 +49,8 @@
 
 /* Begin PBXFileReference section */
 		5557D387AE47434EB0049EC0 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		771F2E2D196B07EA007C3E80 /* DKPictureScroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKPictureScroll.h; sourceTree = "<group>"; };
+		771F2E2E196B07EA007C3E80 /* DKPictureScroll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKPictureScroll.m; sourceTree = "<group>"; };
 		772848EB188FAF4B005F91B0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		772848ED188FAF4B005F91B0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		772848EF188FAF4B005F91B0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -155,6 +158,8 @@
 		77284906188FB038005F91B0 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				771F2E2D196B07EA007C3E80 /* DKPictureScroll.h */,
+				771F2E2E196B07EA007C3E80 /* DKPictureScroll.m */,
 				77284907188FB038005F91B0 /* DKConstants.h */,
 				77284908188FB038005F91B0 /* DKConstants.m */,
 				77284909188FB038005F91B0 /* DKPictureGalleryController.h */,
@@ -397,6 +402,7 @@
 				772848FD188FAF4B005F91B0 /* AppDelegate.m in Sources */,
 				77D5EF51195DB44F0063656D /* DKAnimationTransition.m in Sources */,
 				772848FE188FAF4B005F91B0 /* main.m in Sources */,
+				771F2E2F196B07EA007C3E80 /* DKPictureScroll.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

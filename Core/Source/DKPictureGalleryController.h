@@ -21,7 +21,7 @@
     UIView *hintView;
     UIButton *nameLabel;
     IBOutlet    UIScrollView *scroll;
-    UIImageView *currentImage;
+    UIImageView *_currentImage;
     IBOutlet    UIActivityIndicatorView *netAct;
     BOOL imageOrientation;
     BOOL    isReadyForZoom;
@@ -62,7 +62,9 @@
     
     IBOutlet UICollectionView *_collectionView;
     
-    
+    IBOutlet UIToolbar *_toolBar;
+    IBOutlet AMBlurView *_statusBlurView;
+    IBOutlet UIBarButtonItem *_navTitle;
 }
 
 @property(nonatomic) UIInterfaceOrientation returnOrientaton;
@@ -122,6 +124,7 @@
 -   (void)confirmSave;
 -   (void)setPicNum:(int)position;
 -   (IBAction)dismiss:(id)sender;
+-   (IBAction)saveToAlbum:(id)sender;
 
 - (void)setTransitionRect:(CGRect)startFrame andImage:(UIImage *)startImage finishFrame:(CGRect)endFrame;
 @end
