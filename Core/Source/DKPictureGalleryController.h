@@ -18,7 +18,7 @@
     UITapGestureRecognizer *doubleTap;
     UISwipeGestureRecognizer *leftSwipeRecogn;
     UISwipeGestureRecognizer *rightSwipeRecogn;
-    UIView *hintView;
+    IBOutlet UIView *hintView;
     UIButton *nameLabel;
     IBOutlet    UIScrollView *scroll;
     UIImageView *_currentImage;
@@ -55,7 +55,7 @@
    
     ///// new code ////
     
-    AMBlurView *blurView;
+     AMBlurView *blurView;
     
     
     ///// new storyboard View

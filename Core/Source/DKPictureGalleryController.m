@@ -927,6 +927,55 @@
     _statusBlurView.blurTintColor = _toolBar.tintColor;
     
     
+    singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapped)];
+    [singleTap setNumberOfTapsRequired:1];
+    [singleTap setNumberOfTouchesRequired:1];
+    [self.view addGestureRecognizer:singleTap];
+    
+    
+    doubleTap = [[UITapGestureRecognizer   alloc]  initWithTarget:self action:@selector(doubleTapped)];
+    [doubleTap   setNumberOfTapsRequired:2];
+    
+    [self.view addGestureRecognizer:doubleTap];
+    
+    [singleTap requireGestureRecognizerToFail:doubleTap];
+    
+    
+    
+    
+    
+    
+    
+    
+    nameLabel = [[UIButton alloc] initWithFrame:CGRectMake(15, -15, self.view.frame.size.width - 20, 105)];
+    
+    nameLabel.titleLabel.adjustsFontSizeToFitWidth = YES;
+    
+    [nameLabel.titleLabel setNumberOfLines:6];
+    [nameLabel.titleLabel setFont:[UIFont boldSystemFontOfSize:11]];
+    [nameLabel setBackgroundColor:[UIColor clearColor]];
+    [nameLabel setTitleColor:[UIColor colorWithWhite:0.0 alpha:0.82] forState:UIControlStateNormal];
+    [nameLabel setTitleColor:[UIColor colorWithWhite:1.0 alpha:1] forState:UIControlStateHighlighted];
+    
+    [nameLabel addTarget:self action:@selector(openPicUrl) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    [self setButton:nameLabel];
+    
+    hintView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 120, self.view.frame.size.width, 120)];
+    hintView.backgroundColor = [UIColor clearColor];
+    [hintView   setTransform:HINT_TRANSFORM_HIDDEN_YES];
+    [hintView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
+    
+    [self.view addSubview:hintView];
+    
+    
+    //blurView.blurTintColor = self.navigationController.navigationBar.tintColor;
+    //blurView.backgroundColor = [UIColor redColor];
+    blurView = [[AMBlurView alloc] initWithFrame:CGRectMake(0.0, 0.0, MAX(SCREEN_SIZE_HEIGHT, SCREEN_SIZE_WIDTH), hintView.frame.size.height+1)];
+    [hintView addSubview:blurView];
+    [hintView addSubview: nameLabel];
+    
     
     
     [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
@@ -1274,9 +1323,7 @@
 - (void)openPicUrl{
     
     DKPictureWrapper    *picWR =   [[DKPictureWrapper   alloc]  init];
-    
     picWR = [pics   objectAtIndex:picTag];
-
     
     if (self.selectedPicture) {
         self.selectedPicture(picTag);
@@ -1284,14 +1331,9 @@
     else
         if (picWR.urlStr) {
             isInBrowser = YES;
-        
-        
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:picWR.urlStr]];
             //[Utility openUrl:picWR.urlStr withInternalBrowserControllerPresentedModalByController:self];
         }
-    
-    
-    
 }
 
 
@@ -1309,9 +1351,11 @@
                 
                 num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
                 picTag = num;
-                [self changePage];
+                UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
+                DKPictureScroll *minScroll = (DKPictureScroll *)[cell viewWithTag:11];
+                _currentImage = (UIImageView *)[minScroll viewWithTag:12];
                 [self setButton:nameLabel];
-                self.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+                _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
             }
         }
         
@@ -1323,9 +1367,11 @@
                 num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
                 picTag = num;
                 
-                [self changePage];
+                UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
+                DKPictureScroll *minScroll = (DKPictureScroll *)[cell viewWithTag:11];
+                _currentImage = (UIImageView *)[minScroll viewWithTag:12];
                 [self setButton:nameLabel];
-                self.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+                _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
             }
         }
     }
@@ -1338,7 +1384,7 @@
     if (_scrollView.tag != 13) {
         
         
-        if (self.navigationController.navigationBar.frame.origin.y > 0){
+        if (_toolBar.frame.origin.y > 0){
             [self singleTapped];
         }
         
@@ -1409,9 +1455,9 @@
         
         
         
-        UIImageView *imgView =[_scrollView.subviews    objectAtIndex:0];
+        //UIImageView *imgView =[_scrollView.subviews    objectAtIndex:0];
         
-        return imgView;
+        return _currentImage;
     }
     
     return nil;
@@ -1626,18 +1672,18 @@
         scaledImageHeight = picCur.picHeight;
     }
     
-    if (!isChangingOrientation) {
-        picTag = indexPath.row;
-        _currentImage = picView;
-        
-        _navTitle.title= [NSString stringWithFormat:@"%i из %i",picTag+1,pics.count];
-    }
+    
     
     [minScroll setContentSize:CGSizeMake(SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT)];
     minScroll.widthConstr.constant = scaledImageWidth;
     minScroll.heightConstr.constant = scaledImageHeight;
     minScroll.topOffsestConstr.constant = screenHeight;
     minScroll.leftOffsetConstr.constant = screenWidth;
+    
+    minScroll.actLeftOffsetConstr.constant = (SCREEN_SIZE_WIDTH - act.frame.size.width)/2;
+    minScroll.actRightOffsetConstr.constant = (SCREEN_SIZE_WIDTH - act.frame.size.width)/2;
+    minScroll.actTopOffsetConstr.constant = (SCREEN_SIZE_HEIGHT - act.frame.size.height)/2;
+    minScroll.actTopOffsetConstr.constant = (SCREEN_SIZE_HEIGHT - act.frame.size.height)/2;
     
     [minScroll setNeedsLayout];
     [minScroll layoutIfNeeded];
