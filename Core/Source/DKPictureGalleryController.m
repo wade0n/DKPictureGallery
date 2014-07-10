@@ -65,7 +65,7 @@
             screenWidth = (SCREEN_SIZE_WIDTH - endFrame.size.width)/2;
             screenHeight = (SCREEN_SIZE_HEIGHT   - endFrame.size.height)/2 ;
             scaledImageWidth = endFrame.size.width ;
-            scaledImageHeight = endFrame.size.width;
+            scaledImageHeight = endFrame.size.height;
         }
         
         _endFrame = CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight);
@@ -930,13 +930,13 @@
     singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapped)];
     [singleTap setNumberOfTapsRequired:1];
     [singleTap setNumberOfTouchesRequired:1];
-    [self.view addGestureRecognizer:singleTap];
+    [_collectionView addGestureRecognizer:singleTap];
     
     
     doubleTap = [[UITapGestureRecognizer   alloc]  initWithTarget:self action:@selector(doubleTapped)];
     [doubleTap   setNumberOfTapsRequired:2];
     
-    [self.view addGestureRecognizer:doubleTap];
+    [_collectionView addGestureRecognizer:doubleTap];
     
     [singleTap requireGestureRecognizerToFail:doubleTap];
     
@@ -962,21 +962,18 @@
     
     [self setButton:nameLabel];
     
-    hintView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 120, self.view.frame.size.width, 120)];
-    hintView.backgroundColor = [UIColor clearColor];
-    [hintView   setTransform:HINT_TRANSFORM_HIDDEN_YES];
-    [hintView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
+
     
-    [self.view addSubview:hintView];
+    
+    //[self.view addSubview:hintView];
     
     
     //blurView.blurTintColor = self.navigationController.navigationBar.tintColor;
     //blurView.backgroundColor = [UIColor redColor];
-    blurView = [[AMBlurView alloc] initWithFrame:CGRectMake(0.0, 0.0, MAX(SCREEN_SIZE_HEIGHT, SCREEN_SIZE_WIDTH), hintView.frame.size.height+1)];
-    [hintView addSubview:blurView];
+    blurView = (AMBlurView *)[hintView viewWithTag:12];
     [hintView addSubview: nameLabel];
     
-    
+    _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, pics.count];
     
     [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
 
@@ -1005,15 +1002,67 @@
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     isChangingOrientation = YES;
+    if (navBarHidden) {
+        _navBarView.hidden = YES;
+        hintView.hidden = YES;
+    }
 
 }
 
 -   (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
     //[self changeTheScrollViewOrientation];
-    [_collectionView reloadData];
+    //[_collectionView reloadData];
+   
+    //_collectionView setContentSize:CGSizeMake(SCREEN_SIZE_WIDTH+), <#CGFloat height#>)
     
-    [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+    UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
+    
+    scroll.contentSize = CGSizeMake(picCount * (SCREEN_SIZE_WIDTH + PICS_COLLECTION_SCROLL_IMAGE_DIVIDER), 0);
+    [_collectionView setContentOffset:CGPointMake(scroll.frame.size.width*picTag,0)];
+    [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+    DKPictureScroll *minScroll = (DKPictureScroll *)[cell viewWithTag:11];
+    UIImageView *picView = (UIImageView *)[minScroll viewWithTag:12];
+    DKPictureWrapper  *picCur = [pics    objectAtIndex:picTag];
+    
+    UIImageView *curImageCaptured = picView;
+    
+    float screenWidth;
+    float screenHeight;
+    float scaledImageWidth ;
+    float scaledImageHeight;
+    
+    if(picCur.picWidth > SCREEN_SIZE_WIDTH   ||  picCur.picHeight > (SCREEN_SIZE_HEIGHT)){
+        float widthScale =  SCREEN_SIZE_WIDTH / picCur.picWidth;
+        float heightScale = (SCREEN_SIZE_HEIGHT)/ picCur.picHeight;
+        float resultScale = (widthScale < heightScale) ? widthScale : heightScale;
+        
+        
+        scaledImageWidth = picCur.picWidth * resultScale;
+        scaledImageHeight = picCur.picHeight * resultScale;
+        screenWidth = ( SCREEN_SIZE_WIDTH - scaledImageWidth ) / 2;
+        screenHeight = ( SCREEN_SIZE_HEIGHT - scaledImageHeight ) / 2 ;
+        
+        
+    }
+    else{
+        screenWidth = (SCREEN_SIZE_WIDTH - picCur.picWidth)/2;
+        screenHeight = (SCREEN_SIZE_HEIGHT   - picCur.picHeight)/2 ;
+        scaledImageWidth = picCur.picWidth ;
+        scaledImageHeight = picCur.picHeight;
+    }
+    
+    
+    
+    
+    minScroll.widthConstr.constant = scaledImageWidth;
+    minScroll.heightConstr.constant = scaledImageHeight;
+    minScroll.topOffsestConstr.constant = screenHeight;
+    minScroll.leftOffsetConstr.constant = screenWidth;
+    [minScroll setNeedsLayout];
+    [minScroll layoutIfNeeded];
+    
+    
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
@@ -1021,7 +1070,10 @@
     
     if (navBarHidden) {
         
-        self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height , self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
+        if (navBarHidden) {
+            _navBarView.hidden = NO;
+             hintView.hidden = NO;
+        }
     }
 
     
@@ -1149,7 +1201,7 @@
 }
 
 - (void)doubleTapped{
-    UIScrollView *scrollView = [scrollViews objectAtIndex:picTag];
+    UIScrollView *scrollView = _curScroll;
     
     if(scrollView.zoomScale != 1.0){
         [scrollView setZoomScale:1.0 animated:YES];
@@ -1160,23 +1212,17 @@
 
 
 - (void)singleTapped{
-    
-    
-    
-    UIScrollView *curScroll = [scrollViews objectAtIndex:picTag];
-    
-    
-    
-    
-    
+
+    UIScrollView *curScroll = _curScroll;
+
     if (curScroll.zoomScale <= 1.0f) {
     
-        [self screenTapped];
-        UIActivityIndicatorView *curAct  = [netActs   objectAtIndex:picTag];
-        UIImageView *curImageView = [picsViews objectAtIndex:picTag];
+        //[self screenTapped];
+        UIActivityIndicatorView *curAct  = _curAct;
+        UIImageView *curImageView = _currentImage;
         DKPictureWrapper *picWr = [pics objectAtIndex:picTag];
         
-        if (self.navigationController.navigationBar.frame.origin.y < 0) {
+        if (navBarHidden) {
             
             CGFloat animationDuration;
             
@@ -1190,11 +1236,15 @@
             
 
             [UIView animateWithDuration:animationDuration animations:^{
-                self.navigationController.navigationBar.frame = CGRectMake(0, STATUS_BAR_SIZE, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
+                //self.navigationController.navigationBar.frame = CGRectMake(0, STATUS_BAR_SIZE, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
                 
+                navViewTopOffset.constant = 0;
+                hintViewButtomOffset.constant = 0;
                 self.view.backgroundColor = [UIColor whiteColor];
                 [self setNeedsStatusBarAppearanceUpdate];
                 self.navigationController.navigationBar.tintColor = defaultColor;
+                [self.view setNeedsLayout];
+                [self.view layoutIfNeeded];
                 [curAct setColor:[UIColor grayColor]];
                 [curImageView setTintColor:[UIColor grayColor]];
                 if (!picWr.originLoaded  && !curAct.isAnimating) {
@@ -1236,7 +1286,9 @@
             
             navBarHidden = YES;
             [UIView animateWithDuration:animationDuration animations:^{
-                self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
+                //self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
+                navViewTopOffset.constant = -(_navBarView.frame.size.height);
+                hintViewButtomOffset.constant = -(hintView.frame.size.height+1);
                 
                 self.view.backgroundColor = [UIColor blackColor];
                 [curAct setColor:[UIColor whiteColor]];
@@ -1245,6 +1297,8 @@
                     [curImageView setImage:PICS_NO_IMAGE];
                 }
                 [self setNeedsStatusBarAppearanceUpdate];
+                [self.view setNeedsLayout];
+                [self.view layoutIfNeeded];
                 self.navigationController.navigationBar.tintColor = [UIColor blackColor];
             } completion:^(BOOL finished) {
             }];
@@ -1352,10 +1406,12 @@
                 num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
                 picTag = num;
                 UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
-                DKPictureScroll *minScroll = (DKPictureScroll *)[cell viewWithTag:11];
-                _currentImage = (UIImageView *)[minScroll viewWithTag:12];
+                _curScroll = (UIScrollView *)[cell viewWithTag:11];
+                _currentImage = (UIImageView *)[_curScroll viewWithTag:12];
+                _curAct = (UIActivityIndicatorView *)[_curScroll viewWithTag:13];
+                
                 [self setButton:nameLabel];
-                _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+                _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, pics.count];
             }
         }
         
@@ -1366,12 +1422,13 @@
                 
                 num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
                 picTag = num;
-                
                 UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
-                DKPictureScroll *minScroll = (DKPictureScroll *)[cell viewWithTag:11];
-                _currentImage = (UIImageView *)[minScroll viewWithTag:12];
+                _curScroll = (UIScrollView *)[cell viewWithTag:11];
+                _currentImage = (UIImageView *)[_curScroll viewWithTag:12];
+                _curAct = (UIActivityIndicatorView *)[_curScroll viewWithTag:13];
+
                 [self setButton:nameLabel];
-                _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+                _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, pics.count];
             }
         }
     }
@@ -1384,11 +1441,11 @@
     if (_scrollView.tag != 13) {
         
         
-        if (_toolBar.frame.origin.y > 0){
+        if (!navBarHidden){
             [self singleTapped];
         }
         
-        UIActivityIndicatorView *netActiv = [netActs  objectAtIndex:picTag];
+        UIActivityIndicatorView *netActiv = _curAct;
         
         if (netActiv.isAnimating) {
             [netActiv setHidden:YES];
@@ -1429,18 +1486,21 @@
 -(void) scrollViewDidZoom:(UIScrollView *)_scrollView{
     
     // D_Log(@"Zoom %f", _scrollView.zoomScale);
+    UIImageView *imgView = (UIImageView *)[_scrollView viewWithTag:12];
+
+    
     CGFloat offSetX = (_scrollView.contentSize.width > _scrollView.frame.size.width) ? (_scrollView.contentSize.width - _scrollView.frame.size.width) / 2 : 0.0;
     CGFloat offSetY = (_scrollView.contentSize.height > _scrollView.frame.size.height) ? (_scrollView.contentSize.height - _scrollView.frame.size.height) * 0.45 : 0.0;
     
     if (imageOrientation == YES){
-        _currentImage.center = CGPointMake( offSetX + _scrollView.frame.size.width * 0.5 ,
+        imgView.center = CGPointMake( offSetX + _scrollView.frame.size.width * 0.5 ,
                                           offSetY + _scrollView.frame.size.height * 0.5 + _scrollView.zoomScale * 4.25 * _scrollView.zoomScale);
         //      //  D_Log(@"H");
         //        D_Log(@"%f", currentImage.frame.size.height);
         //        D_Log(@"%f", currentImage.frame.size.width);
     }
     else{
-        _currentImage.center = CGPointMake( offSetX + _scrollView.frame.size.width * 0.5 ,
+        imgView.center = CGPointMake( offSetX + _scrollView.frame.size.width * 0.5 ,
                                           offSetY + _scrollView.frame.size.height * 0.5 + 3);
         //        D_Log(@"W");
         //        D_Log(@"%f", currentImage.frame.size.height);
@@ -1455,9 +1515,9 @@
         
         
         
-        //UIImageView *imgView =[_scrollView.subviews    objectAtIndex:0];
+        UIImageView *imgView = (UIImageView *)[_scrollView viewWithTag:12];
         
-        return _currentImage;
+        return imgView;
     }
     
     return nil;
@@ -1524,9 +1584,9 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     
-     [hintView   setTransform:HINT_TRANSFORM_HIDDEN_YES];
+     //[hintView   setTransform:HINT_TRANSFORM_HIDDEN_YES];
     
-    if(animated && !isInBrowser){
+    if(animated && !isInBrowser && NO){
         
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
         
@@ -1674,7 +1734,7 @@
     
     
     
-    [minScroll setContentSize:CGSizeMake(SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT)];
+   
     minScroll.widthConstr.constant = scaledImageWidth;
     minScroll.heightConstr.constant = scaledImageHeight;
     minScroll.topOffsestConstr.constant = screenHeight;
@@ -1688,7 +1748,35 @@
     [minScroll setNeedsLayout];
     [minScroll layoutIfNeeded];
     
+    
+    [minScroll setContentSize:CGSizeMake(SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT)];
+
+    minScroll.maximumZoomScale   = 4.0f;
+    minScroll.minimumZoomScale  =   1.0f;
+    minScroll.scrollEnabled =   YES;
+    minScroll.showsHorizontalScrollIndicator = YES;
+    minScroll.showsVerticalScrollIndicator = YES;
+    minScroll.scrollsToTop = NO;
+    minScroll.bounces = NO;
+    
+    [minScroll setZoomScale:minScroll.minimumZoomScale];
+    
+    [act startAnimating];
     UIImageView *picViewCapt = picView;
+    
+    
+    if (navBarHidden) {
+        [act setColor:[UIColor whiteColor]];
+       
+        
+    }
+    else{
+        [act setColor:[UIColor grayColor]];
+        
+
+    }
+
+    
     
     if (picCur.originUrl) {
         [picView setImageWithURL:picCur.originUrl placeholderImage:picCur.minPic completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
@@ -1696,8 +1784,9 @@
             {
                 [act stopAnimating];
                 [curImageCaptured setImage:PICS_NO_IMAGE];
-                if (self.navigationController.navigationBar.frame.origin.y < 0) {
+                if (navBarHidden) {
                     [curImageCaptured setTintColor:[UIColor whiteColor]];
+
                 }
                 else{
                     [curImageCaptured setTintColor:[UIColor grayColor]];
@@ -1707,6 +1796,7 @@
                 [curImageCaptured setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT)];
                 [curImageCaptured setContentMode:UIViewContentModeCenter];
                 picCur.originLoaded = NO;
+                
             }
             else{
                 picCur.originLoaded = YES;

@@ -57,6 +57,8 @@
     
      AMBlurView *blurView;
     
+    UIScrollView *_curScroll;
+    UIActivityIndicatorView *_curAct;
     
     ///// new storyboard View
     
@@ -65,6 +67,9 @@
     IBOutlet UIToolbar *_toolBar;
     IBOutlet AMBlurView *_statusBlurView;
     IBOutlet UIBarButtonItem *_navTitle;
+    IBOutlet NSLayoutConstraint *hintViewButtomOffset;
+    IBOutlet UIView *_navBarView;
+    IBOutlet NSLayoutConstraint *navViewTopOffset;
 }
 
 @property(nonatomic) UIInterfaceOrientation returnOrientaton;
