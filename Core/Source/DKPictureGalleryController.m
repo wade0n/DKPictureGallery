@@ -1006,26 +1006,32 @@
         _navBarView.hidden = YES;
         hintView.hidden = YES;
     }
-
-}
-
--   (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
-    
-    //[self changeTheScrollViewOrientation];
-    //[_collectionView reloadData];
    
-    //_collectionView setContentSize:CGSizeMake(SCREEN_SIZE_WIDTH+), <#CGFloat height#>)
     
     UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
     
     scroll.contentSize = CGSizeMake(picCount * (SCREEN_SIZE_WIDTH + PICS_COLLECTION_SCROLL_IMAGE_DIVIDER), 0);
-    [_collectionView setContentOffset:CGPointMake(scroll.frame.size.width*picTag,0)];
-    [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
-    DKPictureScroll *minScroll = (DKPictureScroll *)[cell viewWithTag:11];
-    UIImageView *picView = (UIImageView *)[minScroll viewWithTag:12];
-    DKPictureWrapper  *picCur = [pics    objectAtIndex:picTag];
+    _orientationChangeScroll = (DKPictureScroll *)[cell viewWithTag:11];
+    UIImageView *picView = (UIImageView *)[_orientationChangeScroll viewWithTag:12];
+    _orientationChangeImage = [[UIImageView alloc] initWithImage:picView.image];
+    [_orientationChangeImage setContentMode:[picView contentMode]];
+    [_orientationChangeImage setTintColor:[picView tintColor]];
     
-    UIImageView *curImageCaptured = picView;
+   
+    [self.view insertSubview:_orientationChangeImage aboveSubview:_collectionView];
+    [_orientationChangeImage setFrame:picView.frame];
+    //[_collectionView setAlpha:0.0f];
+    [_collectionView setHidden:YES];
+    
+    
+}
+
+-   (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
+    
+   
+    
+    DKPictureWrapper  *picCur = [pics    objectAtIndex:picTag];
     
     float screenWidth;
     float screenHeight;
@@ -1052,17 +1058,8 @@
         scaledImageHeight = picCur.picHeight;
     }
     
-    
-    
-    
-    minScroll.widthConstr.constant = scaledImageWidth;
-    minScroll.heightConstr.constant = scaledImageHeight;
-    minScroll.topOffsestConstr.constant = screenHeight;
-    minScroll.leftOffsetConstr.constant = screenWidth;
-    [minScroll setNeedsLayout];
-    [minScroll layoutIfNeeded];
-    
-    
+    [_orientationChangeImage setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
+
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
@@ -1075,8 +1072,13 @@
              hintView.hidden = NO;
         }
     }
-
     
+    [_collectionView reloadData];
+    [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+    
+    [_collectionView setHidden:NO];
+    [_orientationChangeImage removeFromSuperview];
+
 }
 
 - (void)changeTheScrollViewOrientation{
@@ -1823,7 +1825,8 @@
                   layout:(UICollectionViewLayout*)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-  
+  //return    _collectionView.frame.size;
+  //  return CGSizeMake(_collectionView.frame.size.width, _collectionView.frame.size.height);
     return CGSizeMake(SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT);
 }
 @end

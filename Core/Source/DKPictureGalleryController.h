@@ -10,9 +10,10 @@
 #import "DKPictureGalleryController.h"
 #import "DKPictureWrapper.h"
 #import "AMBLurView.h"
+#import "DKPictureScroll.h"
 
 
-@interface DKPictureGalleryController : UIViewController <UIScrollViewDelegate,UIActionSheetDelegate, UICollectionViewDataSource, UICollectionViewDelegate>{
+@interface DKPictureGalleryController : UIViewController <UIScrollViewDelegate,UIActionSheetDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>{
     
     UITapGestureRecognizer *singleTap;
     UITapGestureRecognizer *doubleTap;
@@ -59,6 +60,8 @@
     
     UIScrollView *_curScroll;
     UIActivityIndicatorView *_curAct;
+    DKPictureScroll *_orientationChangeScroll;
+    UIImageView *_orientationChangeImage;
     
     ///// new storyboard View
     
