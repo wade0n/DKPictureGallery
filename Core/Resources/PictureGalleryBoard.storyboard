@@ -153,13 +153,29 @@
                                             <constraint firstAttribute="width" constant="568" id="ZBz-Lv-fdM"/>
                                         </constraints>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LwB-bk-nNW">
+                                        <rect key="frame" x="12" y="12" width="296" height="96"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                                        <state key="normal">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" red="0.88627450980392153" green="0.88627450980392153" blue="0.88627450980392153" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="Ggx-vk-p4P" secondAttribute="bottom" constant="-1" id="5Qv-Yp-ttk"/>
                                     <constraint firstAttribute="height" constant="120" id="DA8-pS-IKy"/>
+                                    <constraint firstItem="LwB-bk-nNW" firstAttribute="leading" secondItem="bSa-v4-0d7" secondAttribute="leading" constant="12" id="JMI-11-xKv"/>
                                     <constraint firstItem="Ggx-vk-p4P" firstAttribute="leading" secondItem="bSa-v4-0d7" secondAttribute="leading" id="Jst-9C-lF7"/>
+                                    <constraint firstAttribute="trailing" secondItem="LwB-bk-nNW" secondAttribute="trailing" constant="12" id="Ulb-8X-t5E"/>
+                                    <constraint firstAttribute="bottom" secondItem="LwB-bk-nNW" secondAttribute="bottom" constant="12" id="dkV-Z6-nkw"/>
                                     <constraint firstItem="Ggx-vk-p4P" firstAttribute="top" secondItem="bSa-v4-0d7" secondAttribute="top" id="tHW-2w-drp"/>
+                                    <constraint firstItem="LwB-bk-nNW" firstAttribute="top" secondItem="bSa-v4-0d7" secondAttribute="top" constant="12" id="v6f-65-4ED"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -184,7 +200,7 @@
                         <outlet property="_statusBlurView" destination="AFd-Fa-v26" id="JRo-ug-Q4y"/>
                         <outlet property="hintView" destination="bSa-v4-0d7" id="LyH-es-EhS"/>
                         <outlet property="hintViewButtomOffset" destination="84L-0I-Z4h" id="Fcj-r0-n7t"/>
-                        <outlet property="navBarView" destination="y8Q-a6-upG" id="kAa-SA-edG"/>
+                        <outlet property="nameLabel" destination="LwB-bk-nNW" id="DV0-vG-CR2"/>
                         <outlet property="navViewTopOffset" destination="XrZ-30-QU5" id="shm-hv-b6v"/>
                     </connections>
                 </viewController>

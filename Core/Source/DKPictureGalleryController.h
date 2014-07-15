@@ -10,8 +10,23 @@
 #import "DKPictureGalleryController.h"
 #import "DKPictureWrapper.h"
 #import "AMBLurView.h"
-#import "DKPictureScroll.h"
 
+@class DKPictureScroll;
+
+
+
+@protocol DKPictureGalleryDataSource <NSObject>   //define delegate protocol
+- (NSInteger)numberOfPictures;
+- (NSDictionary *)dictinaryForItem:(NSInteger)itemPosition;
+- (NSString *)textForItem:(NSInteger)itemPosition;
+//define delegate method to be implemented within another class
+@end //end protocol
+
+@protocol DKPictureGalleryDelegate <NSObject>
+- (void)changePictureToItem:(NSInteger)itemPosition;
+- (UIImage *)getImageBackFromDismissTransition;
+- (void)didSelectPictureAtPosition:(int)position Sender:(id)sender;
+@end
 
 @interface DKPictureGalleryController : UIViewController <UIScrollViewDelegate,UIActionSheetDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>{
     
@@ -20,7 +35,7 @@
     UISwipeGestureRecognizer *leftSwipeRecogn;
     UISwipeGestureRecognizer *rightSwipeRecogn;
     IBOutlet UIView *hintView;
-    UIButton *nameLabel;
+    IBOutlet UIButton *nameLabel;
     IBOutlet    UIScrollView *scroll;
     UIImageView *_currentImage;
     IBOutlet    UIActivityIndicatorView *netAct;
@@ -62,6 +77,7 @@
     UIActivityIndicatorView *_curAct;
     DKPictureScroll *_orientationChangeScroll;
     UIImageView *_orientationChangeImage;
+    UIActivityIndicatorView *_orientationChangeAct;
     
     ///// new storyboard View
     
@@ -84,7 +100,8 @@
 @property(nonatomic) CGRect startFrame;
 @property(nonatomic) CGRect endFrame;
 @property(nonatomic, strong) UIImage *transitionImage;
-
+@property (nonatomic, weak) id <DKPictureGalleryDataSource> dataSource;
+@property(nonatomic, weak) id <DKPictureGalleryDelegate> delegate;
 
 - (void)setCurrentPicture:(DKPictureWrapper *)pic
               AllPictures:(NSMutableArray   *)arr

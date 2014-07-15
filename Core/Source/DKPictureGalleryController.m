@@ -334,18 +334,7 @@
     [self.view addGestureRecognizer:doubleTap];
     
     [singleTap requireGestureRecognizerToFail:doubleTap];
-    
-    
-    
-    
-    
-    
-    
-    
-    nameLabel = [[UIButton alloc] initWithFrame:CGRectMake(15, -15, self.view.frame.size.width - 20, 105)];
-    
-    nameLabel.titleLabel.adjustsFontSizeToFitWidth = YES;
-    
+ 
     [nameLabel.titleLabel setNumberOfLines:6];
     [nameLabel.titleLabel setFont:[UIFont boldSystemFontOfSize:11]];
     [nameLabel setBackgroundColor:[UIColor clearColor]];
@@ -369,27 +358,18 @@
     //blurView.backgroundColor = [UIColor redColor];
     blurView = [[AMBlurView alloc] initWithFrame:CGRectMake(0.0, 0.0, MAX(SCREEN_SIZE_HEIGHT, SCREEN_SIZE_WIDTH), hintView.frame.size.height+1)];
     [hintView addSubview:blurView];
-    [hintView addSubview: nameLabel];
     
     
     
     self.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
-    
-    
-    
-    
-    
+
     actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(saveToAlbum)];
     self.navigationItem.rightBarButtonItem = actionButton;
     
     popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedStringFromTable(@"Cancel", @"SPLocalize", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedStringFromTable(@"Save", @"SPLocalize", nil), nil];
     
     popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    
-    
-    
-    
-    
+        
     if (SYSTEM_VERSION_LESS_THAN(@"6.0")){
         
     }
@@ -433,56 +413,69 @@
 
 -   (void) setButton:(UIButton *)button{
     
+    NSMutableString *info;
     
-    DKPictureWrapper    *picWR = [pics   objectAtIndex:picTag];
+    if (self.dataSource) {
+        info =[NSMutableString stringWithFormat:@"«%@»\n", [self.dataSource textForItem:picTag]];
     
-    NSString    *nameStr = [NSString    new];
-    
-    if ([picWR.name stripHTMLMarkup].length > PICS_COLLECTION_IMAGE_TITLE_LENGTH) {
-        nameStr = [[picWR.name stripHTMLMarkup] substringWithRange:NSMakeRange(0, PICS_COLLECTION_IMAGE_TITLE_LENGTH)];
-        nameStr = [NSString stringWithFormat:@"%@...",nameStr];
+    }else{
+        DKPictureWrapper    *picWR = [pics   objectAtIndex:picTag];
+        
+        NSString    *nameStr = [NSString    new];
+        
+        if ([picWR.name stripHTMLMarkup].length > PICS_COLLECTION_IMAGE_TITLE_LENGTH) {
+            nameStr = [[picWR.name stripHTMLMarkup] substringWithRange:NSMakeRange(0, PICS_COLLECTION_IMAGE_TITLE_LENGTH)];
+            nameStr = [NSString stringWithFormat:@"%@...",nameStr];
+        }
+        else{
+            nameStr = [picWR.name stripHTMLMarkup];
+        }
+        
+        
+        
+        
+        info = [NSMutableString stringWithFormat:@"«%@»\n", nameStr];
+        
+        NSString    *snipStr = [NSString    new];
+        
+        //    if ([picWR.snippet stripHTMLMarkup].length > PICS_COLLECTION_IMAGE_TITLE_LENGTH) {
+        //        snipStr = [[picWR.snippet stripHTMLMarkup] substringWithRange:NSMakeRange(0, PICS_COLLECTION_IMAGE_TITLE_LENGTH)];
+        //        snipStr = [NSString stringWithFormat:@"%@...\n",snipStr];
+        //
+        //    }
+        //    else{
+        //        snipStr = [picWR.snippet stripHTMLMarkup];
+        //    }
+        
+        
+        if (picWR.format && picWR.format.length > 0) {
+            snipStr = [snipStr stringByAppendingFormat:@"Формат:%@ \n",picWR.format];
+        }
+        [info appendFormat:@"%@",snipStr];
+        
+        [info appendFormat:@"%@: %ix%i \n", @"Размер", picWR.picWidth, picWR.picHeight];
+        NSString    *sizeStr = [NSString    stringWithFormat:@"%@: %ix%i", @"Размер", picWR.picWidth, picWR.picHeight];
+        NSArray *range = [picWR.urlShowStr componentsSeparatedByString:@"/"];
+        
+        NSString *str = nil;
+        if ([range count] > 2)
+            str = [range objectAtIndex:2];
+        
+        [info   appendFormat:@"%@: %@",@"URL",str];
+        NSString *url = [NSString   stringWithFormat:@"%@: %@",@"Источник",str];
+        
+        
+        //CGSize  expSize = [button.titleLabel.text sizeWithFont:button.titleLabel.font constrainedToSize:CGSizeMake(button.frame.size.width,9999) lineBreakMode:button.titleLabel.lineBreakMode];
+        
+        //[button setFrame:CGRectMake(button.frame.origin.x, button.frame.origin.y, expSize.width, button.frame.size.height)];
+
     }
-    else{
-        nameStr = [picWR.name stripHTMLMarkup];
-    }
     
-    
-    
-    
-    NSMutableString *info = [NSMutableString stringWithFormat:@"«%@»\n", nameStr];
-    
-    NSString    *snipStr = [NSString    new];
-    
-//    if ([picWR.snippet stripHTMLMarkup].length > PICS_COLLECTION_IMAGE_TITLE_LENGTH) {
-//        snipStr = [[picWR.snippet stripHTMLMarkup] substringWithRange:NSMakeRange(0, PICS_COLLECTION_IMAGE_TITLE_LENGTH)];
-//        snipStr = [NSString stringWithFormat:@"%@...\n",snipStr];
-//        
-//    }
-//    else{
-//        snipStr = [picWR.snippet stripHTMLMarkup];
-//    }
-    
-    
-    if (picWR.format && picWR.format.length > 0) {
-        snipStr = [snipStr stringByAppendingFormat:@"Формат:%@ \n",picWR.format];
-    }
-    [info appendFormat:@"%@",snipStr];
-    
-    [info appendFormat:@"%@: %ix%i \n", @"Размер", picWR.picWidth, picWR.picHeight];
-    NSString    *sizeStr = [NSString    stringWithFormat:@"%@: %ix%i", @"Размер", picWR.picWidth, picWR.picHeight];
-    NSArray *range = [picWR.urlShowStr componentsSeparatedByString:@"/"];
-    
-    NSString *str = nil;
-    if ([range count] > 2)
-        str = [range objectAtIndex:2];
-    
-    [info   appendFormat:@"%@: %@",@"URL",str];
-    NSString *url = [NSString   stringWithFormat:@"%@: %@",@"Источник",str];
     [button setTitle:info forState:UIControlStateNormal];
+    //[button setTitle:info forState:UIControlStateNormal];
     
-    CGSize  expSize = [button.titleLabel.text sizeWithFont:button.titleLabel.font constrainedToSize:CGSizeMake(MAX(MAX([nameStr sizeWithFont:button.titleLabel.font].width, [snipStr sizeWithFont:button.titleLabel.font].width), MAX([sizeStr sizeWithFont:button.titleLabel.font].width, [url sizeWithFont:button.titleLabel.font].width)),9999) lineBreakMode:button.titleLabel.lineBreakMode];
-    
-    [button setFrame:CGRectMake(button.frame.origin.x, button.frame.origin.y, expSize.width, button.frame.size.height)];
+    //CGSize  expSize = [button.titleLabel.text sizeWithFont:button.titleLabel.font constrainedToSize:CGSizeMake(MAX(MAX([nameStr sizeWithFont:button.titleLabel.font].width, [snipStr sizeWithFont:button.titleLabel.font].width), MAX([sizeStr sizeWithFont:button.titleLabel.font].width, [url sizeWithFont:button.titleLabel.font].width)),9999) lineBreakMode:button.titleLabel.lineBreakMode];
+    //CGSize  expSize = [button.titleLabel.text sizeWithFont:button.titleLabel.font constrainedToSize:CGSizeMake(button.titleLabel.frame.size.width,9999) lineBreakMode:button.titleLabel.lineBreakMode];
     
     
 }
@@ -946,17 +939,8 @@
     
     
     
-    
-    nameLabel = [[UIButton alloc] initWithFrame:CGRectMake(15, -15, self.view.frame.size.width - 20, 105)];
-    
     nameLabel.titleLabel.adjustsFontSizeToFitWidth = YES;
-    
     [nameLabel.titleLabel setNumberOfLines:6];
-    [nameLabel.titleLabel setFont:[UIFont boldSystemFontOfSize:11]];
-    [nameLabel setBackgroundColor:[UIColor clearColor]];
-    [nameLabel setTitleColor:[UIColor colorWithWhite:0.0 alpha:0.82] forState:UIControlStateNormal];
-    [nameLabel setTitleColor:[UIColor colorWithWhite:1.0 alpha:1] forState:UIControlStateHighlighted];
-    
     [nameLabel addTarget:self action:@selector(openPicUrl) forControlEvents:UIControlEventTouchUpInside];
     
     
@@ -976,8 +960,6 @@
     _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, pics.count];
     
     [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -1017,9 +999,20 @@
     [_orientationChangeImage setContentMode:[picView contentMode]];
     [_orientationChangeImage setTintColor:[picView tintColor]];
     
-   
+    UIActivityIndicatorView *act = (UIActivityIndicatorView *)[_orientationChangeScroll viewWithTag:13];
+    _orientationChangeAct = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [_orientationChangeAct setColor:act.color];
+    [_orientationChangeAct setHidesWhenStopped:YES];
+    if (act.isAnimating) {
+        [_orientationChangeAct startAnimating];
+    }
+    else
+        [_orientationChangeAct stopAnimating];
+    
     [self.view insertSubview:_orientationChangeImage aboveSubview:_collectionView];
+    [self.view insertSubview:_orientationChangeAct aboveSubview:_orientationChangeImage];
     [_orientationChangeImage setFrame:picView.frame];
+    [_orientationChangeAct setFrame:CGRectMake((SCREEN_SIZE_WIDTH - _orientationChangeAct.frame.size.width)/2, (SCREEN_SIZE_HEIGHT - _orientationChangeAct.frame.size.height)/2, _orientationChangeAct.frame.size.width, _orientationChangeAct.frame.size.height)];
     //[_collectionView setAlpha:0.0f];
     [_collectionView setHidden:YES];
     
@@ -1059,6 +1052,7 @@
     }
     
     [_orientationChangeImage setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
+    [_orientationChangeAct setFrame:CGRectMake((SCREEN_SIZE_WIDTH - _orientationChangeAct.frame.size.width)/2, (SCREEN_SIZE_HEIGHT - _orientationChangeAct.frame.size.height)/2, _orientationChangeAct.frame.size.width, _orientationChangeAct.frame.size.height)];
 
 }
 
@@ -1077,8 +1071,8 @@
     [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
     
     [_collectionView setHidden:NO];
+    [_orientationChangeAct removeFromSuperview];
     [_orientationChangeImage removeFromSuperview];
-
 }
 
 - (void)changeTheScrollViewOrientation{
@@ -1256,17 +1250,11 @@
             } completion:^(BOOL finished) {
                 
             }];
-            
-            
-        
-            
-            
+
             //[self setNeedsStatusBarAppearanceUpdate];
         }
         else{
-            
-            
-            
+
             CGRect statusBarFrame = [[UIApplication sharedApplication] statusBarFrame];
             
             // delta is the amount by which the nav bar will be moved
@@ -1279,13 +1267,10 @@
             else { // normal status bar
                 animationDuration = 0.6;
             }
-            
             // hide status bar
             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
             
-            // hide nav bar
-            ;
-            
+            // hide nav ba
             navBarHidden = YES;
             [UIView animateWithDuration:animationDuration animations:^{
                 //self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
@@ -1345,10 +1330,6 @@
         activ.excludedActivityTypes = @[UIActivityTypePostToFacebook, UIActivityTypePostToTwitter, UIActivityTypePostToWeibo]; //or whichever you don't need
 #endif
         
-        
-        
-        
-        
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
             [self presentViewController:activ animated:YES completion:nil];
         } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -1361,7 +1342,6 @@
             else{
                 [aPopoverController presentPopoverFromBarButtonItem:actionButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
             }
-            
         }
         //[popupQuery showInView:self.view];
     }
@@ -1372,7 +1352,6 @@
 -   (void)  confirmSave{
     UIImageWriteToSavedPhotosAlbum(_currentImage.image, nil,
                                    nil, nil);
-    
 }
 
 
@@ -1397,42 +1376,22 @@
 
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    
     if ((scrollView.tag ==   13) && !isChangingOrientation) {
-
-        if ((scrollView.contentOffset.x <= scrollView.frame.size.width * (picTag -1))){
-            if (picTag > 0) {
-                
-                int num;
-                
-                num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
-                picTag = num;
-                UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
-                _curScroll = (UIScrollView *)[cell viewWithTag:11];
-                _currentImage = (UIImageView *)[_curScroll viewWithTag:12];
-                _curAct = (UIActivityIndicatorView *)[_curScroll viewWithTag:13];
-                
-                [self setButton:nameLabel];
-                _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, pics.count];
-            }
+            int num;
+            
+            num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
+            picTag = num;
+            UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
+            _curScroll = (UIScrollView *)[cell viewWithTag:11];
+            _currentImage = (UIImageView *)[_curScroll viewWithTag:12];
+            _curAct = (UIActivityIndicatorView *)[_curScroll viewWithTag:13];
+            
+            [self setButton:nameLabel];
+            _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, pics.count];
+        if (self.delegate) {
+            [self.delegate changePictureToItem:num];
         }
         
-        else  if (scrollView.contentOffset.x >= scrollView.frame.size.width * (picTag+1)-PICS_COLLECTION_SCROLL_IMAGE_DIVIDER) {
-            if (picTag < (pics.count)) {
-                
-                int num;
-                
-                num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
-                picTag = num;
-                UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
-                _curScroll = (UIScrollView *)[cell viewWithTag:11];
-                _currentImage = (UIImageView *)[_curScroll viewWithTag:12];
-                _curAct = (UIActivityIndicatorView *)[_curScroll viewWithTag:13];
-
-                [self setButton:nameLabel];
-                _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, pics.count];
-            }
-        }
     }
     
 }
@@ -1691,47 +1650,81 @@
 #pragma mark collectionView dataSource
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return 1;
+           return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return pics.count;
+    if (self.dataSource) {
+        return [self.dataSource numberOfPictures];
+    }
+    else if (pics.count){
+        return pics.count;
+    }
+    else
+        return 0;
 }
 
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *picCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"picCell" forIndexPath:indexPath];
     
+
+
+    
+    
     DKPictureScroll *minScroll = (DKPictureScroll *)[picCell viewWithTag:11];
     UIImageView *picView = (UIImageView *)[minScroll viewWithTag:12];
     UIActivityIndicatorView *act = (UIActivityIndicatorView *)[picCell viewWithTag:13];
-    DKPictureWrapper  *picCur = [pics    objectAtIndex:indexPath.row];
-    
     UIImageView *curImageCaptured = picView;
+    
+    NSURL *picUrl;
+    UIImage *minPic;
+    UIImage *originPic;
+    CGFloat originPicWidth = 0.0f;
+    CGFloat originPicHeight = 0.0f;
+    
+    if (self.dataSource){
+        NSDictionary *dict = [self.dataSource dictinaryForItem:indexPath.row];
+        
+        originPicWidth = [(NSNumber  *)[dict objectForKey:@"picWidth"] floatValue];
+        originPicHeight = [(NSNumber  *)[dict objectForKey:@"picHeight"] floatValue];
+        
+        picUrl  = (NSURL  *)[dict objectForKey:@"originUrl"];
+        minPic = (UIImage  *)[dict objectForKey:@"minPic"];
+    }else{
+        DKPictureWrapper  *picCur = [pics    objectAtIndex:indexPath.row];
+        originPicWidth = picCur.picWidth;
+        originPicHeight = picCur.picHeight;
+        
+        picUrl  = picCur.originUrl;
+        minPic = picCur.minPic;
+        
+    }
+    
     
     float screenWidth;
     float screenHeight;
     float scaledImageWidth ;
     float scaledImageHeight;
     
-    if(picCur.picWidth > SCREEN_SIZE_WIDTH   ||  picCur.picHeight > (SCREEN_SIZE_HEIGHT)){
-        float widthScale =  SCREEN_SIZE_WIDTH / picCur.picWidth;
-        float heightScale = (SCREEN_SIZE_HEIGHT)/ picCur.picHeight;
+    if(originPicWidth > SCREEN_SIZE_WIDTH   ||  originPicHeight > (SCREEN_SIZE_HEIGHT)){
+        float widthScale =  SCREEN_SIZE_WIDTH / originPicWidth;
+        float heightScale = (SCREEN_SIZE_HEIGHT)/ originPicHeight;
         float resultScale = (widthScale < heightScale) ? widthScale : heightScale;
         
         
-        scaledImageWidth = picCur.picWidth * resultScale;
-        scaledImageHeight = picCur.picHeight * resultScale;
+        scaledImageWidth = originPicWidth * resultScale;
+        scaledImageHeight = originPicHeight * resultScale;
         screenWidth = ( SCREEN_SIZE_WIDTH - scaledImageWidth ) / 2;
         screenHeight = ( SCREEN_SIZE_HEIGHT - scaledImageHeight ) / 2 ;
         
         
     }
     else{
-        screenWidth = (SCREEN_SIZE_WIDTH - picCur.picWidth)/2;
-        screenHeight = (SCREEN_SIZE_HEIGHT   - picCur.picHeight)/2 ;
-        scaledImageWidth = picCur.picWidth ;
-        scaledImageHeight = picCur.picHeight;
+        screenWidth = (SCREEN_SIZE_WIDTH - originPicWidth)/2;
+        screenHeight = (SCREEN_SIZE_HEIGHT   - originPicHeight)/2 ;
+        scaledImageWidth = originPicWidth;
+        scaledImageHeight = originPicHeight;
     }
     
     
@@ -1780,8 +1773,8 @@
 
     
     
-    if (picCur.originUrl) {
-        [picView setImageWithURL:picCur.originUrl placeholderImage:picCur.minPic completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+    if (picUrl) {
+        [picView setImageWithURL:picUrl placeholderImage:minPic completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             if (error)
             {
                 [act stopAnimating];
@@ -1797,11 +1790,11 @@
                 
                 [curImageCaptured setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT)];
                 [curImageCaptured setContentMode:UIViewContentModeCenter];
-                picCur.originLoaded = NO;
+                //picCur.originLoaded = NO;
                 
             }
             else{
-                picCur.originLoaded = YES;
+                //picCur.originLoaded = YES;
                 [picViewCapt setImage:image];
                 // [curImageCaptured setFrame:CGRectMake((SCREEN_SIZE_WIDTH/2) - image.size.width/2,( SCREEN_SIZE_HEIGHT- NAVIGATION_BAR_SIZE*2)/2  - image.size.height/2, image.size.width, image.size.height)];
             }
