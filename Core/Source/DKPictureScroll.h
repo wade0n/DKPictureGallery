@@ -20,5 +20,6 @@
 @property(nonatomic, strong) IBOutlet NSLayoutConstraint *actLeftOffsetConstr;
 @property(nonatomic, strong) IBOutlet NSLayoutConstraint *actTopOffsetConstr;
 
+@property(nonatomic) BOOL imageLoaded;
 
 @end

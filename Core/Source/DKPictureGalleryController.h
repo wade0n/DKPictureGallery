@@ -73,7 +73,7 @@
     
      AMBlurView *blurView;
     
-    UIScrollView *_curScroll;
+    DKPictureScroll *_curScroll;
     UIActivityIndicatorView *_curAct;
     DKPictureScroll *_orientationChangeScroll;
     UIImageView *_orientationChangeImage;
@@ -89,6 +89,8 @@
     IBOutlet NSLayoutConstraint *hintViewButtomOffset;
     IBOutlet UIView *_navBarView;
     IBOutlet NSLayoutConstraint *navViewTopOffset;
+    
+    IBOutlet UIImageView *backImageView;
 }
 
 @property(nonatomic) UIInterfaceOrientation returnOrientaton;

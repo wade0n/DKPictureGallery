@@ -1209,7 +1209,7 @@
 
 - (void)singleTapped{
 
-    UIScrollView *curScroll = _curScroll;
+    DKPictureScroll *curScroll = _curScroll;
 
     if (curScroll.zoomScale <= 1.0f) {
     
@@ -1243,7 +1243,7 @@
                 [self.view layoutIfNeeded];
                 [curAct setColor:[UIColor grayColor]];
                 [curImageView setTintColor:[UIColor grayColor]];
-                if (!picWr.originLoaded  && !curAct.isAnimating) {
+                if (!curScroll.imageLoaded  && !curAct.isAnimating) {
                     curImageView.image =  [curImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
                 }
 
@@ -1280,7 +1280,7 @@
                 self.view.backgroundColor = [UIColor blackColor];
                 [curAct setColor:[UIColor whiteColor]];
                 [curImageView setTintColor:[UIColor whiteColor]];
-                if (!picWr.originLoaded && !curAct.isAnimating) {
+                if (!curScroll.imageLoaded && !curAct.isAnimating) {
                     [curImageView setImage:PICS_NO_IMAGE];
                 }
                 [self setNeedsStatusBarAppearanceUpdate];
@@ -1392,6 +1392,17 @@
             [self.delegate changePictureToItem:num];
         }
         
+    }else if(scrollView.tag == 11){
+        if (self.delegate) {
+            if (!backImageView) {
+                backImageView = [[UIImageView alloc] initWithImage:[self.delegate getImageBackFromDismissTransition]];
+                backImageView.frame = self.view.frame;
+                [self.view insertSubview:backImageView belowSubview:_collectionView];
+            }
+        }
+        CGFloat offset =  scrollView.contentOffset.y;
+        [_collectionView setBackgroundColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:100/offset]];
+         NSLog(@"offset - %f",scrollView.contentOffset.y);
     }
     
 }
@@ -1752,7 +1763,6 @@
     minScroll.showsHorizontalScrollIndicator = YES;
     minScroll.showsVerticalScrollIndicator = YES;
     minScroll.scrollsToTop = NO;
-    minScroll.bounces = NO;
     
     [minScroll setZoomScale:minScroll.minimumZoomScale];
     
@@ -1790,11 +1800,11 @@
                 
                 [curImageCaptured setFrame:CGRectMake(0 ,0 , SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT)];
                 [curImageCaptured setContentMode:UIViewContentModeCenter];
-                //picCur.originLoaded = NO;
+                minScroll.imageLoaded = NO;
                 
             }
             else{
-                //picCur.originLoaded = YES;
+                minScroll.imageLoaded = YES;
                 [picViewCapt setImage:image];
                 // [curImageCaptured setFrame:CGRectMake((SCREEN_SIZE_WIDTH/2) - image.size.width/2,( SCREEN_SIZE_HEIGHT- NAVIGATION_BAR_SIZE*2)/2  - image.size.height/2, image.size.width, image.size.height)];
             }

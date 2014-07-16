@@ -24,7 +24,7 @@
                                     <size key="itemSize" width="266" height="569"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="5" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="picCell" id="71s-qo-w3J">
@@ -34,7 +34,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" tag="11" contentMode="scaleToFill" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g0K-uS-JhZ" customClass="DKPictureScroll">
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" tag="11" contentMode="scaleToFill" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g0K-uS-JhZ" customClass="DKPictureScroll">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <subviews>
