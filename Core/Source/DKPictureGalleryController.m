@@ -864,7 +864,7 @@
     
     
     if (pics.count > 3) {
-        //        TODO: what was this
+        //         what was this
         //        [manager downloadWithURL:nextNextPic.originUrl delegate:self options:0 success:nil failure:nil];
         //        [manager downloadWithURL:prePrePic.originUrl delegate:self options:0 success:nil failure:nil];
         
@@ -971,6 +971,18 @@
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark inputmethods
+
+- (void)insertNewPictures:(int)pictureAmount{
+    NSMutableArray *paths = [NSMutableArray new];
+    for (int i = 0 ; i++; i < pictureAmount) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i+picCount inSection:0];
+        [paths addObject:indexPath];
+    }
+    
+    [_collectionView insertItemsAtIndexPaths:[NSArray arrayWithArray:[NSArray arrayWithArray:paths]]];
 }
 #pragma mark - orientation
 
@@ -1666,7 +1678,8 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if (self.dataSource) {
-        return [self.dataSource numberOfPictures];
+        picCount = [self.dataSource numberOfPictures];
+        return picCount;
     }
     else if (pics.count){
         return pics.count;
@@ -1832,4 +1845,5 @@
   //  return CGSizeMake(_collectionView.frame.size.width, _collectionView.frame.size.height);
     return CGSizeMake(SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT);
 }
+
 @end

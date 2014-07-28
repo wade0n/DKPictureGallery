@@ -154,4 +154,5 @@
 -   (IBAction)saveToAlbum:(id)sender;
 
 - (void)setTransitionRect:(CGRect)startFrame andImage:(UIImage *)startImage finishFrame:(CGRect)endFrame;
+- (void)insertNewPictures:(int)pictureAmount;
 @end
