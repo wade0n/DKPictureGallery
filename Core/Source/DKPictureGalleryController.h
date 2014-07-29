@@ -24,8 +24,8 @@
 
 @protocol DKPictureGalleryDelegate <NSObject>
 - (void)changePictureToItem:(NSInteger)itemPosition;
-- (UIImage *)getImageBackFromDismissTransition;
-- (CGRect)getRectForTransition;
+- (UIImage *)getImageBackFromDismissTransition:(int)itemPosition;
+- (CGRect)getRectForTransitionForIndex:(int)itemPosition;
 - (void)didSelectPictureAtPosition:(int)position Sender:(id)sender;
 @end
 

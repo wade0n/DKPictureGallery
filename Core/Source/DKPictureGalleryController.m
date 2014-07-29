@@ -957,7 +957,7 @@
     }
     if (picTag && picCount) {
         _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
-        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        //[_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
 
     }
     [self setNeedsStatusBarAppearanceUpdate];
@@ -1426,7 +1426,7 @@
     }else if(scrollView.tag == 11){
         if (self.delegate) {
             if (!backImageView) {
-                backImageView = [[UIImageView alloc] initWithImage:[self.delegate getImageBackFromDismissTransition]];
+                backImageView = [[UIImageView alloc] initWithImage:[self.delegate getImageBackFromDismissTransition:picTag]];
                 backImageView.frame = self.view.frame;
                 [self.view insertSubview:backImageView belowSubview:_collectionView];
             }
