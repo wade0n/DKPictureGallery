@@ -157,4 +157,5 @@
 
 - (void)setTransitionRect:(CGRect)startFrame andImage:(UIImage *)startImage finishFrame:(CGRect)endFrame;
 - (void)insertNewPictures:(int)pictureAmount;
+- (void)reloadData;
 @end
