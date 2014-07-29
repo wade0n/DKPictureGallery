@@ -35,7 +35,12 @@
 
 @synthesize pics = _pics;
 
-
+- (void)setPictureIndex:(int)picPosition Animated:(BOOL)animated{
+    picTag = picPosition;
+    if (animated) {
+        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picPosition inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:animated];
+    }
+}
 - (void)setTransitionRect:(CGRect)startFrame andImage:(UIImage *)startImage finishFrame:(CGRect)endFrame{
     if (startImage) {
         _startFrame = startFrame;
@@ -79,16 +84,6 @@
        _transitionSet = NO;
     }
 
-}
-
-- (void)setPicNum:(int)position{
-    
-     picTag = position;
-    
-     self.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
-    
-     [scroll setContentOffset:CGPointMake(scroll.frame.size.width*picTag, 0)];
-    
 }
 
 
@@ -956,10 +951,16 @@
     //blurView.backgroundColor = [UIColor redColor];
     blurView = (AMBlurView *)[hintView viewWithTag:12];
     [hintView addSubview: nameLabel];
+    if (self.dataSource) {
+        picCount = [self.dataSource numberOfPictures];
+    }
+    if (picTag && picCount) {
+        _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+        
+        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+
+    }
     
-    _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, pics.count];
-    
-    [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
 }
 
 - (void)didReceiveMemoryWarning
@@ -1399,7 +1400,7 @@
             _curAct = (UIActivityIndicatorView *)[_curScroll viewWithTag:13];
             
             [self setButton:nameLabel];
-            _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, pics.count];
+            _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
         if (self.delegate) {
             [self.delegate changePictureToItem:num];
         }

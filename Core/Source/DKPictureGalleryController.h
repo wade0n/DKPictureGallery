@@ -25,6 +25,7 @@
 @protocol DKPictureGalleryDelegate <NSObject>
 - (void)changePictureToItem:(NSInteger)itemPosition;
 - (UIImage *)getImageBackFromDismissTransition;
+- (CGRect)getRectForTransition;
 - (void)didSelectPictureAtPosition:(int)position Sender:(id)sender;
 @end
 
@@ -145,6 +146,7 @@
                withOriginUrlStr:(NSMutableArray *)originUrlStrArr
                      withSource:(NSMutableArray *)sourceArr;
 
+-   (void)setPictureIndex:(int)picPosition Animated:(BOOL)animated;
 -   (void)setScrollView:(UIScrollView*)tempScrollView;
 -   (void)screenTapped;
 -   (void)saveToAlbum;
