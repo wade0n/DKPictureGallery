@@ -960,7 +960,7 @@
         [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
 
     }
-    
+    [self setNeedsStatusBarAppearanceUpdate];
     
 }
 
@@ -978,6 +978,11 @@
 #pragma mark inputmethods
 
 - (void)insertNewPictures:(int)pictureAmount{
+    if (self.dataSource) {
+        picCount = [self.dataSource numberOfPictures];
+    }
+    _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+    
     NSMutableArray *paths = [NSMutableArray new];
     for (int i = 0 ; i++; i < pictureAmount) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:i+picCount inSection:0];
