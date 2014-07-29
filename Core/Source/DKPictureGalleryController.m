@@ -12,6 +12,8 @@
 #import "UIImageView+WebCache.h"
 #import "DKConstants.h"
 #import "DKPictureScroll.h"
+#import "DKTransitionDelegate.h"
+
 
 
 
@@ -1321,7 +1323,29 @@
 #pragma mark pics actions
 
 - (IBAction)dismiss:(id)sender{
-    [[self presentingViewController] dismissViewControllerAnimated:NO completion:nil];
+    
+    id <UIViewControllerTransitioningDelegate> myDelegate = nil;
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(getRectForTransitionForIndex:)]){
+        self.endFrame = [self.delegate getRectForTransitionForIndex:picTag];
+        UICollectionViewCell *picCell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
+        
+        DKPictureScroll *minScroll = (DKPictureScroll *)[picCell viewWithTag:11];
+        UIImageView *picView = (UIImageView *)[minScroll viewWithTag:12];
+        self.transitionImage = picView.image;
+        self.startFrame = picView.frame;
+        self.backTransitionSet = YES;
+        
+        myDelegate = [DKTransitionDelegate new];
+        
+        self.transitioningDelegate = myDelegate;
+
+        
+        //[self presentingViewController].transitioningDelegate = nil;
+        
+    }
+    
+    [self  dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)saveToAlbum:(id)sender{

@@ -17,18 +17,36 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
 {
-    UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    DKPictureGalleryController *toViewController = (DKPictureGalleryController *)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    DKPictureGalleryController *gallery;
+    UIViewController *otherController;
+    
     UIView *container = [transitionContext containerView];
     UIImageView *imgView;
     UIView *whiteView;
     if (self.reverse) {
-        [container insertSubview:toViewController.view belowSubview:fromViewController.view];
+        otherController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+        gallery = (DKPictureGalleryController *)[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+        [container addSubview:otherController.view];
+        [container insertSubview:gallery.view aboveSubview:otherController.view];
+        
+        if (gallery.backTransitionSet) {
+            imgView = [[UIImageView alloc] initWithFrame:gallery.startFrame];
+            [imgView setImage:gallery.transitionImage];
+            
+            [container addSubview:imgView];
+        }
+        
+        gallery.view.alpha = 1.0;
+   
     }
     else {
-        if (toViewController.transitionSet) {
-            imgView = [[UIImageView alloc] initWithFrame:toViewController.startFrame];
-            [imgView setImage:toViewController.transitionImage];
+        
+        gallery = (DKPictureGalleryController *)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+        otherController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+        
+        if (gallery.transitionSet) {
+            imgView = [[UIImageView alloc] initWithFrame:gallery.startFrame];
+            [imgView setImage:gallery.transitionImage];
             
             whiteView = [[UIView alloc] initWithFrame:container.frame];
             whiteView.backgroundColor = [UIColor whiteColor];
@@ -36,8 +54,8 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
             [container addSubview:whiteView];
             [container addSubview:imgView];
         }else{
-            toViewController.view.transform = CGAffineTransformMakeScale(0, 0);
-            [container addSubview:toViewController.view];
+            gallery.view.transform = CGAffineTransformMakeScale(0, 0);
+            [container addSubview:gallery.view];
 
         }
 
@@ -46,15 +64,23 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
     
     [UIView animateKeyframesWithDuration:DKAnimatedTransitionDuration delay:0 options:0 animations:^{
         if (self.reverse) {
-            fromViewController.view.transform = CGAffineTransformMakeScale(0, 0);
+            if (gallery.backTransitionSet) {
+                [imgView setFrame:gallery.endFrame];
+               // [whiteView setAlpha:1.0f];
+            }
+            
+            gallery.view.alpha = 0.0;
+            
+            
+            
         }
         else {
-            if (toViewController.transitionSet) {
-                [imgView setFrame:toViewController.endFrame];
+            if (gallery.transitionSet) {
+                [imgView setFrame:gallery.endFrame];
                 [whiteView setAlpha:1.0f];
                 
             }else{
-                toViewController.view.transform = CGAffineTransformIdentity;
+                gallery.view.transform = CGAffineTransformIdentity;
             }
             
             

@@ -100,6 +100,7 @@
 @property(nonatomic, strong) UIActivityViewController    *activity;
 @property(nonatomic, copy) void (^selectedPicture)(int selectedNumber);
 @property(nonatomic) BOOL transitionSet;
+@property(nonatomic) BOOL backTransitionSet;
 @property(nonatomic) CGRect startFrame;
 @property(nonatomic) CGRect endFrame;
 @property(nonatomic, strong) UIImage *transitionImage;
