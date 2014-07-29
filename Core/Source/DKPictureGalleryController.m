@@ -914,6 +914,7 @@
     _toolBar.clipsToBounds = YES;
     _statusBlurView.blurTintColor = _toolBar.tintColor;
     
+    [_collectionView reloadData];
     
     singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapped)];
     [singleTap setNumberOfTapsRequired:1];
@@ -956,10 +957,10 @@
     }
     if (picTag && picCount) {
         _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
-        
         [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
 
     }
+    
     
 }
 
@@ -1373,7 +1374,9 @@
     DKPictureWrapper    *picWR =   [[DKPictureWrapper   alloc]  init];
     picWR = [pics   objectAtIndex:picTag];
     
-    if (self.selectedPicture) {
+    if (self.delegate) {
+        [self.delegate didSelectPictureAtPosition:picTag Sender:self];
+    }else if (self.selectedPicture) {
         self.selectedPicture(picTag);
     }
     else
