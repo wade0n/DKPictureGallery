@@ -977,6 +977,11 @@
 
 #pragma mark inputmethods
 
+- (void)reloadData{
+    [_collectionView reloadData];
+    [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+}
+
 - (void)insertNewPictures:(int)pictureAmount{
     if (self.dataSource) {
         picCount = [self.dataSource numberOfPictures];
@@ -1394,7 +1399,15 @@
 
 
 #pragma mark zooming scrollview
-
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    if (self.delegate) {
+        int num;
+        
+        num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
+        
+        [self.delegate changePictureToItem:num];
+    }
+}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if ((scrollView.tag ==   13) && !isChangingOrientation) {
@@ -1409,9 +1422,6 @@
             
             [self setButton:nameLabel];
             _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
-        if (self.delegate) {
-            [self.delegate changePictureToItem:num];
-        }
         
     }else if(scrollView.tag == 11){
         if (self.delegate) {
