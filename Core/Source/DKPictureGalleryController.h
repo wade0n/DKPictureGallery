@@ -105,6 +105,7 @@
 @property(nonatomic) CGRect endFrame;
 @property(nonatomic, strong) UIImage *transitionImage;
 @property(nonatomic, strong) UIImage *transitionMinPic;
+@property (nonatomic, strong) UIView *transitionView;
 @property (nonatomic, weak) id <DKPictureGalleryDataSource> dataSource;
 @property(nonatomic, weak) id <DKPictureGalleryDelegate> delegate;
 
@@ -155,7 +156,6 @@
 -   (void)confirmSave;
 -   (void)setPicNum:(int)position;
 -   (IBAction)dismiss:(id)sender;
--   (void)closeGallery;
 -   (IBAction)saveToAlbum:(id)sender;
 
 - (void)setTransitionRect:(CGRect)startFrame andImage:(UIImage *)startImage finishFrame:(CGRect)endFrame;

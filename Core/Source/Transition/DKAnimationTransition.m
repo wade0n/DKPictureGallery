@@ -25,6 +25,7 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
     UIImageView *minImgView;
     UIView *whiteView;
     if (self.reverse) {
+//        container.layer.speed = 0.1f;
         otherController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
         gallery = (DKPictureGalleryController *)[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
         [container addSubview:otherController.view];
@@ -37,6 +38,8 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
             if (gallery.transitionMinPic) {
                
                 [minImgView setImage:gallery.transitionMinPic];
+                minImgView.contentMode = UIViewContentModeScaleAspectFill;
+                minImgView.clipsToBounds = YES;
             }else{
                 minImgView.hidden = YES;
             }
@@ -44,13 +47,15 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
             
             if (gallery.transitionImage) {
                 [imgView setImage:gallery.transitionImage];
+                
+//                imgView.clipsToBounds = YES;
             }else{
                 imgView.hidden = YES;
             }
             
-            minImgView.alpha = 0.0;
+            minImgView.alpha = 1.0;
             imgView.alpha = 1.0;
-            
+            gallery.transitionView.hidden = YES;
             
             [container addSubview:minImgView];
             [container addSubview:imgView];
@@ -96,7 +101,6 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
             gallery.view.alpha = 0.0;
             
             
-            
         }
         else {
             if (gallery.transitionSet) {
@@ -109,6 +113,8 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
             
             
         }
+        [container layoutIfNeeded];
+
     } completion:^(BOOL finished) {
         [whiteView removeFromSuperview];
         [imgView removeFromSuperview];

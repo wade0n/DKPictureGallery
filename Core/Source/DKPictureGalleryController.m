@@ -978,10 +978,6 @@
 }
 
 #pragma mark inputmethods
-- (void)closeGallery{
-    [self  dismissViewControllerAnimated:NO completion:nil];
-
-}
 
 - (void)reloadData{
     [_collectionView reloadData];
@@ -1346,6 +1342,8 @@
         self.transitionImage = picView.image;
         self.startFrame = picView.frame;
         self.backTransitionSet = YES;
+        _transitionView = picView;
+//        picView.hidden = YES;
         
         myDelegate = [DKTransitionDelegate new];
         
