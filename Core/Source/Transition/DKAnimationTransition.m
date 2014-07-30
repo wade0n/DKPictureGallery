@@ -22,6 +22,7 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
     
     UIView *container = [transitionContext containerView];
     UIImageView *imgView;
+    UIImageView *minImgView;
     UIView *whiteView;
     if (self.reverse) {
         otherController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
@@ -30,9 +31,28 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
         [container insertSubview:gallery.view aboveSubview:otherController.view];
         
         if (gallery.backTransitionSet) {
+            minImgView =  [[UIImageView alloc] initWithFrame:gallery.startFrame];
             imgView = [[UIImageView alloc] initWithFrame:gallery.startFrame];
-            [imgView setImage:gallery.transitionImage];
             
+            if (gallery.transitionMinPic) {
+               
+                [minImgView setImage:gallery.transitionMinPic];
+            }else{
+                minImgView.hidden = YES;
+            }
+            
+            
+            if (gallery.transitionImage) {
+                [imgView setImage:gallery.transitionImage];
+            }else{
+                imgView.hidden = YES;
+            }
+            
+            minImgView.alpha = 0.0;
+            imgView.alpha = 1.0;
+            
+            
+            [container addSubview:minImgView];
             [container addSubview:imgView];
         }
         
@@ -66,6 +86,10 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
         if (self.reverse) {
             if (gallery.backTransitionSet) {
                 [imgView setFrame:gallery.endFrame];
+                [minImgView setFrame:gallery.endFrame];
+                
+                [imgView setAlpha:0.0f];
+                [minImgView setAlpha:1.0f];
                // [whiteView setAlpha:1.0f];
             }
             
@@ -88,6 +112,7 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
     } completion:^(BOOL finished) {
         [whiteView removeFromSuperview];
         [imgView removeFromSuperview];
+        [minImgView removeFromSuperview];
         [transitionContext completeTransition:finished];
     }];
 }

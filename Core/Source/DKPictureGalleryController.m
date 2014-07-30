@@ -1332,6 +1332,13 @@
         
         DKPictureScroll *minScroll = (DKPictureScroll *)[picCell viewWithTag:11];
         UIImageView *picView = (UIImageView *)[minScroll viewWithTag:12];
+        if (self.dataSource && [self.dataSource respondsToSelector:@selector(dictinaryForItem:)]) {
+            NSDictionary *dict = [self.dataSource dictinaryForItem:picTag];
+            if ([dict valueForKey:@"minPic"]) {
+                self.transitionMinPic = (UIImage *)[dict valueForKey:@"minPic"];
+            }
+        }
+        
         self.transitionImage = picView.image;
         self.startFrame = picView.frame;
         self.backTransitionSet = YES;

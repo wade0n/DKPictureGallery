@@ -104,6 +104,7 @@
 @property(nonatomic) CGRect startFrame;
 @property(nonatomic) CGRect endFrame;
 @property(nonatomic, strong) UIImage *transitionImage;
+@property(nonatomic, strong) UIImage *transitionMinPic;
 @property (nonatomic, weak) id <DKPictureGalleryDataSource> dataSource;
 @property(nonatomic, weak) id <DKPictureGalleryDelegate> delegate;
 
