@@ -978,6 +978,10 @@
 }
 
 #pragma mark inputmethods
+- (void)closeGallery{
+    [self  dismissViewControllerAnimated:NO completion:nil];
+
+}
 
 - (void)reloadData{
     [_collectionView reloadData];
