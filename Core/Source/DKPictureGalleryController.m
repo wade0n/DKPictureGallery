@@ -957,7 +957,7 @@
     if (self.dataSource) {
         picCount = [self.dataSource numberOfPictures];
     }
-    if (picTag && picCount) {
+    if (picCount) {
         _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
         [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
 
@@ -979,11 +979,9 @@
 
 #pragma mark inputmethods
 
-
 -  (void)closeGallery{
     [self  dismissViewControllerAnimated:NO completion:nil];
 }
-
 
 - (void)reloadData{
     [_collectionView reloadData];
