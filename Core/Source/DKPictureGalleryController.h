@@ -157,6 +157,7 @@
 -   (void)setPicNum:(int)position;
 -   (IBAction)dismiss:(id)sender;
 -   (IBAction)saveToAlbum:(id)sender;
+-  (void)closeGallery;
 
 - (void)setTransitionRect:(CGRect)startFrame andImage:(UIImage *)startImage finishFrame:(CGRect)endFrame;
 - (void)insertNewPictures:(int)pictureAmount;

@@ -979,6 +979,12 @@
 
 #pragma mark inputmethods
 
+
+-  (void)closeGallery{
+    [self  dismissViewControllerAnimated:NO completion:nil];
+}
+
+
 - (void)reloadData{
     [_collectionView reloadData];
     [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
