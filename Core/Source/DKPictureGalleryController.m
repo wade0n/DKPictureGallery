@@ -351,7 +351,7 @@
     [nameLabel.titleLabel setFont:[UIFont boldSystemFontOfSize:11]];
     [nameLabel setBackgroundColor:[UIColor clearColor]];
     [nameLabel setTitleColor:[UIColor colorWithWhite:0.0 alpha:0.82] forState:UIControlStateNormal];
-    [nameLabel setTitleColor:[UIColor colorWithWhite:1.0 alpha:1] forState:UIControlStateHighlighted];
+    [nameLabel setTitleColor:[UIColor greenColor] forState:UIControlStateHighlighted];
     
     [nameLabel addTarget:self action:@selector(openPicUrl) forControlEvents:UIControlEventTouchUpInside];
     
@@ -1472,14 +1472,14 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if ((scrollView.tag ==   13) && !isChangingOrientation) {
-            int num;
+        int num;
         
         if (_scrollLock && GALLERY_IS_IPHONE_4) {
             scrollView.contentOffset  = CGPointMake(picTag  * scrollView.frame.size.width,0);
             _scrollLock = NO;
         }
-        
-            num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
+        num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
+        if (num != picTag) {
             picTag = num;
             UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
             _curScroll = (UIScrollView *)[cell viewWithTag:11];
@@ -1488,6 +1488,8 @@
             
             [self setButton:nameLabel];
             _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+ 
+        }
         
     }else if(scrollView.tag == 11){
         if (self.delegate) {
