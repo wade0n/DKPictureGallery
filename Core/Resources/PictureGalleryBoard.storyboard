@@ -110,7 +110,7 @@
                                                 </connections>
                                             </barButtonItem>
                                             <barButtonItem style="plain" systemItem="flexibleSpace" id="MHe-Xp-kIQ"/>
-                                            <barButtonItem title="1 из 20" style="plain" id="xLc-Ku-xiQ">
+                                            <barButtonItem title="0 из 0" style="plain" id="xLc-Ku-xiQ">
                                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                             </barButtonItem>
                                             <barButtonItem style="plain" systemItem="flexibleSpace" id="XVZ-HA-deC"/>
@@ -181,10 +181,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="blP-Vk-rNM" secondAttribute="bottom" id="0xG-LJ-QUO"/>
                             <constraint firstItem="hox-PT-SoY" firstAttribute="top" secondItem="bSa-v4-0d7" secondAttribute="bottom" id="84L-0I-Z4h"/>
                             <constraint firstAttribute="trailing" secondItem="bSa-v4-0d7" secondAttribute="trailing" id="9qJ-vq-GlW"/>
                             <constraint firstAttribute="trailing" secondItem="y8Q-a6-upG" secondAttribute="trailing" id="Fx1-BV-qwh"/>
-                            <constraint firstItem="hox-PT-SoY" firstAttribute="top" secondItem="blP-Vk-rNM" secondAttribute="bottom" id="K5n-eG-iIc"/>
                             <constraint firstItem="bSa-v4-0d7" firstAttribute="leading" secondItem="2qZ-ja-2jw" secondAttribute="leading" id="NQw-v1-BLg"/>
                             <constraint firstAttribute="trailing" secondItem="blP-Vk-rNM" secondAttribute="trailing" constant="-10" id="Rum-HR-EVU"/>
                             <constraint firstItem="blP-Vk-rNM" firstAttribute="leading" secondItem="2qZ-ja-2jw" secondAttribute="leading" id="Tta-TD-BSq"/>

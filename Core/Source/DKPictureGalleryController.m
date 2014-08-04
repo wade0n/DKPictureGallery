@@ -294,6 +294,21 @@
 }
 
 
+#pragma mark lifeCicle 
+
+
+- (void)enableScrollLock{
+//    if (self.dataSource) {
+//        picCount = [self.dataSource numberOfPictures];
+//    }
+//    if (picCount) {
+//        _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+//        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+//        
+//    }
+    _scrollLock = NO;
+}
+
 - (void)setCurrentPicture:(DKPictureWrapper *)pic
               AllPictures:(NSMutableArray   *)arr
        SetCurrentPosition:(int)num{
@@ -906,6 +921,23 @@
     return self;
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+  
+    if (self.dataSource) {
+        picCount = [self.dataSource numberOfPictures];
+    }
+    if (picCount) {
+        _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        
+    }
+
+    if (GALLERY_IS_IPHONE_4) {
+        _scrollLock = YES;
+    }
+
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -954,14 +986,6 @@
     //blurView.backgroundColor = [UIColor redColor];
     blurView = (AMBlurView *)[hintView viewWithTag:12];
     [hintView addSubview: nameLabel];
-    if (self.dataSource) {
-        picCount = [self.dataSource numberOfPictures];
-    }
-    if (picCount) {
-        _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
-        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-
-    }
     [self setNeedsStatusBarAppearanceUpdate];
     
 }
@@ -1191,7 +1215,7 @@
     
     
    
-    [scroll setContentOffset:CGPointMake(scroll.frame.size.width*picTag, - NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE+4, 8))];
+   // [scroll setContentOffset:CGPointMake(scroll.frame.size.width*picTag, - NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE+4, 8))];
 
     
     isChangingOrientation = NO;
@@ -1449,7 +1473,12 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if ((scrollView.tag ==   13) && !isChangingOrientation) {
             int num;
-            
+        
+        if (_scrollLock && GALLERY_IS_IPHONE_4) {
+            scrollView.contentOffset  = CGPointMake(picTag  * scrollView.frame.size.width,0);
+            _scrollLock = NO;
+        }
+        
             num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
             picTag = num;
             UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
@@ -1470,7 +1499,7 @@
         }
         CGFloat offset =  scrollView.contentOffset.y;
         [_collectionView setBackgroundColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:100/offset]];
-         NSLog(@"offset - %f",scrollView.contentOffset.y);
+         //NSLog(@"offset - %f",scrollView.contentOffset.y);
     }
     
 }
@@ -1747,10 +1776,6 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *picCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"picCell" forIndexPath:indexPath];
-    
-
-
-    
     
     DKPictureScroll *minScroll = (DKPictureScroll *)[picCell viewWithTag:11];
     UIImageView *picView = (UIImageView *)[minScroll viewWithTag:12];

@@ -92,6 +92,8 @@
     IBOutlet NSLayoutConstraint *navViewTopOffset;
     
     IBOutlet UIImageView *backImageView;
+    
+    BOOL _scrollLock;
 }
 
 @property(nonatomic) UIInterfaceOrientation returnOrientaton;
