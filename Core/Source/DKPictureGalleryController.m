@@ -1510,7 +1510,7 @@
 
 - (void)scrollViewWillBeginZooming:(UIScrollView *)_scrollView withView:(UIView *)view {
     //        _scrollView.scrollEnabled = YES;
-    if (_scrollView.tag != 13) {
+    if (_scrollView.tag == 11) {
         
         
         if (!navBarHidden){
@@ -1533,7 +1533,7 @@
 - (void)scrollViewDidEndZooming:(UIScrollView *)_scrollView withView:(UIView *)view atScale:(CGFloat)scale {
     
     
-    if (_scrollView.tag != 13) {
+    if (_scrollView.tag == 11) {
         
         
         
