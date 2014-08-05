@@ -48,3 +48,8 @@
 #define INTERFACE_ORIENTATION_SENSETIVE_VALUE(__Portrait__,__Landscape__) ( UI_INTERFACE_ORIENTATION_IS_PORTRAIT() ? __Portrait__ : __Landscape__ )
 
 #define PICS_NO_IMAGE       [UIImage imageNamed:@"no_photo"]
+
+#define GALLEY_IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#define GALLERY_IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+#define GALLERY_IS_IPHONE_5 (GALLERY_IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 568.0f)
+#define GALLERY_IS_IPHONE_4 (GALLERY_IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 480.0f)
