@@ -1492,16 +1492,17 @@
         }
         
     }else if(scrollView.tag == 11){
-        if (self.delegate) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(getImageBackFromDismissTransition:)]) {
             if (!backImageView) {
                 backImageView = [[UIImageView alloc] initWithImage:[self.delegate getImageBackFromDismissTransition:picTag]];
                 backImageView.frame = self.view.frame;
                 [self.view insertSubview:backImageView belowSubview:_collectionView];
             }
+            CGFloat offset =  scrollView.contentOffset.y;
+            [_collectionView setBackgroundColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:100/offset]];
+
         }
-        CGFloat offset =  scrollView.contentOffset.y;
-        [_collectionView setBackgroundColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:100/offset]];
-         //NSLog(@"offset - %f",scrollView.contentOffset.y);
+               //NSLog(@"offset - %f",scrollView.contentOffset.y);
     }
     
 }
@@ -1557,7 +1558,7 @@
 -(void) scrollViewDidZoom:(UIScrollView *)_scrollView{
     
     // D_Log(@"Zoom %f", _scrollView.zoomScale);
-    UIImageView *imgView = (UIImageView *)[_scrollView viewWithTag:12];
+    UIImageView *imgView = _currentImage;
 
     
     CGFloat offSetX = (_scrollView.contentSize.width > _scrollView.frame.size.width) ? (_scrollView.contentSize.width - _scrollView.frame.size.width) / 2 : 0.0;
@@ -1581,16 +1582,9 @@
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)_scrollView {
-    
-    if (_scrollView.tag != 13) {
-        
-        
-        
-        UIImageView *imgView = (UIImageView *)[_scrollView viewWithTag:12];
-        
-        return imgView;
+    if (_scrollView.tag == 11) {
+        return _currentImage;
     }
-    
     return nil;
 }
 
