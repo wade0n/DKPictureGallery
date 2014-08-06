@@ -80,7 +80,7 @@
     UIImageView *_orientationChangeImage;
     UIActivityIndicatorView *_orientationChangeAct;
     UIView *_orientationChangeWhiteView;
-    
+    UIImageView *_zoomImageView;
     ///// new storyboard View
     
     IBOutlet UICollectionView *_collectionView;

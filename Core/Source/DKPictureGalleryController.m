@@ -1503,6 +1503,8 @@
  
         }
         
+        //NSLog(@"%@",_zoomImageView);
+        
     }else if(scrollView.tag == 11){
         if (self.delegate && [self.delegate respondsToSelector:@selector(getImageBackFromDismissTransition:)]) {
             if (!backImageView) {
@@ -1561,6 +1563,7 @@
             
         }
         
+    
         
     }
     
@@ -1570,7 +1573,7 @@
 -(void) scrollViewDidZoom:(UIScrollView *)_scrollView{
     
     // D_Log(@"Zoom %f", _scrollView.zoomScale);
-    UIImageView *imgView = [self getCurrentimage];
+    UIImageView *imgView = _zoomImageView;
 
     
     CGFloat offSetX = (_scrollView.contentSize.width > _scrollView.frame.size.width) ? (_scrollView.contentSize.width - _scrollView.frame.size.width) / 2 : 0.0;
@@ -1595,7 +1598,9 @@
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)_scrollView {
     if (_scrollView.tag == 11) {
-        return [self getCurrentimage];
+        _zoomImageView = [self getCurrentimage];
+        [_zoomImageView setContentMode:UIViewContentModeScaleToFill];
+        return _zoomImageView;
     }
     return nil;
 }
@@ -1864,9 +1869,13 @@
     minScroll.scrollEnabled =   YES;
     minScroll.showsHorizontalScrollIndicator = YES;
     minScroll.showsVerticalScrollIndicator = YES;
+    [picView  setContentMode:UIViewContentModeScaleAspectFill];
     minScroll.scrollsToTop = NO;
-    
     [minScroll setZoomScale:minScroll.minimumZoomScale];
+    
+    if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)]) {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
     
     [act startAnimating];
     UIImageView *picViewCapt = picView;
