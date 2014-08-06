@@ -297,6 +297,11 @@
 #pragma mark lifeCicle 
 
 
+- (UIImageView  *)getCurrentimage{
+    UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
+    return  (UIImageView *)[_curScroll viewWithTag:12];
+}
+
 - (void)enableScrollLock{
 //    if (self.dataSource) {
 //        picCount = [self.dataSource numberOfPictures];
@@ -782,14 +787,7 @@
     [curAct startAnimating];
     [nextAct startAnimating];
     [preAct startAnimating];
-    
-    
-    ////check pics order///
-    
-    
-    
-    
-    
+
     UIImageView *curImageCaptured = curImage;
     
     
@@ -1053,6 +1051,7 @@
     [_orientationChangeImage setContentMode:[picView contentMode]];
     [_orientationChangeImage setTintColor:[picView tintColor]];
     
+    
     UIActivityIndicatorView *act = (UIActivityIndicatorView *)[_orientationChangeScroll viewWithTag:13];
     _orientationChangeAct = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [_orientationChangeAct setColor:act.color];
@@ -1070,42 +1069,58 @@
     //[_collectionView setAlpha:0.0f];
     [_collectionView setHidden:YES];
     
-    
+    if (!navBarHidden) {
+        _orientationChangeWhiteView = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_SIZE_WIDTH, 0, SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT)];
+        _orientationChangeWhiteView.backgroundColor = [UIColor whiteColor];
+        [self.view insertSubview:_orientationChangeWhiteView belowSubview:_orientationChangeImage];
+    }
 }
 
 -   (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
+    CGFloat originPicWidth = 0.0f;
+    CGFloat originPicHeight = 0.0f;
     
-   
+    if (self.dataSource) {
+        NSDictionary *dict = [self.dataSource dictinaryForItem:picTag];
+        
+        originPicWidth = [(NSNumber  *)[dict objectForKey:@"picWidth"] floatValue];
+        originPicHeight = [(NSNumber  *)[dict objectForKey:@"picHeight"] floatValue];
+    }else if (pics && [pics    objectAtIndex:picTag]){
+        DKPictureWrapper  *picCur = [pics    objectAtIndex:picTag];
+        originPicWidth = picCur.picWidth;
+        originPicHeight = picCur.picHeight;
+        
+    }
     
-    DKPictureWrapper  *picCur = [pics    objectAtIndex:picTag];
     
     float screenWidth;
     float screenHeight;
     float scaledImageWidth ;
     float scaledImageHeight;
     
-    if(picCur.picWidth > SCREEN_SIZE_WIDTH   ||  picCur.picHeight > (SCREEN_SIZE_HEIGHT)){
-        float widthScale =  SCREEN_SIZE_WIDTH / picCur.picWidth;
-        float heightScale = (SCREEN_SIZE_HEIGHT)/ picCur.picHeight;
+    if(originPicWidth > SCREEN_SIZE_WIDTH   ||  originPicHeight > (SCREEN_SIZE_HEIGHT)){
+        float widthScale =  SCREEN_SIZE_WIDTH / originPicWidth;
+        float heightScale = (SCREEN_SIZE_HEIGHT)/ originPicHeight;
         float resultScale = (widthScale < heightScale) ? widthScale : heightScale;
         
         
-        scaledImageWidth = picCur.picWidth * resultScale;
-        scaledImageHeight = picCur.picHeight * resultScale;
+        scaledImageWidth = originPicWidth * resultScale;
+        scaledImageHeight = originPicHeight * resultScale;
         screenWidth = ( SCREEN_SIZE_WIDTH - scaledImageWidth ) / 2;
         screenHeight = ( SCREEN_SIZE_HEIGHT - scaledImageHeight ) / 2 ;
         
         
     }
     else{
-        screenWidth = (SCREEN_SIZE_WIDTH - picCur.picWidth)/2;
-        screenHeight = (SCREEN_SIZE_HEIGHT   - picCur.picHeight)/2 ;
-        scaledImageWidth = picCur.picWidth ;
-        scaledImageHeight = picCur.picHeight;
+        screenWidth = (SCREEN_SIZE_WIDTH - originPicWidth)/2;
+        screenHeight = (SCREEN_SIZE_HEIGHT   - originPicHeight)/2 ;
+        scaledImageWidth = originPicWidth ;
+        scaledImageHeight = originPicHeight;
     }
     
     [_orientationChangeImage setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
+   [_orientationChangeWhiteView setFrame:CGRectMake(SCREEN_SIZE_WIDTH, 0, SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT)];
     [_orientationChangeAct setFrame:CGRectMake((SCREEN_SIZE_WIDTH - _orientationChangeAct.frame.size.width)/2, (SCREEN_SIZE_HEIGHT - _orientationChangeAct.frame.size.height)/2, _orientationChangeAct.frame.size.width, _orientationChangeAct.frame.size.height)];
 
 }
@@ -1127,6 +1142,7 @@
     [_collectionView setHidden:NO];
     [_orientationChangeAct removeFromSuperview];
     [_orientationChangeImage removeFromSuperview];
+    [_orientationChangeWhiteView removeFromSuperview];
 }
 
 - (void)changeTheScrollViewOrientation{
@@ -1213,10 +1229,6 @@
     
     picTag = localPicTag;
     
-    
-   
-   // [scroll setContentOffset:CGPointMake(scroll.frame.size.width*picTag, - NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE+4, 8))];
-
     
     isChangingOrientation = NO;
     
@@ -1541,7 +1553,7 @@
             
             [self singleTapped];
             
-            UIActivityIndicatorView *netActiv = [netActs  objectAtIndex:picTag];
+            UIActivityIndicatorView *netActiv = _curAct;
             
             if (netActiv.isAnimating) {
                 [netActiv setHidden:NO];
@@ -1558,7 +1570,7 @@
 -(void) scrollViewDidZoom:(UIScrollView *)_scrollView{
     
     // D_Log(@"Zoom %f", _scrollView.zoomScale);
-    UIImageView *imgView = _currentImage;
+    UIImageView *imgView = [self getCurrentimage];
 
     
     CGFloat offSetX = (_scrollView.contentSize.width > _scrollView.frame.size.width) ? (_scrollView.contentSize.width - _scrollView.frame.size.width) / 2 : 0.0;
@@ -1583,7 +1595,7 @@
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)_scrollView {
     if (_scrollView.tag == 11) {
-        return _currentImage;
+        return [self getCurrentimage];
     }
     return nil;
 }

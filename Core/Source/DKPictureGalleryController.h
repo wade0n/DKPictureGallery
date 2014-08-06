@@ -79,6 +79,7 @@
     DKPictureScroll *_orientationChangeScroll;
     UIImageView *_orientationChangeImage;
     UIActivityIndicatorView *_orientationChangeAct;
+    UIView *_orientationChangeWhiteView;
     
     ///// new storyboard View
     
