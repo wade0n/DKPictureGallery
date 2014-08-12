@@ -38,14 +38,10 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" tag="12" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eBH-rG-dva">
-                                                            <rect key="frame" x="20" y="150" width="280" height="269"/>
+                                                        <imageView userInteractionEnabled="NO" tag="12" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eBH-rG-dva">
+                                                            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="269" id="9XT-Iu-ifb"/>
-                                                                <constraint firstAttribute="width" constant="280" id="NVI-GT-WCS"/>
-                                                            </constraints>
                                                         </imageView>
                                                         <activityIndicatorView opaque="NO" tag="13" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="qXg-za-rgo">
                                                             <rect key="frame" x="141" y="266" width="37" height="37"/>
@@ -55,12 +51,14 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
-                                                        <constraint firstItem="eBH-rG-dva" firstAttribute="leading" secondItem="g0K-uS-JhZ" secondAttribute="leading" constant="20" id="LMO-kb-tsK"/>
-                                                        <constraint firstItem="eBH-rG-dva" firstAttribute="top" secondItem="g0K-uS-JhZ" secondAttribute="top" constant="150" id="VXk-wG-JnI"/>
+                                                        <constraint firstAttribute="bottom" secondItem="eBH-rG-dva" secondAttribute="bottom" id="5iX-aX-Wqd"/>
+                                                        <constraint firstItem="eBH-rG-dva" firstAttribute="top" secondItem="g0K-uS-JhZ" secondAttribute="top" id="drS-Bs-ZBC"/>
+                                                        <constraint firstItem="eBH-rG-dva" firstAttribute="leading" secondItem="g0K-uS-JhZ" secondAttribute="leading" id="la1-6j-m3O"/>
                                                         <constraint firstItem="qXg-za-rgo" firstAttribute="leading" secondItem="g0K-uS-JhZ" secondAttribute="leading" constant="141" id="muh-Nd-oqY"/>
                                                         <constraint firstAttribute="bottom" secondItem="qXg-za-rgo" secondAttribute="bottom" constant="265" id="tke-Sd-vlq"/>
                                                         <constraint firstAttribute="trailing" secondItem="qXg-za-rgo" secondAttribute="trailing" constant="142" id="udZ-vN-Z6i"/>
                                                         <constraint firstItem="qXg-za-rgo" firstAttribute="top" secondItem="g0K-uS-JhZ" secondAttribute="top" constant="266" id="xQ7-mY-uSC"/>
+                                                        <constraint firstAttribute="trailing" secondItem="eBH-rG-dva" secondAttribute="trailing" id="ypF-1s-inj"/>
                                                     </constraints>
                                                     <connections>
                                                         <outlet property="actBottomtOffsetConstr" destination="tke-Sd-vlq" id="e7y-h6-96N"/>
@@ -68,10 +66,6 @@
                                                         <outlet property="actRightOffsetConstr" destination="udZ-vN-Z6i" id="CgK-Kz-jzd"/>
                                                         <outlet property="actTopOffsetConstr" destination="xQ7-mY-uSC" id="Sf6-UE-9Z2"/>
                                                         <outlet property="delegate" destination="ntz-Bi-ZAD" id="pI3-YB-hH4"/>
-                                                        <outlet property="heightConstr" destination="9XT-Iu-ifb" id="g0R-ke-90F"/>
-                                                        <outlet property="leftOffsetConstr" destination="LMO-kb-tsK" id="15L-ad-jMA"/>
-                                                        <outlet property="topOffsestConstr" destination="VXk-wG-JnI" id="4Is-vu-abE"/>
-                                                        <outlet property="widthConstr" destination="NVI-GT-WCS" id="o7z-oJ-wV7"/>
                                                     </connections>
                                                 </scrollView>
                                             </subviews>
@@ -100,9 +94,29 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dKl-PO-RkA">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T10-oE-bP4">
+                                        <rect key="frame" x="0.0" y="59" width="320" height="1"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="TrA-IA-CaU"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AFd-Fa-v26" customClass="AMBlurView">
+                                        <rect key="frame" x="0.0" y="0.0" width="568" height="60"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="568" id="kJe-Tl-xJl"/>
+                                        </constraints>
+                                    </view>
+                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dKl-PO-RkA">
                                         <rect key="frame" x="0.0" y="16" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="R0G-th-BR1"/>
+                                        </constraints>
                                         <items>
                                             <barButtonItem systemItem="stop" id="m0d-Lt-DPb">
                                                 <connections>
@@ -121,23 +135,18 @@
                                             </barButtonItem>
                                         </items>
                                     </toolbar>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AFd-Fa-v26" customClass="AMBlurView">
-                                        <rect key="frame" x="0.0" y="0.0" width="568" height="17"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="17" id="IPZ-ej-G9W"/>
-                                            <constraint firstAttribute="width" constant="568" id="kJe-Tl-xJl"/>
-                                        </constraints>
-                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="AFd-Fa-v26" secondAttribute="bottom" id="0Ja-wb-MfY"/>
+                                    <constraint firstItem="T10-oE-bP4" firstAttribute="leading" secondItem="y8Q-a6-upG" secondAttribute="leading" id="11I-B5-0G5"/>
+                                    <constraint firstItem="dKl-PO-RkA" firstAttribute="top" secondItem="y8Q-a6-upG" secondAttribute="top" constant="16" id="5kW-yO-X8Y"/>
                                     <constraint firstAttribute="height" constant="60" id="Btj-ef-4aa"/>
                                     <constraint firstItem="dKl-PO-RkA" firstAttribute="leading" secondItem="y8Q-a6-upG" secondAttribute="leading" id="FGB-MQ-NY1"/>
                                     <constraint firstAttribute="trailing" secondItem="dKl-PO-RkA" secondAttribute="trailing" id="Jw8-aG-czN"/>
-                                    <constraint firstAttribute="bottom" secondItem="dKl-PO-RkA" secondAttribute="bottom" id="RrG-7Z-x2t"/>
                                     <constraint firstItem="AFd-Fa-v26" firstAttribute="top" secondItem="y8Q-a6-upG" secondAttribute="top" id="ZQi-fn-Vpv"/>
+                                    <constraint firstAttribute="trailing" secondItem="T10-oE-bP4" secondAttribute="trailing" id="jPx-wW-z6x"/>
+                                    <constraint firstAttribute="bottom" secondItem="T10-oE-bP4" secondAttribute="bottom" id="o8L-vx-tQc"/>
                                     <constraint firstItem="AFd-Fa-v26" firstAttribute="leading" secondItem="y8Q-a6-upG" secondAttribute="leading" id="u9y-Sa-6cK"/>
                                 </constraints>
                             </view>
@@ -199,6 +208,7 @@
                         <outlet property="_navBarView" destination="y8Q-a6-upG" id="q0f-k3-tri"/>
                         <outlet property="_navTitle" destination="xLc-Ku-xiQ" id="MU7-3q-zDy"/>
                         <outlet property="_statusBlurView" destination="AFd-Fa-v26" id="JRo-ug-Q4y"/>
+                        <outlet property="_toolBar" destination="dKl-PO-RkA" id="qc9-kq-a2v"/>
                         <outlet property="hintView" destination="bSa-v4-0d7" id="LyH-es-EhS"/>
                         <outlet property="hintViewButtomOffset" destination="84L-0I-Z4h" id="Fcj-r0-n7t"/>
                         <outlet property="nameLabel" destination="LwB-bk-nNW" id="DV0-vG-CR2"/>
