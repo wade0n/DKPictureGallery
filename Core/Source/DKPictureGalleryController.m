@@ -39,9 +39,9 @@
 
 - (void)setPictureIndex:(int)picPosition Animated:(BOOL)animated{
     picTag = picPosition;
-    if (animated) {
-        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picPosition inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:animated];
-    }
+//    if (animated) {
+//        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picPosition inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:animated];
+//    }
 }
 - (void)setTransitionRect:(CGRect)startFrame andImage:(UIImage *)startImage finishFrame:(CGRect)endFrame{
     if (startImage) {
@@ -919,8 +919,10 @@
     return self;
 }
 
+
+
 - (void)viewDidAppear:(BOOL)animated{
-  
+    
     if (self.dataSource) {
         picCount = [self.dataSource numberOfPictures];
     }
@@ -929,10 +931,10 @@
         [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         
     }
+    
+    
+    _scrollLock = YES;
 
-    if (GALLERY_IS_IPHONE_4) {
-        _scrollLock = YES;
-    }
 
 }
 
@@ -944,9 +946,9 @@
     _toolBar.layer.cornerRadius = 0.0f;
     
     _toolBar.clipsToBounds = YES;
-    _statusBlurView.blurTintColor = _toolBar.tintColor;
+    //.blurTintColor = _toolBar.tintColor;
     
-    [_collectionView reloadData];
+    //[_collectionView reloadData];
     
     singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapped)];
     [singleTap setNumberOfTapsRequired:1];
@@ -962,10 +964,7 @@
     [singleTap requireGestureRecognizerToFail:doubleTap];
     
     
-    if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)]) {
-        self.automaticallyAdjustsScrollViewInsets = NO;
-    }
-    
+       
     
     
     
@@ -987,6 +986,8 @@
     blurView = (AMBlurView *)[hintView viewWithTag:12];
     [hintView addSubview: nameLabel];
     [self setNeedsStatusBarAppearanceUpdate];
+    
+    [_collectionView reloadData];
     
 }
 
@@ -1477,7 +1478,7 @@
     if (self.delegate) {
         int num;
         
-        num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
+        num = scrollView.contentOffset.x/SCREEN_SIZE_WIDTH + 0.5;
         
         [self.delegate changePictureToItem:num];
     }
@@ -1487,11 +1488,14 @@
     if ((scrollView.tag ==   13) && !isChangingOrientation) {
         int num;
         
-        if (_scrollLock && GALLERY_IS_IPHONE_4) {
-            scrollView.contentOffset  = CGPointMake(picTag  * scrollView.frame.size.width,0);
+        num = scrollView.contentOffset.x/(SCREEN_SIZE_WIDTH+10)+0.5;
+
+        if (_scrollLock) {
+            num = picTag;
             _scrollLock = NO;
+            [scrollView setContentOffset:CGPointMake(picTag*(SCREEN_SIZE_WIDTH+10), 0)];
         }
-        num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
+        
         if (num != picTag) {
             picTag = num;
             UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
@@ -1719,67 +1723,6 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-    
-     //[hintView   setTransform:HINT_TRANSFORM_HIDDEN_YES];
-    
-    if(animated && !isInBrowser && NO){
-        
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-        
-        NSNumber *num = [NSNumber numberWithUnsignedInteger:UIInterfaceOrientationMaskAllButUpsideDown];
-        
-        [dict setObject:num forKey:@"value"];
-        
-        
-        
-        
-        scrollHeight = SCREEN_SIZE_HEIGHT;
-        [self.navigationController setNavigationBarHidden:NO];
-        [self.navigationController setNavigationBarHidden:NO animated:YES];
-        
-        UINavigationBar *navBar = [[self navigationController] navigationBar];
-        defaultColor =  navBar.tintColor;
-        initialNavBarHidden = navBar.hidden;
-        [navBar setHidden:NO];
-        
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            
-        }
-        else{
-        }
-        
-
-        
-        [self setScrollView:scroll];
-        
-        
-        if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
-            [navBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
-            
-            [navBar setBackgroundColor:[UIColor   blackColor]];
-            self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-            [navBar setTintColor:[UIColor blackColor]];
-            [navBar setAlpha:0.5f];
-//            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-            
-        }
-        
-        
-        
-        
-        
-        
-        
-        isReadyForZoom = YES;
-        
-    }
-    else{
-        isInBrowser = NO;
-        }
-    
-    
-}
 
 #pragma mark status bar customization
 - (UIStatusBarStyle)preferredStatusBarStyle{
