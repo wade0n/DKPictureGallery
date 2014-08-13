@@ -38,11 +38,6 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" tag="12" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eBH-rG-dva">
-                                                            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                        </imageView>
                                                         <activityIndicatorView opaque="NO" tag="13" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="qXg-za-rgo">
                                                             <rect key="frame" x="141" y="266" width="37" height="37"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -51,14 +46,10 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottom" secondItem="eBH-rG-dva" secondAttribute="bottom" id="5iX-aX-Wqd"/>
-                                                        <constraint firstItem="eBH-rG-dva" firstAttribute="top" secondItem="g0K-uS-JhZ" secondAttribute="top" id="drS-Bs-ZBC"/>
-                                                        <constraint firstItem="eBH-rG-dva" firstAttribute="leading" secondItem="g0K-uS-JhZ" secondAttribute="leading" id="la1-6j-m3O"/>
                                                         <constraint firstItem="qXg-za-rgo" firstAttribute="leading" secondItem="g0K-uS-JhZ" secondAttribute="leading" constant="141" id="muh-Nd-oqY"/>
                                                         <constraint firstAttribute="bottom" secondItem="qXg-za-rgo" secondAttribute="bottom" constant="265" id="tke-Sd-vlq"/>
                                                         <constraint firstAttribute="trailing" secondItem="qXg-za-rgo" secondAttribute="trailing" constant="142" id="udZ-vN-Z6i"/>
                                                         <constraint firstItem="qXg-za-rgo" firstAttribute="top" secondItem="g0K-uS-JhZ" secondAttribute="top" constant="266" id="xQ7-mY-uSC"/>
-                                                        <constraint firstAttribute="trailing" secondItem="eBH-rG-dva" secondAttribute="trailing" id="ypF-1s-inj"/>
                                                     </constraints>
                                                     <connections>
                                                         <outlet property="actBottomtOffsetConstr" destination="tke-Sd-vlq" id="e7y-h6-96N"/>

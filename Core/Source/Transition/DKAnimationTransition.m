@@ -8,6 +8,7 @@
 
 #import "DKAnimationTransition.h"
 #import "DKPictureGalleryController.h"
+#import "DKConstants.h"
 
 
 static NSTimeInterval const DKAnimatedTransitionDuration = 0.5f;
@@ -73,7 +74,7 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
             imgView = [[UIImageView alloc] initWithFrame:gallery.startFrame];
             [imgView setImage:gallery.transitionImage];
             
-            whiteView = [[UIView alloc] initWithFrame:container.frame];
+            whiteView = [[UIView alloc] initWithFrame:otherController.view.frame];
             whiteView.backgroundColor = [UIColor whiteColor];
             whiteView.alpha = 0.0f;
             [container addSubview:whiteView];

@@ -296,10 +296,19 @@
 
 #pragma mark lifeCicle 
 
+- (DKPictureScroll *)getCurrentScroll{
+    UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
+    DKPictureScroll *minScroll = (DKPictureScroll *)[cell viewWithTag:11];
+    
+    return minScroll;
+}
 
 - (UIImageView  *)getCurrentimage{
     UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
-    return  (UIImageView *)[_curScroll viewWithTag:12];
+    DKPictureScroll *minScroll = (DKPictureScroll *)[cell viewWithTag:11];
+    UIImageView *picView = (UIImageView *)[minScroll viewWithTag:12];
+    
+    return  picView;
 }
 
 - (void)enableScrollLock{
@@ -1277,12 +1286,24 @@
 
 - (void)singleTapped{
 
+    if (_curScroll) {
+        _curScroll = [self getCurrentScroll];
+    }
+    
     DKPictureScroll *curScroll = _curScroll;
 
     if (curScroll.zoomScale <= 1.0f) {
     
         //[self screenTapped];
+        if (_curAct) {
+            _curAct = (UIActivityIndicatorView *)[_curScroll viewWithTag:13];
+        }
+        
         UIActivityIndicatorView *curAct  = _curAct;
+        if (_currentImage) {
+            _currentImage = (UIImageView *)[_curScroll viewWithTag:12];
+        }
+        
         UIImageView *curImageView = _currentImage;
         DKPictureWrapper *picWr = [pics objectAtIndex:picTag];
         
@@ -1608,7 +1629,7 @@
 //        
 //    }
     
-   // [self centerScrollViewContents];
+    [self centerScrollViewContents];
 //    UIImage* image = _zoomImageView.image;
 //    
 //    float xNewOrigin = [TCBRandom randomIntLessThan:image.size.width - scrollView.bounds.size.width];
@@ -1639,9 +1660,11 @@
 //        UIImage* image = _zoomImageView.image;
 //        _zoomImageView.bounds = CGRectMake(0, 0, image.size.width, image.size.height);
 //        _curScroll.contentSize = image.size;
+        if (!_zoomImageView) {
+            _zoomImageView = [self getCurrentimage];
+        }
         
-        _zoomImageView = _currentImage;
-        return _currentImage;
+        return _zoomImageView;
     }
     return nil;
 }
@@ -1651,15 +1674,15 @@
     CGRect contentsFrame = _zoomImageView.frame;
     
     if (contentsFrame.size.width < boundsSize.width) {
-        contentsFrame.origin.x = (boundsSize.width - contentsFrame.size.width) / 2.0f - 20;
+        contentsFrame.origin.x = (boundsSize.width - contentsFrame.size.width) / 2.0f;
     } else {
-        contentsFrame.origin.x = 0.0f - 20;
+        contentsFrame.origin.x = 0.0f;
     }
     
     if (contentsFrame.size.height < boundsSize.height) {
-        contentsFrame.origin.y = (boundsSize.height - contentsFrame.size.height) / 2.0f - 150;
+        contentsFrame.origin.y = (boundsSize.height - contentsFrame.size.height) / 2.0f ;
     } else {
-        contentsFrame.origin.y = 0.0f-150;
+        contentsFrame.origin.y = 0.0f;
     }
     
     _zoomImageView.frame = contentsFrame;
@@ -1790,6 +1813,11 @@
     
     DKPictureScroll *minScroll = (DKPictureScroll *)[picCell viewWithTag:11];
     UIImageView *picView = (UIImageView *)[minScroll viewWithTag:12];
+    if (!picView){
+        picView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        picView.tag = 12;
+        [minScroll addSubview:picView];
+    }
     UIActivityIndicatorView *act = (UIActivityIndicatorView *)[picCell viewWithTag:13];
     UIImageView *curImageCaptured = picView;
     
@@ -1860,11 +1888,13 @@
     [minScroll layoutIfNeeded];
     
     [picView setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
+    
 
-    [minScroll setContentSize:CGSizeMake(SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT)];
+    [minScroll setContentSize:CGSizeMake(picView.frame.size.width, picView.frame.size.height)];
 
     minScroll.maximumZoomScale   = 4.0f;
     minScroll.minimumZoomScale  =   1.0f;
+    minScroll.zoomScale = 1.0f;
     minScroll.scrollEnabled =   YES;
     minScroll.showsHorizontalScrollIndicator = YES;
     minScroll.showsVerticalScrollIndicator = YES;
