@@ -120,6 +120,7 @@ static NSTimeInterval const DKAnimatedTransitionDurationForMarco = 0.15f;
         [whiteView removeFromSuperview];
         [imgView removeFromSuperview];
         [minImgView removeFromSuperview];
+        [gallery finishTransition];
         [transitionContext completeTransition:finished];
     }];
 }

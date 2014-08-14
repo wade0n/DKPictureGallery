@@ -27,6 +27,7 @@
 - (UIImage *)getImageBackFromDismissTransition:(int)itemPosition;
 - (CGRect)getRectForTransitionForIndex:(int)itemPosition;
 - (void)didSelectPictureAtPosition:(int)position Sender:(id)sender;
+- (void)finishTransitionAtPosition:(int)position;
 @end
 
 @interface DKPictureGalleryController : UIViewController <UIScrollViewDelegate,UIActionSheetDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>{
@@ -161,6 +162,7 @@
 -   (IBAction)dismiss:(id)sender;
 -   (IBAction)saveToAlbum:(id)sender;
 -  (void)closeGallery;
+-  (void)finishTransition;
 
 - (void)setTransitionRect:(CGRect)startFrame andImage:(UIImage *)startImage finishFrame:(CGRect)endFrame;
 - (void)insertNewPictures:(int)pictureAmount;

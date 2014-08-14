@@ -296,6 +296,12 @@
 
 #pragma mark lifeCicle 
 
+- (void)finishTransition{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(finishTransitionAtPosition:)]) {
+        [self.delegate finishTransitionAtPosition:picTag];
+    }
+}
+
 - (DKPictureScroll *)getCurrentScroll{
     UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
     DKPictureScroll *minScroll = (DKPictureScroll *)[cell viewWithTag:11];
