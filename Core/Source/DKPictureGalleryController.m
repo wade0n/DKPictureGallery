@@ -961,10 +961,10 @@
     [_collectionView addGestureRecognizer:singleTap];
     
     
-    doubleTap = [[UITapGestureRecognizer   alloc]  initWithTarget:self action:@selector(doubleTapped)];
+    doubleTap = [[UITapGestureRecognizer   alloc]  initWithTarget:self action:@selector(doubleTapped:)];
     [doubleTap   setNumberOfTapsRequired:2];
     
-    //[_collectionView addGestureRecognizer:doubleTap];
+    [_collectionView addGestureRecognizer:doubleTap];
     
     [singleTap requireGestureRecognizerToFail:doubleTap];
     
@@ -1248,11 +1248,22 @@
     }
 }
 
-- (void)doubleTapped{
-    UIScrollView *scrollView = _curScroll;
+- (void)doubleTapped:(UITapGestureRecognizer *)recognizer{
     
+    if (!_curScroll) {
+        _curScroll = [self getCurrentScroll];
+    }
+    
+    CGPoint location = [recognizer locationInView:self.view];
+    
+    UIScrollView *scrollView = _curScroll;
+    UIImageView *imageView = (UIImageView *)[_curScroll viewWithTag:12];
+    
+    [scrollView zoomToRect:CGRectZero animated:YES];
     if(scrollView.zoomScale != 1.0){
-        [scrollView setZoomScale:1.0 animated:YES];
+        //[scrollView setZoomScale:1.0 animated:YES];
+        CGRect rect = CGRectMake(location.x - 65, location.y - 65, 130, 130);
+        [scrollView zoomToRect:rect  animated:YES];
     }else{
         [scrollView setZoomScale:scrollView.maximumZoomScale animated:YES];
     }
@@ -1472,11 +1483,9 @@
 #pragma mark zooming scrollview
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     if (self.delegate && (scrollView.tag == 13)) {
-        int num;
         
-        num = scrollView.contentOffset.x/SCREEN_SIZE_WIDTH + 0.5;
         
-        [self.delegate changePictureToItem:num];
+        [self.delegate changePictureToItem:picTag];
     }
 }
 
@@ -1495,7 +1504,7 @@
         if (num != picTag) {
             picTag = num;
             UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
-            _curScroll = (UIScrollView *)[cell viewWithTag:11];
+            _curScroll = (DKPictureScroll *)[cell viewWithTag:11];
             _currentImage = (UIImageView *)[_curScroll viewWithTag:12];
             _curAct = (UIActivityIndicatorView *)[_curScroll viewWithTag:13];
             
