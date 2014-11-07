@@ -1373,7 +1373,7 @@
 
 - (IBAction)dismiss:(id)sender{
     
-    id <UIViewControllerTransitioningDelegate> myDelegate = nil;
+    DKTransitionDelegate *myDelegate = nil;
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(getRectForTransitionForIndex:)]){
         self.endFrame = [self.delegate getRectForTransitionForIndex:picTag];
@@ -1396,14 +1396,18 @@
         
         myDelegate = [DKTransitionDelegate new];
         
-        self.transitioningDelegate = myDelegate;
-
         
         //[self presentingViewController].transitioningDelegate = nil;
         
     }
     
-    [self  dismissViewControllerAnimated:YES completion:nil];
+    self.transitioningDelegate = myDelegate;
+
+    if (self.transitioningDelegate) {
+        [self  dismissViewControllerAnimated:YES completion:nil];
+    }else{
+        [self  dismissViewControllerAnimated:NO completion:nil];
+    }
 }
 
 - (IBAction)saveToAlbum:(id)sender{
