@@ -1658,6 +1658,8 @@
 }
 
 - (void)centerScrollViewContents {
+    if( !_curScroll)
+        _curScroll = [self getCurrentScroll];
     CGSize boundsSize = _curScroll.bounds.size;
     CGRect contentsFrame = _zoomImageView.frame;
     
@@ -1672,9 +1674,9 @@
     } else {
         contentsFrame.origin.y = 0.0f;
     }
-    
     _zoomImageView.frame = contentsFrame;
 }
+
 
 #pragma mark appear and dissapear
 - (void)viewWillDisappear:(BOOL)animated{
