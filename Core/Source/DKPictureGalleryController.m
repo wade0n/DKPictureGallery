@@ -39,9 +39,9 @@
 
 - (void)setPictureIndex:(int)picPosition Animated:(BOOL)animated{
     picTag = picPosition;
-    if (animated) {
-        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picPosition inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:animated];
-    }
+//    if (animated) {
+//        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picPosition inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:animated];
+//    }
 }
 - (void)setTransitionRect:(CGRect)startFrame andImage:(UIImage *)startImage finishFrame:(CGRect)endFrame{
     if (startImage) {
@@ -294,6 +294,41 @@
 }
 
 
+#pragma mark lifeCicle 
+
+- (void)finishTransition{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(finishTransitionAtPosition:)]) {
+        [self.delegate finishTransitionAtPosition:picTag];
+    }
+}
+
+- (DKPictureScroll *)getCurrentScroll{
+    UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
+    DKPictureScroll *minScroll = (DKPictureScroll *)[cell viewWithTag:11];
+    
+    return minScroll;
+}
+
+- (UIImageView  *)getCurrentimage{
+    UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
+    DKPictureScroll *minScroll = (DKPictureScroll *)[cell viewWithTag:11];
+    UIImageView *picView = (UIImageView *)[minScroll viewWithTag:12];
+    
+    return  picView;
+}
+
+- (void)enableScrollLock{
+//    if (self.dataSource) {
+//        picCount = [self.dataSource numberOfPictures];
+//    }
+//    if (picCount) {
+//        _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+//        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+//        
+//    }
+    _scrollLock = NO;
+}
+
 - (void)setCurrentPicture:(DKPictureWrapper *)pic
               AllPictures:(NSMutableArray   *)arr
        SetCurrentPosition:(int)num{
@@ -313,7 +348,7 @@
     
     ///adjusting scrollView ot input pictures
     
-   scroll.contentSize = CGSizeMake(picCount * SCREEN_SIZE_WIDTH , SCREEN_SIZE_HEIGHT);
+   
     
     ///
     // [self setScrollView:scroll];
@@ -336,7 +371,7 @@
     [nameLabel.titleLabel setFont:[UIFont boldSystemFontOfSize:11]];
     [nameLabel setBackgroundColor:[UIColor clearColor]];
     [nameLabel setTitleColor:[UIColor colorWithWhite:0.0 alpha:0.82] forState:UIControlStateNormal];
-    [nameLabel setTitleColor:[UIColor colorWithWhite:1.0 alpha:1] forState:UIControlStateHighlighted];
+    [nameLabel setTitleColor:[UIColor greenColor] forState:UIControlStateHighlighted];
     
     [nameLabel addTarget:self action:@selector(openPicUrl) forControlEvents:UIControlEventTouchUpInside];
     
@@ -767,14 +802,7 @@
     [curAct startAnimating];
     [nextAct startAnimating];
     [preAct startAnimating];
-    
-    
-    ////check pics order///
-    
-    
-    
-    
-    
+
     UIImageView *curImageCaptured = curImage;
     
     
@@ -872,15 +900,7 @@
 #pragma mark init
 
 - (void)startUp{
-    scroll = [[UIScrollView alloc]   init];
-    scroll.tag = 13;
-    scroll.delegate = self;
-    scroll.pagingEnabled = YES;
-    scroll.showsHorizontalScrollIndicator = NO;
-    scroll.showsVerticalScrollIndicator = YES;
-    scroll.scrollsToTop = NO;
-    scroll.bounces = NO;
-   
+    
     [self observeApplicationNotifications];
 }
 
@@ -906,6 +926,23 @@
     return self;
 }
 
+
+
+- (void)viewDidAppear:(BOOL)animated{
+    
+    if (self.dataSource) {
+        picCount = (int)[self.dataSource numberOfPictures];
+    }
+    if (picCount) {
+        _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        
+    }
+    _scrollLock = YES;
+
+    [self performSelector:@selector(enableScrollLock) withObject:nil afterDelay:0.4];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -914,9 +951,9 @@
     _toolBar.layer.cornerRadius = 0.0f;
     
     _toolBar.clipsToBounds = YES;
-    _statusBlurView.blurTintColor = _toolBar.tintColor;
+    //.blurTintColor = _toolBar.tintColor;
     
-    [_collectionView reloadData];
+    //[_collectionView reloadData];
     
     singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapped)];
     [singleTap setNumberOfTapsRequired:1];
@@ -924,46 +961,24 @@
     [_collectionView addGestureRecognizer:singleTap];
     
     
-    doubleTap = [[UITapGestureRecognizer   alloc]  initWithTarget:self action:@selector(doubleTapped)];
+    doubleTap = [[UITapGestureRecognizer   alloc]  initWithTarget:self action:@selector(doubleTapped:)];
     [doubleTap   setNumberOfTapsRequired:2];
     
     [_collectionView addGestureRecognizer:doubleTap];
     
     [singleTap requireGestureRecognizerToFail:doubleTap];
     
-    
-    
-    
-    
-    
-    
     nameLabel.titleLabel.adjustsFontSizeToFitWidth = YES;
     [nameLabel.titleLabel setNumberOfLines:6];
     [nameLabel addTarget:self action:@selector(openPicUrl) forControlEvents:UIControlEventTouchUpInside];
     
-    
     [self setButton:nameLabel];
-    
 
-    
-    
-    //[self.view addSubview:hintView];
-    
-    
-    //blurView.blurTintColor = self.navigationController.navigationBar.tintColor;
-    //blurView.backgroundColor = [UIColor redColor];
     blurView = (AMBlurView *)[hintView viewWithTag:12];
     [hintView addSubview: nameLabel];
-    if (self.dataSource) {
-        picCount = [self.dataSource numberOfPictures];
-    }
-    if (picTag && picCount) {
-        _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
-        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]  atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-
-    }
     [self setNeedsStatusBarAppearanceUpdate];
     
+    [_collectionView reloadData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -979,6 +994,10 @@
 
 #pragma mark inputmethods
 
+-  (void)closeGallery{
+    [self  dismissViewControllerAnimated:NO completion:nil];
+}
+
 - (void)reloadData{
     [_collectionView reloadData];
     [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
@@ -986,7 +1005,7 @@
 
 - (void)insertNewPictures:(int)pictureAmount{
     if (self.dataSource) {
-        picCount = [self.dataSource numberOfPictures];
+        picCount = (int)[self.dataSource numberOfPictures];
     }
     _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
     
@@ -1000,8 +1019,6 @@
 }
 #pragma mark - orientation
 
-
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
@@ -1014,11 +1031,8 @@
         _navBarView.hidden = YES;
         hintView.hidden = YES;
     }
-   
-    
     UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
     
-    scroll.contentSize = CGSizeMake(picCount * (SCREEN_SIZE_WIDTH + PICS_COLLECTION_SCROLL_IMAGE_DIVIDER), 0);
     _orientationChangeScroll = (DKPictureScroll *)[cell viewWithTag:11];
     UIImageView *picView = (UIImageView *)[_orientationChangeScroll viewWithTag:12];
     _orientationChangeImage = [[UIImageView alloc] initWithImage:picView.image];
@@ -1042,42 +1056,58 @@
     //[_collectionView setAlpha:0.0f];
     [_collectionView setHidden:YES];
     
-    
+    if (!navBarHidden) {
+        _orientationChangeWhiteView = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_SIZE_WIDTH, 0, SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT)];
+        _orientationChangeWhiteView.backgroundColor = [UIColor whiteColor];
+        [self.view insertSubview:_orientationChangeWhiteView belowSubview:_orientationChangeImage];
+    }
 }
 
 -   (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     
+    CGFloat originPicWidth = 0.0f;
+    CGFloat originPicHeight = 0.0f;
     
-   
+    if (self.dataSource) {
+        NSDictionary *dict = [self.dataSource dictinaryForItem:picTag];
+        
+        originPicWidth = [(NSNumber  *)[dict objectForKey:@"picWidth"] floatValue];
+        originPicHeight = [(NSNumber  *)[dict objectForKey:@"picHeight"] floatValue];
+    }else if (pics && [pics    objectAtIndex:picTag]){
+        DKPictureWrapper  *picCur = [pics    objectAtIndex:picTag];
+        originPicWidth = picCur.picWidth;
+        originPicHeight = picCur.picHeight;
+        
+    }
     
-    DKPictureWrapper  *picCur = [pics    objectAtIndex:picTag];
     
     float screenWidth;
     float screenHeight;
     float scaledImageWidth ;
     float scaledImageHeight;
     
-    if(picCur.picWidth > SCREEN_SIZE_WIDTH   ||  picCur.picHeight > (SCREEN_SIZE_HEIGHT)){
-        float widthScale =  SCREEN_SIZE_WIDTH / picCur.picWidth;
-        float heightScale = (SCREEN_SIZE_HEIGHT)/ picCur.picHeight;
+    if(originPicWidth > SCREEN_SIZE_WIDTH   ||  originPicHeight > (SCREEN_SIZE_HEIGHT)){
+        float widthScale =  SCREEN_SIZE_WIDTH / originPicWidth;
+        float heightScale = (SCREEN_SIZE_HEIGHT)/ originPicHeight;
         float resultScale = (widthScale < heightScale) ? widthScale : heightScale;
         
         
-        scaledImageWidth = picCur.picWidth * resultScale;
-        scaledImageHeight = picCur.picHeight * resultScale;
+        scaledImageWidth = originPicWidth * resultScale;
+        scaledImageHeight = originPicHeight * resultScale;
         screenWidth = ( SCREEN_SIZE_WIDTH - scaledImageWidth ) / 2;
         screenHeight = ( SCREEN_SIZE_HEIGHT - scaledImageHeight ) / 2 ;
         
         
     }
     else{
-        screenWidth = (SCREEN_SIZE_WIDTH - picCur.picWidth)/2;
-        screenHeight = (SCREEN_SIZE_HEIGHT   - picCur.picHeight)/2 ;
-        scaledImageWidth = picCur.picWidth ;
-        scaledImageHeight = picCur.picHeight;
+        screenWidth = (SCREEN_SIZE_WIDTH - originPicWidth)/2;
+        screenHeight = (SCREEN_SIZE_HEIGHT   - originPicHeight)/2 ;
+        scaledImageWidth = originPicWidth ;
+        scaledImageHeight = originPicHeight;
     }
     
     [_orientationChangeImage setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
+   [_orientationChangeWhiteView setFrame:CGRectMake(SCREEN_SIZE_WIDTH, 0, SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT)];
     [_orientationChangeAct setFrame:CGRectMake((SCREEN_SIZE_WIDTH - _orientationChangeAct.frame.size.width)/2, (SCREEN_SIZE_HEIGHT - _orientationChangeAct.frame.size.height)/2, _orientationChangeAct.frame.size.width, _orientationChangeAct.frame.size.height)];
 
 }
@@ -1099,6 +1129,7 @@
     [_collectionView setHidden:NO];
     [_orientationChangeAct removeFromSuperview];
     [_orientationChangeImage removeFromSuperview];
+    [_orientationChangeWhiteView removeFromSuperview];
 }
 
 - (void)changeTheScrollViewOrientation{
@@ -1117,7 +1148,6 @@
 
     
     scroll.frame = CGRectMake(0, 0  , SCREEN_SIZE_WIDTH+PICS_COLLECTION_SCROLL_IMAGE_DIVIDER, SCREEN_SIZE_HEIGHT);
-    scroll.contentSize = CGSizeMake(picCount * (SCREEN_SIZE_WIDTH + PICS_COLLECTION_SCROLL_IMAGE_DIVIDER), 0);
     
     
     for (int i = 0; i <= picCount-1; i++) {
@@ -1186,10 +1216,6 @@
     picTag = localPicTag;
     
     
-   
-    [scroll setContentOffset:CGPointMake(scroll.frame.size.width*picTag, - NAVIGATION_BAR_SIZE - INTERFACE_ORIENTATION_SENSETIVE_VALUE(STATUS_BAR_SIZE+4, 8))];
-
-    
     isChangingOrientation = NO;
     
     
@@ -1222,11 +1248,22 @@
     }
 }
 
-- (void)doubleTapped{
-    UIScrollView *scrollView = _curScroll;
+- (void)doubleTapped:(UITapGestureRecognizer *)recognizer{
     
+    if (!_curScroll) {
+        _curScroll = [self getCurrentScroll];
+    }
+    
+    CGPoint location = [recognizer locationInView:self.view];
+    
+    UIScrollView *scrollView = _curScroll;
+    UIImageView *imageView = (UIImageView *)[_curScroll viewWithTag:12];
+    
+    [scrollView zoomToRect:CGRectZero animated:YES];
     if(scrollView.zoomScale != 1.0){
-        [scrollView setZoomScale:1.0 animated:YES];
+        //[scrollView setZoomScale:1.0 animated:YES];
+        CGRect rect = CGRectMake(location.x - 65, location.y - 65, 130, 130);
+        [scrollView zoomToRect:rect  animated:YES];
     }else{
         [scrollView setZoomScale:scrollView.maximumZoomScale animated:YES];
     }
@@ -1235,12 +1272,24 @@
 
 - (void)singleTapped{
 
+    if (_curScroll) {
+        _curScroll = [self getCurrentScroll];
+    }
+    
     DKPictureScroll *curScroll = _curScroll;
 
-    if (curScroll.zoomScale <= 1.0f) {
+    if (curScroll.zoomScale <= curScroll.minimumZoomScale) {
     
-        //[self screenTapped];
+        [self screenTapped];
+        if (_curAct) {
+            _curAct = (UIActivityIndicatorView *)[_curScroll viewWithTag:13];
+        }
+        
         UIActivityIndicatorView *curAct  = _curAct;
+        if (_currentImage) {
+            _currentImage = (UIImageView *)[_curScroll viewWithTag:12];
+        }
+        
         UIImageView *curImageView = _currentImage;
         DKPictureWrapper *picWr = [pics objectAtIndex:picTag];
         
@@ -1324,7 +1373,7 @@
 
 - (IBAction)dismiss:(id)sender{
     
-    id <UIViewControllerTransitioningDelegate> myDelegate = nil;
+    DKTransitionDelegate *myDelegate = nil;
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(getRectForTransitionForIndex:)]){
         self.endFrame = [self.delegate getRectForTransitionForIndex:picTag];
@@ -1347,14 +1396,18 @@
         
         myDelegate = [DKTransitionDelegate new];
         
-        self.transitioningDelegate = myDelegate;
-
         
         //[self presentingViewController].transitioningDelegate = nil;
         
     }
     
-    [self  dismissViewControllerAnimated:YES completion:nil];
+    self.transitioningDelegate = myDelegate;
+
+    if (self.transitioningDelegate) {
+        [self  dismissViewControllerAnimated:YES completion:nil];
+    }else{
+        [self  dismissViewControllerAnimated:NO completion:nil];
+    }
 }
 
 - (IBAction)saveToAlbum:(id)sender{
@@ -1433,48 +1486,61 @@
 
 #pragma mark zooming scrollview
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    if (self.delegate) {
-        int num;
+    if (self.delegate && (scrollView.tag == 13)) {
         
-        num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
         
-        [self.delegate changePictureToItem:num];
+        [self.delegate changePictureToItem:picTag];
     }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if ((scrollView.tag ==   13) && !isChangingOrientation) {
-            int num;
-            
-            num = scrollView.contentOffset.x/scrollView.frame.size.width + 0.5;
+        int num;
+        
+        num = scrollView.contentOffset.x/(SCREEN_SIZE_WIDTH+10)+0.5;
+
+        if (_scrollLock) {
+            num = picTag;
+            _scrollLock = NO;
+            [scrollView setContentOffset:CGPointMake(picTag*(SCREEN_SIZE_WIDTH+10), 0)];
+        }
+        
+        if (num != picTag) {
             picTag = num;
             UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:picTag inSection:0]];
-            _curScroll = (UIScrollView *)[cell viewWithTag:11];
+            _curScroll = (DKPictureScroll *)[cell viewWithTag:11];
             _currentImage = (UIImageView *)[_curScroll viewWithTag:12];
             _curAct = (UIActivityIndicatorView *)[_curScroll viewWithTag:13];
             
             [self setButton:nameLabel];
             _navTitle.title = [NSString stringWithFormat:@"%i из %i", picTag + 1, picCount];
+ 
+        }
+        
+        //NSLog(@"%@",_zoomImageView);
         
     }else if(scrollView.tag == 11){
-        if (self.delegate) {
-            if (!backImageView) {
-                backImageView = [[UIImageView alloc] initWithImage:[self.delegate getImageBackFromDismissTransition:picTag]];
-                backImageView.frame = self.view.frame;
-                [self.view insertSubview:backImageView belowSubview:_collectionView];
-            }
-        }
-        CGFloat offset =  scrollView.contentOffset.y;
-        [_collectionView setBackgroundColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:100/offset]];
-         NSLog(@"offset - %f",scrollView.contentOffset.y);
+//        if (self.delegate && [self.delegate respondsToSelector:@selector(getImageBackFromDismissTransition:)]) {
+//            if (!backImageView) {
+//                backImageView = [[UIImageView alloc] initWithImage:[self.delegate getImageBackFromDismissTransition:picTag]];
+//                backImageView.frame = self.view.frame;
+//                [self.view insertSubview:backImageView belowSubview:_collectionView];
+//            }
+//            CGFloat offset =  scrollView.contentOffset.y;
+//            [_collectionView setBackgroundColor:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:100/offset]];
+//
+//        }
+               //NSLog(@"offset - %f",scrollView.contentOffset.y);
     }
     
 }
 
 
+#pragma mark zooming scrollView
+
 - (void)scrollViewWillBeginZooming:(UIScrollView *)_scrollView withView:(UIView *)view {
     //        _scrollView.scrollEnabled = YES;
-    if (_scrollView.tag != 13) {
+    if (_scrollView.tag == 11) {
         
         
         if (!navBarHidden){
@@ -1497,66 +1563,118 @@
 - (void)scrollViewDidEndZooming:(UIScrollView *)_scrollView withView:(UIView *)view atScale:(CGFloat)scale {
     
     
-    if (_scrollView.tag != 13) {
-        
-        
-        
-        if (_scrollView.zoomScale == _scrollView.minimumZoomScale){
+    if (_scrollView.tag == 11) {
+        if (scale <= _scrollView.minimumZoomScale){
             
             [self singleTapped];
             
-            UIActivityIndicatorView *netActiv = [netActs  objectAtIndex:picTag];
+            UIActivityIndicatorView *netActiv = _curAct;
             
             if (netActiv.isAnimating) {
                 [netActiv setHidden:NO];
             }
             
         }
-        
-        
+    
     }
     
 }
 
 
 -(void) scrollViewDidZoom:(UIScrollView *)_scrollView{
+    //[_zoomImageView setCenter:_scrollView.center];
+    NSLog(@"Zoom %f contsize h -  %f w - %f  image oofset x - %F offset y - %f", _scrollView.zoomScale,_scrollView.contentSize.height, _scrollView.contentSize.width,_zoomImageView.frame.origin.x, _zoomImageView.frame.origin.y);
     
-    // D_Log(@"Zoom %f", _scrollView.zoomScale);
-    UIImageView *imgView = (UIImageView *)[_scrollView viewWithTag:12];
+    
+    UIImageView *imgView = _zoomImageView;
 
     
-    CGFloat offSetX = (_scrollView.contentSize.width > _scrollView.frame.size.width) ? (_scrollView.contentSize.width - _scrollView.frame.size.width) / 2 : 0.0;
-    CGFloat offSetY = (_scrollView.contentSize.height > _scrollView.frame.size.height) ? (_scrollView.contentSize.height - _scrollView.frame.size.height) * 0.45 : 0.0;
+//    CGFloat offSetX = (_scrollView.contentSize.width > _scrollView.frame.size.width) ? (_scrollView.contentSize.width - _scrollView.frame.size.width) / 2 : 0.0;
+//    CGFloat offSetY = (_scrollView.contentSize.height > _scrollView.frame.size.height) ? (_scrollView.contentSize.height - _scrollView.frame.size.height) * 0.45 : 0.0;
+//    
+//    if (_zoomImageView.frame.size.width < _zoomImageView.frame.size.height){
+//        imgView.center = CGPointMake( offSetX + _scrollView.frame.size.width * 0.5 ,
+//                                          offSetY + _scrollView.frame.size.height * 0.5 + _scrollView.zoomScale * 4.25 * _scrollView.zoomScale);
+//        NSLog(@"H");
+//        NSLog(@"%f", imgView.frame.size.height);
+//        NSLog(@"%f", imgView.frame.size.width);
+//    }
+//    else{
+//        imgView.center = CGPointMake( offSetX + _scrollView.frame.size.width * 0.5 ,  - _scrollView.frame.size.height);
+//        ///[imgView setFrame:CGRectMake(offSetX, offSetY, imgView.frame.size.width, imgView.frame.size.height)];
+//        
+////        DKPictureScroll *dkpicture = (DKPictureScroll *)_scrollView;
+////        dkpicture.topOffsestConstr.constant = dkpicture.topOffsestConstr.constant - offSetY;
+////        [_scrollView setNeedsLayout];
+////        [_scrollView layoutIfNeeded];
+//        NSLog(@"W");
+//        NSLog(@" ofsetY - %f h - %f",offSetY,imgView.frame.origin.y);
+//        NSLog(@"%f", imgView.frame.size.height);
+//        NSLog(@"%f", imgView.frame.size.width);
+//        
+//    }
     
-    if (imageOrientation == YES){
-        imgView.center = CGPointMake( offSetX + _scrollView.frame.size.width * 0.5 ,
-                                          offSetY + _scrollView.frame.size.height * 0.5 + _scrollView.zoomScale * 4.25 * _scrollView.zoomScale);
-        //      //  D_Log(@"H");
-        //        D_Log(@"%f", currentImage.frame.size.height);
-        //        D_Log(@"%f", currentImage.frame.size.width);
-    }
-    else{
-        imgView.center = CGPointMake( offSetX + _scrollView.frame.size.width * 0.5 ,
-                                          offSetY + _scrollView.frame.size.height * 0.5 + 3);
-        //        D_Log(@"W");
-        //        D_Log(@"%f", currentImage.frame.size.height);
-        //        D_Log(@"%f", currentImage.frame.size.width);
-    }
+    [self centerScrollViewContents];
+//    UIImage* image = _zoomImageView.image;
+//    
+//    float xNewOrigin = [TCBRandom randomIntLessThan:image.size.width - scrollView.bounds.size.width];
+//    float yNewOrigin = [TCBRandom randomIntLessThan:image.size.height - scrollView.bounds.size.height];
+//    
+//    CGRect oldRect = scrollView.bounds;
+//    CGRect newRect = CGRectMake(
+//                                xNewOrigin,
+//                                yNewOrigin,
+//                                scrollView.bounds.size.width,
+//                                scrollView.bounds.size.height);
+//    
+//    float xDistance = fabs(xNewOrigin - oldRect.origin.x);
+//    float yDistance = fabs(yNewOrigin - oldRect.origin.y);
+//    float hDistance = sqrtf(powf(xDistance, 2) + powf(yDistance, 2));
+//    float hDistanceInPixels = hDistance;
+//    
+//    float animationDuration = hDistanceInPixels / speedInPixelsPerSecond;
     
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)_scrollView {
+    if (_scrollView.tag == 11) {
+      
+        
+        
+        NSLog(@"view for zoom");
+//        [_zoomImageView setContentMode:UIViewContentModeScaleToFill];
+//        [_curScroll setContentMode:UIViewContentModeScaleAspectFill];
+        
+//        UIImage* image = _zoomImageView.image;
+//        _zoomImageView.bounds = CGRectMake(0, 0, image.size.width, image.size.height);
+//        _curScroll.contentSize = image.size;
+        
+            _zoomImageView = (UIImageView *)[_scrollView viewWithTag:12];
     
-    if (_scrollView.tag != 13) {
         
-        
-        
-        UIImageView *imgView = (UIImageView *)[_scrollView viewWithTag:12];
-        
-        return imgView;
+        return _zoomImageView;
+    }
+    return nil;
+}
+
+- (void)centerScrollViewContents {
+    if( !_curScroll)
+        _curScroll = [self getCurrentScroll];
+    CGSize boundsSize = _curScroll.bounds.size;
+    CGRect contentsFrame = _zoomImageView.frame;
+    
+    if (contentsFrame.size.width < boundsSize.width) {
+        contentsFrame.origin.x = (boundsSize.width - contentsFrame.size.width) / 2.0f;
+    } else {
+        contentsFrame.origin.x = 0.0f;
     }
     
-    return nil;
+    if (contentsFrame.size.height < boundsSize.height) {
+        contentsFrame.origin.y = (boundsSize.height - contentsFrame.size.height) / 2.0f ;
+    } else {
+        contentsFrame.origin.y = 0.0f;
+    }
+    _zoomImageView.frame = contentsFrame;
 }
 
 
@@ -1618,67 +1736,6 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-    
-     //[hintView   setTransform:HINT_TRANSFORM_HIDDEN_YES];
-    
-    if(animated && !isInBrowser && NO){
-        
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-        
-        NSNumber *num = [NSNumber numberWithUnsignedInteger:UIInterfaceOrientationMaskAllButUpsideDown];
-        
-        [dict setObject:num forKey:@"value"];
-        
-        
-        
-        
-        scrollHeight = SCREEN_SIZE_HEIGHT;
-        [self.navigationController setNavigationBarHidden:NO];
-        [self.navigationController setNavigationBarHidden:NO animated:YES];
-        
-        UINavigationBar *navBar = [[self navigationController] navigationBar];
-        defaultColor =  navBar.tintColor;
-        initialNavBarHidden = navBar.hidden;
-        [navBar setHidden:NO];
-        
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            
-        }
-        else{
-        }
-        
-
-        
-        [self setScrollView:scroll];
-        
-        
-        if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
-            [navBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
-            
-            [navBar setBackgroundColor:[UIColor   blackColor]];
-            self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-            [navBar setTintColor:[UIColor blackColor]];
-            [navBar setAlpha:0.5f];
-//            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-            
-        }
-        
-        
-        
-        
-        
-        
-        
-        isReadyForZoom = YES;
-        
-    }
-    else{
-        isInBrowser = NO;
-        }
-    
-    
-}
 
 #pragma mark status bar customization
 - (UIStatusBarStyle)preferredStatusBarStyle{
@@ -1715,7 +1772,7 @@
     if (navBarHidden) {
         self.navigationController.navigationBar.frame = CGRectMake(0, -self.navigationController.navigationBar.frame.size.height, self.navigationController.navigationBar.frame.size.width, self.navigationController.navigationBar.frame.size.height);
         
-        self.view.backgroundColor = [UIColor redColor];
+        //self.view.backgroundColor = [UIColor redColor];
         [self setNeedsStatusBarAppearanceUpdate];
     }
  
@@ -1744,12 +1801,14 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell *picCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"picCell" forIndexPath:indexPath];
     
-
-
-    
-    
     DKPictureScroll *minScroll = (DKPictureScroll *)[picCell viewWithTag:11];
     UIImageView *picView = (UIImageView *)[minScroll viewWithTag:12];
+    if (!picView){
+        picView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        picView.tag = 12;
+        [minScroll addSubview:picView];
+    }
+    picView.contentMode = UIViewContentModeScaleToFill;
     UIActivityIndicatorView *act = (UIActivityIndicatorView *)[picCell viewWithTag:13];
     UIImageView *curImageCaptured = picView;
     
@@ -1804,12 +1863,12 @@
     }
     
     
-    
    
-    minScroll.widthConstr.constant = scaledImageWidth;
-    minScroll.heightConstr.constant = scaledImageHeight;
-    minScroll.topOffsestConstr.constant = screenHeight;
-    minScroll.leftOffsetConstr.constant = screenWidth;
+//    minScroll.widthConstr.constant = scaledImageWidth;
+//    minScroll.heightConstr.constant = scaledImageHeight;
+//    minScroll.topOffsestConstr.constant = screenHeight;
+//    minScroll.leftOffsetConstr.constant = screenWidth;
+    
     
     minScroll.actLeftOffsetConstr.constant = (SCREEN_SIZE_WIDTH - act.frame.size.width)/2;
     minScroll.actRightOffsetConstr.constant = (SCREEN_SIZE_WIDTH - act.frame.size.width)/2;
@@ -1820,16 +1879,31 @@
     [minScroll layoutIfNeeded];
     
     
-    [minScroll setContentSize:CGSizeMake(SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT)];
+
+    [minScroll setContentSize:CGSizeMake(picView.frame.size.width, picView.frame.size.height)];
 
     minScroll.maximumZoomScale   = 4.0f;
     minScroll.minimumZoomScale  =   1.0f;
+    minScroll.zoomScale = 1.0f;
     minScroll.scrollEnabled =   YES;
     minScroll.showsHorizontalScrollIndicator = YES;
     minScroll.showsVerticalScrollIndicator = YES;
     minScroll.scrollsToTop = NO;
-    
     [minScroll setZoomScale:minScroll.minimumZoomScale];
+    
+    [picView setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
+    
+    [minScroll setNeedsLayout];
+    [minScroll layoutIfNeeded];
+    
+    
+    
+    [minScroll setContentSize:CGSizeMake(minScroll.frame.size.width, minScroll.frame.size.height)];
+
+    
+    if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)]) {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
     
     [act startAnimating];
     UIImageView *picViewCapt = picView;
@@ -1871,7 +1945,8 @@
             else{
                 minScroll.imageLoaded = YES;
                 [picViewCapt setImage:image];
-                // [curImageCaptured setFrame:CGRectMake((SCREEN_SIZE_WIDTH/2) - image.size.width/2,( SCREEN_SIZE_HEIGHT- NAVIGATION_BAR_SIZE*2)/2  - image.size.height/2, image.size.width, image.size.height)];
+                //picViewCapt.bounds = CGRectMake(0, 0, image.size.width, image.size.height);
+            // [curImageCaptured setFrame:CGRectMake((SCREEN_SIZE_WIDTH/2) - image.size.width/2,( SCREEN_SIZE_HEIGHT- NAVIGATION_BAR_SIZE*2)/2  - image.size.height/2, image.size.width, image.size.height)];
             }
             [act stopAnimating];
         }];
