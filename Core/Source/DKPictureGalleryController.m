@@ -1808,6 +1808,7 @@
         picView.tag = 12;
         [minScroll addSubview:picView];
     }
+    picView.contentMode = UIViewContentModeScaleAspectFit;
     UIActivityIndicatorView *act = (UIActivityIndicatorView *)[picCell viewWithTag:13];
     UIImageView *curImageCaptured = picView;
     
@@ -1874,13 +1875,6 @@
     minScroll.actTopOffsetConstr.constant = (SCREEN_SIZE_HEIGHT - act.frame.size.height)/2;
     minScroll.actTopOffsetConstr.constant = (SCREEN_SIZE_HEIGHT - act.frame.size.height)/2;
     
-    [minScroll setNeedsLayout];
-    [minScroll layoutIfNeeded];
-    
-    
-
-    [minScroll setContentSize:CGSizeMake(picView.frame.size.width, picView.frame.size.height)];
-
     minScroll.maximumZoomScale   = 4.0f;
     minScroll.minimumZoomScale  =   1.0f;
     minScroll.zoomScale = 1.0f;
@@ -1892,7 +1886,11 @@
     
     [picView setFrame:CGRectMake(screenWidth, screenHeight, scaledImageWidth, scaledImageHeight)];
     
+    [minScroll setNeedsLayout];
+    [minScroll layoutIfNeeded];
     
+    [minScroll setContentSize:CGSizeMake(minScroll.frame.size.width, minScroll.frame.size.height)];
+
     
     if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)]) {
         self.automaticallyAdjustsScrollViewInsets = NO;
